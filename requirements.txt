@@ -1,0 +1,3 @@
+berserk==0.10.0
+python-chess==1.999
+colorama==0.4.4
