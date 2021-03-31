@@ -76,7 +76,7 @@ class Game(threading.Thread):
 lok("Initialized.")
 
 with open("lichess.token") as file:
-    token = file.read()
+    token = file.read()[:-1]
 
 lok("Token is", token)
 
