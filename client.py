@@ -53,7 +53,7 @@ class Game(threading.Thread):
             if board.turn != self.my_turn:
                 lok("Calculating...")
                 t = event['btime'].time()
-                if (t.hour * 60 + t.minute) * 60 + t.second > 60:
+                if (t.hour * 60 + t.minute) * 60 + t.second > 120 and len(mvs) % 4 == 0:
                     score, best_move = yukoo.minimax(board, 3, board.turn, False)
                 else:
                     score, best_move = yukoo.minimax(board, 2, board.turn, False)
