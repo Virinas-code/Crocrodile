@@ -8,6 +8,7 @@ from __future__ import print_function
 import chess
 import chess.polyglot
 import requests
+import copy
 
 PAWN_VALUE = 100
 KNIGHT_VALUE = 290
@@ -100,6 +101,13 @@ class EngineBase:
                         mate_in = 0
                 return mate_in, r["moves"][0]["uci"]
                 # color will be mated in..."""
+            attackers = board.attackers(board.turn, board.peek().to_square)
+            if len(attackers) > 0:
+                # print("retake ! board : \n", board, "\n last move :", board.peek())
+                if board.turn == chess.WHITE:
+                    evaluation += PIECES_VALUES[board.piece_map()[board.peek().to_square].symbol().lower()]
+                else:
+                    evaluation -= PIECES_VALUES[board.piece_map()[board.peek().to_square].symbol().lower()]
             return evaluation, chess.Move.from_uci("0000")
         if maximimize_white:
             value = -float('inf')
