@@ -11,4 +11,4 @@ Uses berserk.
 Only Classical and Correspondence.
 Please report all bugs at [Issues](https://github.com/Virinas-code/Crocrodile/issues).
 ## License
-[GPLv3](https://github.com/Virinas-code/Crocrodile/404)
+[GPLv3](https://github.com/Virinas-code/Crocrodile/blob/master/LICENSE)
