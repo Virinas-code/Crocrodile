@@ -97,7 +97,7 @@ while continue_loop:
                 colors[event['challenge']['id']] = event['challenge']['color']
             else:
                 client.bots.decline_challenge(event['challenge']['id'])
-                lok("Don't accept challenge in", event['challenge']['speed'].capitalize())
+                lok("Don't accept challenge in", event['challenge']['speed'].capitalize(), ("because it's a rematch" if event['challenge']['id'] in colors else "because the bot don't play this speed"))
         elif event['type'] == 'gameStart':
             game = Game(client, event['game']['id'], colors[event['game']['id']])
             game.start()
