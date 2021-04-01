@@ -33,7 +33,7 @@ class Game(threading.Thread):
             self.my_turn = chess.WHITE
         else:
             self.my_turn = chess.BLACK
-        if self.my_turn != chess.WHITE:
+        if self.my_turn == chess.WHITE:
             self.game_state_change({'status':'started', 'moves':'0000 0000', 'btime':datetime.datetime(1970, 1, 1, 12)})
         lok("Game", self.game_id, "start")
     def run(self):
@@ -56,7 +56,7 @@ class Game(threading.Thread):
                 t = event['btime'].time()
                 time = (t.hour *60 + t.minute) *60 + t.second
                 lok("Time", time)
-                if time > 120 and len(mvs) % 4 == 0:
+                if time > 120 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1:
                     score, best_move = yukoo.minimax(board, 3, board.turn, False)
                 else:
                     score, best_move = yukoo.minimax(board, 2, board.turn, False)
@@ -94,12 +94,14 @@ while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
         if event['type'] == 'challenge':
-            if event['challenge']['speed'] in SPEEDS and not event['challenge']['id'] in colors:
+            if event['challenge']['speed'] in SPEEDS and not event['challenge']['id'] in colors and event['challenge']['color'] != 'random':
                 client.bots.accept_challenge(event['challenge']['id'])
                 colors[event['challenge']['id']] = event['challenge']['color']
             else:
                 client.bots.decline_challenge(event['challenge']['id'])
                 lok("Don't accept challenge in", event['challenge']['speed'].capitalize(), ("because it's a rematch" if event['challenge']['id'] in colors else "because the bot don't play this speed"))
+                if event['challenge']['id'] in colors:
+                    client.bots.post_message(event['challenge']['id'], "I don't aceppt rematches (lot of bugs)")
         elif event['type'] == 'gameStart':
             game = Game(client, event['game']['id'], colors[event['game']['id']])
             game.start()
