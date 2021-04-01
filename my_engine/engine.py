@@ -67,10 +67,14 @@ class EngineBase:
                     black_score += 5
                 if piece_map[piece].symbol().lower() == 'p' and piece in SECOND_ROW:
                     black_score += 20
-        if board.has_castling_rights(chess.WHITE):
-            white_score += 30
-        if board.has_castling_rights(chess.BLACK):
-            black_score += 30
+        if board.has_kingside_castling_rights(chess.WHITE):
+            white_score += 7
+        if board.has_kingside_castling_rights(chess.BLACK):
+            black_score += 7
+        if board.has_queenside_castling_rights(chess.WHITE):
+            white_score += 7
+        if board.has_queenside_castling_rights(chess.BLACK):
+            black_score += 7
         return white_score-black_score
 
     def search(self, depth, board):
@@ -136,21 +140,4 @@ class EngineBase:
                     value = evaluation
                     best_move = move
             return value, best_move
-        """depth = int(depth)
-        if depth == 1:
-            return self.evaluate(board)
-        else:
-            moves_to_get = list()
-            eval = -float("inf") if board.turn == chess.BLACK else float('inf')
-            for move in board.legal_moves:
-                printi("move", move)
-                test = chess.Board(fen=board.fen())
-                moves_to_get.append(move)
-                test.push(move)
-                print(test)
-                score = self.evaluate(test)
-                if board.turn == chess.WHITE:
-                    eval = max(score, eval)
-                else:
-                    eval = min(score, eval)
-            return eval"""
+
