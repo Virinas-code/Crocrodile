@@ -38,6 +38,10 @@ def csv_to_array(csv_path):
     return r
 
 def array_to_csv(array, csv_path):
+    with open(csv_path, 'w') as file:
+        writer = csv.writer(file)
+        writer.writerows(array)
+        file.close()
     return 0
 
 class EngineBase:
