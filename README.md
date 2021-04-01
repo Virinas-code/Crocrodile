@@ -1,5 +1,4 @@
 # Crocrodile
-__________
 Lichess BOT engine.
 Uses berserk.
 ## Features
