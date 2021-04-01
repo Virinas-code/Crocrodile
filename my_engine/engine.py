@@ -9,6 +9,7 @@ import chess
 import chess.polyglot
 import requests
 import copy
+import csv
 
 PAWN_VALUE = 100
 KNIGHT_VALUE = 290
@@ -28,6 +29,16 @@ def printi(*args):
     """Debug mode printer."""
     print("info string", args)
 
+def csv_to_array(csv_path):
+    r = []
+    with open(csv_path) as file:
+        reader = csv.reader(file, quoting=csv.QUOTE_NONNUMERIC)
+        for row in reader:
+            r.append(row)
+    return r
+
+def array_to_csv(array, csv_path):
+    return 0
 
 class EngineBase:
     """Engine base."""
