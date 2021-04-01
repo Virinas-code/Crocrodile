@@ -35,6 +35,7 @@ class Game(threading.Thread):
             self.my_turn = chess.BLACK
         if self.my_turn != chess.WHITE:
             self.game_state_change({'status':'started', 'moves':'0000 0000', 'btime':datetime.datetime(1970, 1, 1, 12)})
+        lok("Game", self.game_id, "start")
     def run(self):
         for event in self.stream:
             if event['type'] == 'gameState':
@@ -91,7 +92,7 @@ while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
         if event['type'] == 'challenge':
-            if event['challenge']['speed'] in SPEEDS:
+            if event['challenge']['speed'] in SPEEDS and not event['challenge']['id'] in colors:
                 client.bots.accept_challenge(event['challenge']['id'])
                 colors[event['challenge']['id']] = event['challenge']['color']
             else:
