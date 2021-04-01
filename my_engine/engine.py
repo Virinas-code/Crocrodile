@@ -7,8 +7,8 @@ Base engine
 from __future__ import print_function
 import chess
 import chess.polyglot
-import requests
-import copy
+# import requests
+# import copy
 import csv
 
 PAWN_VALUE = 100
@@ -90,6 +90,12 @@ class EngineBase:
             white_score += 7
         if board.has_queenside_castling_rights(chess.BLACK):
             black_score += 7
+        if board.peek().uci() in ['e1g1', 'e1c1']:
+            white_score += 101
+            print("white castle !")
+        if board.peek().uci() in ['e8g8', 'e8c8']:
+            black_score += 101
+            print("black castle !")
         return white_score-black_score
 
     def search(self, depth, board):
