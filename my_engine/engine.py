@@ -23,7 +23,7 @@ CENTRAL_SQUARES = [36, 35, 28, 27]
 ELARGED_SQUARES = [45, 44, 43, 42, 37, 34, 29, 26, 21, 20, 19, 18]
 SEVENTH_ROW = [55, 54, 53, 52, 51, 50, 49, 48]
 SECOND_ROW = [15, 14, 13, 12, 11, 10, 9, 8]
-
+VARIANTS = ['standard', 'chess960']
 
 def printi(*args):
     """Debug mode printer."""
@@ -90,12 +90,12 @@ class EngineBase:
             white_score += 7
         if board.has_queenside_castling_rights(chess.BLACK):
             black_score += 7
-        if board.peek().uci() in ['e1g1', 'e1c1']:
-            white_score += 101
-            print("white castle !")
-        if board.peek().uci() in ['e8g8', 'e8c8']:
-            black_score += 101
-            print("black castle !")
+        # if board.peek().uci() in ['e1g1', 'e1c1']:
+            # white_score += 101
+            # print("white castle !")
+        # if board.peek().uci() in ['e8g8', 'e8c8']:
+            # black_score += 101
+            # print("black castle !")
         return white_score-black_score
 
     def search(self, depth, board):
@@ -143,6 +143,12 @@ class EngineBase:
                 e = chess.Board(fen=board.fen())
                 e.push(move)
                 evaluation = self.minimax(e, depth-1, False, True)[0]
+                if move.uci() in ['e1g1', 'e1c1']:
+                    evaluation += 11
+                    # print('castle')
+                if move.uci() in ['e8g8', 'e8c8']:
+                    evaluation -= 11
+                    # print('castle')
                 if value < evaluation:
                     value = evaluation
                     best_move = move
@@ -157,6 +163,12 @@ class EngineBase:
                 e = chess.Board(fen=board.fen())
                 e.push(move)
                 evaluation = self.minimax(e, depth-1, True, True)[0]
+                if move.uci() in ['e1g1', 'e1c1']:
+                    evaluation += 11
+                    #print('castle')
+                if move.uci() in ['e8g8', 'e8c8']:
+                    evaluation -= 11
+                    # print('castle')
                 if value > evaluation:
                     value = evaluation
                     best_move = move
