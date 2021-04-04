@@ -86,9 +86,10 @@ def csv_to_array(csv_path):
     return r
 
 def array_to_csv(array, csv_path):
-    with open(csv_path, 'w') as file:
+    with open(csv_path, 'w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerows(array)
+        for row in array:
+            writer.writerow(row)
         file.close()
     return 0
 
