@@ -11,6 +11,7 @@ yukoo = my_engine.EngineBase("Yukoo", "Virinas-code")
 print(yukoo)
 
 SPEEDS = ['classical', 'correspondence']
+VARIANTS = ['standard']
 
 colorama.init()
 def lok(*args):
@@ -33,7 +34,7 @@ class Game(threading.Thread):
             self.my_turn = chess.WHITE
         else:
             self.my_turn = chess.BLACK
-        if self.my_turn == chess.WHITE:
+        if self.my_turn != chess.WHITE:
             self.game_state_change({'status':'started', 'moves':'0000 0000', 'btime':datetime.datetime(1970, 1, 1, 12)})
         lok("Game", self.game_id, "start")
     def run(self):
@@ -52,16 +53,16 @@ class Game(threading.Thread):
                 board.push(chess.Move.from_uci(move))
             ldebug("\n" + str(board))
             if board.turn != self.my_turn:
-                lok("Calculating...")
+                lok("Game", self.game_id, ": Calculating...")
                 t = event['btime'].time()
                 time = (t.hour *60 + t.minute) *60 + t.second
-                lok("Time", time)
+                lok("Game", self.game_id, ": time", time)
                 if time > 120 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1:
                     score, best_move = yukoo.minimax(board, 3, board.turn, False)
                 else:
                     score, best_move = yukoo.minimax(board, 2, board.turn, False)
-                lok("Best move", best_move)
-                lok("Score", score)
+                lok("Game", self.game_id, ": best move", best_move)
+                lok("Game", self.game_id, ": score", score)
                 retry = 3
                 while retry > 0:
                     try:
@@ -94,7 +95,7 @@ while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
         if event['type'] == 'challenge':
-            if event['challenge']['speed'] in SPEEDS and not event['challenge']['id'] in colors and event['challenge']['color'] != 'random':
+            if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors and event['challenge']['color'] != 'random':
                 client.bots.accept_challenge(event['challenge']['id'])
                 colors[event['challenge']['id']] = event['challenge']['color']
             else:

@@ -23,11 +23,59 @@ CENTRAL_SQUARES = [36, 35, 28, 27]
 ELARGED_SQUARES = [45, 44, 43, 42, 37, 34, 29, 26, 21, 20, 19, 18]
 SEVENTH_ROW = [55, 54, 53, 52, 51, 50, 49, 48]
 SECOND_ROW = [15, 14, 13, 12, 11, 10, 9, 8]
+VARIANTS = ['standard', 'chess960']
 
+def normalisation(val):
+    if val < -1:
+        return -1
+    elif val > 1:
+        return 1
+    else:
+        return val
 
 def printi(*args):
     """Debug mode printer."""
     print("info string", args)
+
+def nn_opening_white_check_move(fen, move): # Move is UCI str
+    board = chess.Board(fen=fen)
+    pieces = board.piece_map()
+    INPUTS_VALUES = {'': 0, 'P': 0.1, 'N': 0.2, 'B': 0.3, 'R': 0.5, 'Q': 0.6, 'K': 0.7, 'p': -0.1, 'n': -0.2, 'b': -0.3, 'r': -0.5, 'q': -0.6, 'k': -0.7}
+    inputs = []
+    for a in range(64):
+        if pieces.get(a, None):
+            inputs.append(INPUTS_VALUES.get(pieces[a].symbol(), 0))
+        else:
+            inputs.append(0)
+    if board.has_kingside_castling_rights(chess.WHITE):
+        inputs.append(1)
+    else:
+        inputs.append(0)
+    if board.has_queenside_castling_rights(chess.WHITE):
+        inputs.append(1)
+    else:
+        inputs.append(0)
+    if board.has_kingside_castling_rights(chess.BLACK):
+        inputs.append(1)
+    else:
+        inputs.append(0)
+    if board.has_queenside_castling_rights(chess.BLACK):
+        inputs.append(1)
+    else:
+        inputs.append(0)
+    if board.has_legal_en_passant():
+        inputs.append(chess.square_file(board.ep_square) / 10)
+    else:
+        inputs.append(-1)
+    move = chess.Move.from_uci(move)
+    from_square = move.from_square
+    inputs.append(chess.square_file(from_square) / 10)
+    inputs.append(chess.square_rank(from_square) / 10)
+    to_square = move.to_square
+    inputs.append(chess.square_file(to_square) / 10)
+    inputs.append(chess.square_rank(to_square) / 10)
+    inputs.append(1)
+    print("Inputs :", inputs)
 
 def csv_to_array(csv_path):
     r = []
@@ -90,12 +138,12 @@ class EngineBase:
             white_score += 7
         if board.has_queenside_castling_rights(chess.BLACK):
             black_score += 7
-        if board.peek().uci() in ['e1g1', 'e1c1']:
-            white_score += 101
-            print("white castle !")
-        if board.peek().uci() in ['e8g8', 'e8c8']:
-            black_score += 101
-            print("black castle !")
+        # if board.peek().uci() in ['e1g1', 'e1c1']:
+            # white_score += 101
+            # print("white castle !")
+        # if board.peek().uci() in ['e8g8', 'e8c8']:
+            # black_score += 101
+            # print("black castle !")
         return white_score-black_score
 
     def search(self, depth, board):
@@ -143,6 +191,12 @@ class EngineBase:
                 e = chess.Board(fen=board.fen())
                 e.push(move)
                 evaluation = self.minimax(e, depth-1, False, True)[0]
+                if move.uci() in ['e1g1', 'e1c1']:
+                    evaluation += 11
+                    # print('castle')
+                if move.uci() in ['e8g8', 'e8c8']:
+                    evaluation -= 11
+                    # print('castle')
                 if value < evaluation:
                     value = evaluation
                     best_move = move
@@ -157,6 +211,12 @@ class EngineBase:
                 e = chess.Board(fen=board.fen())
                 e.push(move)
                 evaluation = self.minimax(e, depth-1, True, True)[0]
+                if move.uci() in ['e1g1', 'e1c1']:
+                    evaluation += 11
+                    #print('castle')
+                if move.uci() in ['e8g8', 'e8c8']:
+                    evaluation -= 11
+                    # print('castle')
                 if value > evaluation:
                     value = evaluation
                     best_move = move
