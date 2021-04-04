@@ -103,3 +103,62 @@ def nn_opening_white_check_move(fen, move): # Move is UCI str
     # print("Output :", output)
     return output
 
+def train():
+    with open("my_engine/training_boncoups_ouverture_blancs.txt") as file:
+        file1 = file.read()
+        file.close()
+    with open("my_engine/training_mauvaiscoups_ouverture_blancs.txt") as file:
+        file2 = file.read()
+        file.close()
+    file1 = file1.split("\n\n")[1:]
+    file2 = file2.split("\n\n")[1:]
+    l = len(file1) + len(file2)
+    print("==== CHECKING ====")
+    errs = 0
+    good = 0
+    for inputs in file1:
+        pos = inputs.split("\n")[0]
+        mve = inputs.split("\n")[1]
+        res = nn_opening_white_check_move(pos, mve)
+        if res == 1:
+           good += 1
+        else:
+            errs += 1
+    for inputs in file2:
+        pos = inputs.split("\n")[0]
+        mve = inputs.split("\n")[1]
+        res = nn_opening_white_check_move(pos, mve)
+        if res == -1:
+            good += 1
+        else:
+            errs += 1
+    print("Errors : {0}/{1} tests".format(errs, l))
+    print("Good moves : {0}/{1} tests".format(good, l))
+    print("==== TRAINING ====")
+    results = []
+    for a in range(len(wa)):
+        results.append(list())
+        for b in range(len(wa[0])):
+            wa[a][b] += 0.1
+            errs = 0
+            good = 0
+            for inputs in file1:
+                pos = inputs.split("\n")[0]
+                mve = inputs.split("\n")[1]
+                res = nn_opening_white_check_move(pos, mve)
+                if res == 1:
+                    good += 1
+                else:
+                    errs += 1
+            for inputs in file2:
+                pos = inputs.split("\n")[0]
+                mve = inputs.split("\n")[1]
+                res = nn_opening_white_check_move(pos, mve)
+                if res == -1:
+                    good += 1
+                else:
+                    errs += 1
+            print("Training WA[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
+            results[a].append(errs)
+            wa[a][b] -= 0.1
+    return results
