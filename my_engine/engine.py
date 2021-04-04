@@ -25,6 +25,14 @@ SEVENTH_ROW = [55, 54, 53, 52, 51, 50, 49, 48]
 SECOND_ROW = [15, 14, 13, 12, 11, 10, 9, 8]
 VARIANTS = ['standard', 'chess960']
 
+def normalisation(val):
+    if val < -1:
+        return -1
+    elif val > 1:
+        return 1
+    else:
+        return val
+
 def printi(*args):
     """Debug mode printer."""
     print("info string", args)
