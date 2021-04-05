@@ -1,5 +1,6 @@
 import chess
 import csv
+import copy
 
 def csv_to_array(csv_path):
     r = []
@@ -133,13 +134,14 @@ def train():
         else:
             errs += 1
     print("Errors : {0}/{1} tests".format(errs, l))
+    default = copy.copy(errs)
     print("Good moves : {0}/{1} tests".format(good, l))
     print("==== TRAINING ====")
     results = []
-    for a in range(len(wa)):
+    for a in range(len(wb)):
         results.append(list())
-        for b in range(len(wa[0])):
-            wa[a][b] += 0.1
+        for b in range(len(wb[0])):
+            wb[a][b] += 0.1
             errs = 0
             good = 0
             for inputs in file1:
@@ -158,7 +160,12 @@ def train():
                     good += 1
                 else:
                     errs += 1
-            print("Training WA[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
+            print("Training WB[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
             results[a].append(errs)
-            wa[a][b] -= 0.1
+            wb[a][b] -= 0.1
+    print("==== RESULTS ====")
+    for a in range(len(results)):
+        for b in range(len(results[0])):
+            if results[a][b] < default:
+                print("Training WB[{0}][{1}] : {2}".format(a, b, results[a][b]))
     return results
