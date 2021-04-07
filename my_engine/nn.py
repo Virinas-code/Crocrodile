@@ -18,7 +18,7 @@ def array_to_csv(array, csv_path):
         file.close()
     return 0
 
-print("Loading weights...", end=" ")
+print("Loading weights...")
 wa = csv_to_array("wa.csv")
 wb = csv_to_array("wb.csv")
 wc = csv_to_array("wc.csv")
@@ -136,36 +136,244 @@ def train():
     print("Errors : {0}/{1} tests".format(errs, l))
     default = copy.copy(errs)
     print("Good moves : {0}/{1} tests".format(good, l))
-    print("==== TRAINING ====")
-    results = []
-    for a in range(len(wb)):
-        results.append(list())
-        for b in range(len(wb[0])):
-            wb[a][b] += 0.1
-            errs = 0
-            good = 0
-            for inputs in file1:
-                pos = inputs.split("\n")[0]
-                mve = inputs.split("\n")[1]
-                res = nn_opening_white_check_move(pos, mve)
-                if res == 1:
-                    good += 1
-                else:
-                    errs += 1
-            for inputs in file2:
-                pos = inputs.split("\n")[0]
-                mve = inputs.split("\n")[1]
-                res = nn_opening_white_check_move(pos, mve)
-                if res == -1:
-                    good += 1
-                else:
-                    errs += 1
-            print("Training WB[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
-            results[a].append(errs)
-            wb[a][b] -= 0.1
-    print("==== RESULTS ====")
-    for a in range(len(results)):
-        for b in range(len(results[0])):
-            if results[a][b] < default:
-                print("Training WB[{0}][{1}] : {2}".format(a, b, results[a][b]))
-    return results
+    sessions = 1
+    while errs > 32:
+        print("==== TRAINING #{0} ====".format(sessions))
+        results = []
+        print("---- WC TRAINING ----")
+        for a in range(len(wc)):
+            results.append(list())
+            for b in range(len(wc[0])):
+                r = []
+                wc[a][b] += 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WC[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
+                r.append(errs)
+                wc[a][b] -= 0.1
+                wc[a][b] -= 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WC[{0}][{1}] - 0.1 : {2} errors".format(a, b, errs))
+                r.append(errs)
+                results[a].append(r)
+                wc[a][b] -= 0.1
+        print("#### Updating neural network... ####")
+        mini = float('inf')
+        index = (0, 0)
+        for a in range(len(results)):
+            for b in range(len(results[0])):
+                if results[a][b][0] < mini:
+                    mini = results[a][b][0]
+                    wc[index[0]][index[1]] -= 0.1
+                    index = (a, b)
+                    wc[a][b] += 0.1
+                if results[a][b][1] < mini:
+                    mini = results[a][b][0]
+                    wc[index[0]][index[1]] += 0.1
+                    index = (a, b)
+                    wc[a][b] -= 0.1
+        print("Minimum  : {0}".format(mini))
+        print("Index : {0}".format(index))
+        print("Saving...")
+        array_to_csv(wc, "wc.csv")
+        print("Saved to wc.csv")
+        print("####################################")
+        print("---- WB TRAINING ----")
+        for a in range(1): # len(wb)
+            results.append(list())
+            for b in range(2): # len(wb[0])
+                r = []
+                wb[a][b] += 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WB[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
+                r.append(errs)
+                wb[a][b] -= 0.1
+                wb[a][b] -= 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WB[{0}][{1}] - 0.1 : {2} errors".format(a, b, errs))
+                r.append(errs)
+                results[a].append(r)
+                wb[a][b] -= 0.1
+        print(results)
+        print("#### Updating neural network... ####")
+        mini = float('inf')
+        index = (0, 0)
+        for a in range(len(results)):
+            for b in range(len(results[0])):
+                if results[a][b][0] < mini:
+                    mini = results[a][b][0]
+                    wb[index[0]][index[1]] -= 0.1
+                    index = (a, b)
+                    wb[a][b] += 0.1
+                if results[a][b][1] < mini:
+                    mini = results[a][b][0]
+                    wb[index[0]][index[1]] += 0.1
+                    index = (a, b)
+                    wb[a][b] -= 0.1
+        print("Minimum  : {0}".format(mini))
+        print("Index : {0}".format(index))
+        print("Saving...")
+        array_to_csv(wb, "wb.csv")
+        print("Saved to wb.csv")
+        print("####################################")
+        print("---- WA TRAINING ----")
+        for a in range(len(wa)):
+            results.append(list())
+            for b in range(len(wa[0])):
+                r = []
+                wa[a][b] += 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WA[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
+                r.append(errs)
+                wa[a][b] -= 0.1
+                wa[a][b] -= 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WA[{0}][{1}] - 0.1 : {2} errors".format(a, b, errs))
+                r.append(errs)
+                results[a].append(r)
+                wa[a][b] -= 0.1
+        print("#### Updating neural network... ####")
+        mini = float('inf')
+        index = (0, 0)
+        for a in range(len(results)):
+            for b in range(len(results[0])):
+                if results[a][b][0] < mini:
+                    mini = results[a][b][0]
+                    wa[index[0]][index[1]] -= 0.1
+                    index = (a, b)
+                    wa[a][b] += 0.1
+                if results[a][b][1] < mini:
+                    mini = results[a][b][0]
+                    wa[index[0]][index[1]] += 0.1
+                    index = (a, b)
+                    wa[a][b] -= 0.1
+        print("Minimum  : {0}".format(mini))
+        print("Index : {0}".format(index))
+        print("Saving...")
+        array_to_csv(wa, "wa.csv")
+        print("Saved to wa.csv")
+        print("####################################")
+        print("==== RESULTS ====")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
+        # return results
