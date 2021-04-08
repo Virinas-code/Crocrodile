@@ -197,24 +197,49 @@ def train():
             for b in range(len(results[0])):
                 if results[a][b][0] < mini:
                     mini = results[a][b][0]
-                    wc[index[0]][index[1]] -= 0.1
                     index = (a, b)
-                    wc[a][b] += 0.1
+                    sign = True
                 if results[a][b][1] < mini:
                     mini = results[a][b][0]
-                    wc[index[0]][index[1]] += 0.1
                     index = (a, b)
-                    wc[a][b] -= 0.1
+                    sign = False
+        if sign:
+            wc[index[0]][index[1]] += 0.1
+        else:
+            wc[index[0]][index[1]] -= 0.1
         print("Minimum  : {0}".format(mini))
         print("Index : {0}".format(index))
         print("Saving...")
         array_to_csv(wc, "wc.csv")
         print("Saved to wc.csv")
         print("####################################")
+        print("---- RESULTS ----")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
         print("---- WB TRAINING ----")
-        for a in range(1): # len(wb)
+        results = []
+        for a in range(len(wb)): # 
             results.append(list())
-            for b in range(2): # len(wb[0])
+            for b in range(len(wb[0])): # 
                 r = []
                 wb[a][b] += 0.1
                 errs = 0
@@ -261,7 +286,6 @@ def train():
                 r.append(errs)
                 results[a].append(r)
                 wb[a][b] -= 0.1
-        print(results)
         print("#### Updating neural network... ####")
         mini = float('inf')
         index = (0, 0)
@@ -269,21 +293,46 @@ def train():
             for b in range(len(results[0])):
                 if results[a][b][0] < mini:
                     mini = results[a][b][0]
-                    wb[index[0]][index[1]] -= 0.1
                     index = (a, b)
-                    wb[a][b] += 0.1
+                    sign = True
                 if results[a][b][1] < mini:
                     mini = results[a][b][0]
-                    wb[index[0]][index[1]] += 0.1
                     index = (a, b)
-                    wb[a][b] -= 0.1
+                    sign = False
+        if sign:
+            wb[index[0]][index[1]] += 0.1
+        else:
+            wb[index[0]][index[1]] -= 0.1
         print("Minimum  : {0}".format(mini))
         print("Index : {0}".format(index))
         print("Saving...")
         array_to_csv(wb, "wb.csv")
         print("Saved to wb.csv")
         print("####################################")
+        print("---- RESULTS ----")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
         print("---- WA TRAINING ----")
+        results = []
         for a in range(len(wa)):
             results.append(list())
             for b in range(len(wa[0])):
@@ -340,20 +389,44 @@ def train():
             for b in range(len(results[0])):
                 if results[a][b][0] < mini:
                     mini = results[a][b][0]
-                    wa[index[0]][index[1]] -= 0.1
                     index = (a, b)
-                    wa[a][b] += 0.1
+                    sign = True
                 if results[a][b][1] < mini:
                     mini = results[a][b][0]
-                    wa[index[0]][index[1]] += 0.1
                     index = (a, b)
-                    wa[a][b] -= 0.1
+                    sign = False
+        if sign:
+            wa[index[0]][index[1]] += 0.1
+        else:
+            wa[index[0]][index[1]] -= 0.1
         print("Minimum  : {0}".format(mini))
         print("Index : {0}".format(index))
         print("Saving...")
         array_to_csv(wa, "wa.csv")
         print("Saved to wa.csv")
         print("####################################")
+        print("---- RESULTS ----")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
         print("==== RESULTS ====")
         errs = 0
         good = 0
