@@ -386,7 +386,7 @@ def train():
         print("---- WA TRAINING ----")
         best = -1
         best_score = float('inf')
-        rand = (random.randint(0, 37), 0)
+        rand = (random.randint(0, 73), random.randint(0, 37))
         errs = 0
         good = 0
         for inputs in file1:
