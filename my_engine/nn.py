@@ -136,15 +136,14 @@ def train():
     print("Errors : {0}/{1} tests".format(errs, l))
     default = copy.copy(errs)
     print("Good moves : {0}/{1} tests".format(good, l))
-    sessions = 1
-    while errs > 32:
+    sessions = 1  # inintialise le nombre de sessions d'optimisation
+    while errs > l/10:  # on veut atteindre un taux d'erreur inférieur à 10%
         print("==== TRAINING #{0} ====".format(sessions))
-        results = []
         print("---- WC TRAINING ----")
+        index = (0,0)
+        mini = float('inf')
         for a in range(len(wc)):
-            results.append(list())
             for b in range(len(wc[0])):
-                r = []
                 wc[a][b] += 0.1
                 errs = 0
                 good = 0
@@ -165,7 +164,10 @@ def train():
                     else:
                         errs += 1
                 print("Training WC[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
-                r.append(errs)
+                if errs < mini:
+                    index = (a, b)
+                    mini = errs
+                    sign = True
                 wc[a][b] -= 0.1
                 wc[a][b] -= 0.1
                 errs = 0
@@ -187,22 +189,12 @@ def train():
                     else:
                         errs += 1
                 print("Training WC[{0}][{1}] - 0.1 : {2} errors".format(a, b, errs))
-                r.append(errs)
-                results[a].append(r)
-                wc[a][b] -= 0.1
-        print("#### Updating neural network... ####")
-        mini = float('inf')
-        index = (0, 0)
-        for a in range(len(results)):
-            for b in range(len(results[0])):
-                if results[a][b][0] < mini:
-                    mini = results[a][b][0]
+                if errs < mini:
                     index = (a, b)
-                    sign = True
-                if results[a][b][1] < mini:
-                    mini = results[a][b][0]
-                    index = (a, b)
+                    mini = errs
                     sign = False
+                wc[a][b] += 0.1
+        print("#### Updating neural network... ####")
         if sign:
             wc[index[0]][index[1]] += 0.1
         else:
@@ -235,12 +227,12 @@ def train():
         print("Errors : {0}/{1} tests".format(errs, l))
         default = copy.copy(errs)
         print("Good moves : {0}/{1} tests".format(good, l))
+        print("==== TRAINING #{0} ====".format(sessions))
         print("---- WB TRAINING ----")
-        results = []
-        for a in range(len(wb)): # 
-            results.append(list())
-            for b in range(len(wb[0])): # 
-                r = []
+        index = (0,0)
+        mini = float('inf')
+        for a in range(len(wb)):
+            for b in range(len(wb[0])):
                 wb[a][b] += 0.1
                 errs = 0
                 good = 0
@@ -261,7 +253,10 @@ def train():
                     else:
                         errs += 1
                 print("Training WB[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
-                r.append(errs)
+                if errs < mini:
+                    index = (a, b)
+                    mini = errs
+                    sign = True
                 wb[a][b] -= 0.1
                 wb[a][b] -= 0.1
                 errs = 0
@@ -283,22 +278,12 @@ def train():
                     else:
                         errs += 1
                 print("Training WB[{0}][{1}] - 0.1 : {2} errors".format(a, b, errs))
-                r.append(errs)
-                results[a].append(r)
-                wb[a][b] -= 0.1
-        print("#### Updating neural network... ####")
-        mini = float('inf')
-        index = (0, 0)
-        for a in range(len(results)):
-            for b in range(len(results[0])):
-                if results[a][b][0] < mini:
-                    mini = results[a][b][0]
+                if errs < mini:
                     index = (a, b)
-                    sign = True
-                if results[a][b][1] < mini:
-                    mini = results[a][b][0]
-                    index = (a, b)
+                    mini = errs
                     sign = False
+                wb[a][b] += 0.1
+        print("#### Updating neural network... ####")
         if sign:
             wb[index[0]][index[1]] += 0.1
         else:
@@ -331,12 +316,12 @@ def train():
         print("Errors : {0}/{1} tests".format(errs, l))
         default = copy.copy(errs)
         print("Good moves : {0}/{1} tests".format(good, l))
+        print("==== TRAINING #{0} ====".format(sessions))
         print("---- WA TRAINING ----")
-        results = []
+        index = (0,0)
+        mini = float('inf')
         for a in range(len(wa)):
-            results.append(list())
             for b in range(len(wa[0])):
-                r = []
                 wa[a][b] += 0.1
                 errs = 0
                 good = 0
@@ -357,7 +342,10 @@ def train():
                     else:
                         errs += 1
                 print("Training WA[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
-                r.append(errs)
+                if errs < mini:
+                    index = (a, b)
+                    mini = errs
+                    sign = True
                 wa[a][b] -= 0.1
                 wa[a][b] -= 0.1
                 errs = 0
@@ -379,22 +367,12 @@ def train():
                     else:
                         errs += 1
                 print("Training WA[{0}][{1}] - 0.1 : {2} errors".format(a, b, errs))
-                r.append(errs)
-                results[a].append(r)
-                wa[a][b] -= 0.1
-        print("#### Updating neural network... ####")
-        mini = float('inf')
-        index = (0, 0)
-        for a in range(len(results)):
-            for b in range(len(results[0])):
-                if results[a][b][0] < mini:
-                    mini = results[a][b][0]
+                if errs < mini:
                     index = (a, b)
-                    sign = True
-                if results[a][b][1] < mini:
-                    mini = results[a][b][0]
-                    index = (a, b)
+                    mini = errs
                     sign = False
+                wa[a][b] += 0.1
+        print("#### Updating neural network... ####")
         if sign:
             wa[index[0]][index[1]] += 0.1
         else:
