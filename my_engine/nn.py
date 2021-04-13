@@ -112,8 +112,8 @@ def train():
     with open("my_engine/training_mauvaiscoups_ouverture_blancs.txt") as file:
         file2 = file.read()
         file.close()
-    file1 = file1.split("\n\n")[1:]
-    file2 = file2.split("\n\n")[1:]
+    file1 = file1.split("\n\n")
+    file2 = file2.split("\n\n")
     l = len(file1) + len(file2)
     print("==== CHECKING ====")
     errs = 0
@@ -139,6 +139,7 @@ def train():
     print("Good moves : {0}/{1} tests".format(good, l))
     sessions = 1  # inintialise le nombre de sessions d'optimisation
     loops = int(input("Nombre de répétitions : "))
+    add = float(input("Valeur à ajouter : "))
     for loop in range(loops):
         print("==== TRAINING #{0} ====".format(loop))
         print("---- WC TRAINING ----")
@@ -167,10 +168,7 @@ def train():
         if errs < best_score:
             best = 0
             best_score = errs
-        if errs == best_score and random.randint(0, 2) == 1:
-            best = 0
-            best_score = errs
-        wc[rand[0]][rand[1]] += 0.1
+        wc[rand[0]][rand[1]] += add
         errs = 0
         good = 0
         for inputs in file1:
@@ -189,15 +187,12 @@ def train():
                 good += 1
             else:
                 errs += 1
-        print("Training WC[{0}][{1}] + 0.1 : {2} errors".format(rand[0], rand[1], errs))
+        print("Training WC[{0}][{1}] + add : {2} errors".format(rand[0], rand[1], errs))
         if errs < best_score:
             best = 1
             best_score = errs
-        if errs == best_score and random.randint(0, 2) == 1:
-            best = 1
-            best_score = errs
-        wc[rand[0]][rand[1]] -= 0.1
-        wc[rand[0]][rand[1]] -= 0.1
+        wc[rand[0]][rand[1]] -= add
+        wc[rand[0]][rand[1]] -= add
         errs = 0
         good = 0
         for inputs in file1:
@@ -216,29 +211,26 @@ def train():
                 good += 1
             else:
                 errs += 1
-        print("Training WC[{0}][{1}] - 0.1 : {2} errors".format(rand[0], rand[1], errs))
+        print("Training WC[{0}][{1}] - add : {2} errors".format(rand[0], rand[1], errs))
         if errs < best_score:
             best = 2
             best_score = errs
-        if errs == best_score and random.randint(0, 2) == 1:
-            best = 2
-            best_score = errs
-        wc[rand[0]][rand[1]] += 0.1
+        wc[rand[0]][rand[1]] += add
         print("#### Updating neural network... ####")
         if best == 0:
             pass  # Il ne faut rien faire...
         elif best == 1:
-            wc[rand[0]][rand[1]] += 0.1
+            wc[rand[0]][rand[1]] += add
         else:
-            wc[rand[0]][rand[1]] -= 0.1
+            wc[rand[0]][rand[1]] -= add
         print("Minimum  : {0}".format(best_score))
         print("Index : {0}".format(rand))
         if best == 0:
             print("Modification : Nothing")
         elif best == 1:
-            print("Modification : + 0.1")
+            print("Modification : + add")
         else:
-            print("Modification : - 0.1")
+            print("Modification : - add")
         print("####################################")
         print("---- RESULTS ----")
         errs = 0
@@ -288,10 +280,7 @@ def train():
         if errs < best_score:
             best = 0
             best_score = errs
-        if errs == best_score and random.randint(0, 2) == 1:
-            best = 0
-            best_score = errs
-        wb[rand[0]][rand[1]] += 0.1
+        wb[rand[0]][rand[1]] += add
         errs = 0
         good = 0
         for inputs in file1:
@@ -310,15 +299,12 @@ def train():
                 good += 1
             else:
                 errs += 1
-        print("Training WB[{0}][{1}] + 0.1 : {2} errors".format(rand[0], rand[1], errs))
+        print("Training WB[{0}][{1}] + add : {2} errors".format(rand[0], rand[1], errs))
         if errs < best_score:
             best = 1
             best_score = errs
-        if errs == best_score and random.randint(0, 2) == 1:
-            best = 1
-            best_score = errs
-        wb[rand[0]][rand[1]] -= 0.1
-        wb[rand[0]][rand[1]] -= 0.1
+        wb[rand[0]][rand[1]] -= add
+        wb[rand[0]][rand[1]] -= add
         errs = 0
         good = 0
         for inputs in file1:
@@ -337,29 +323,26 @@ def train():
                 good += 1
             else:
                 errs += 1
-        print("Training WB[{0}][{1}] - 0.1 : {2} errors".format(rand[0], rand[1], errs))
+        print("Training WB[{0}][{1}] - add : {2} errors".format(rand[0], rand[1], errs))
         if errs < best_score:
             best = 2
             best_score = errs
-        if errs == best_score and random.randint(0, 2) == 1:
-            best = 2
-            best_score = errs
-        wb[rand[0]][rand[1]] += 0.1
+        wb[rand[0]][rand[1]] += add
         print("#### Updating neural network... ####")
         if best == 0:
             pass  # Il ne faut rien faire...
         elif best == 1:
-            wb[rand[0]][rand[1]] += 0.1
+            wb[rand[0]][rand[1]] += add
         else:
-            wb[rand[0]][rand[1]] -= 0.1
+            wb[rand[0]][rand[1]] -= add
         print("Minimum  : {0}".format(best_score))
         print("Index : {0}".format(rand))
         if best == 0:
             print("Modification : Nothing")
         elif best == 1:
-            print("Modification : + 0.1")
+            print("Modification : + add")
         else:
-            print("Modification : - 0.1")
+            print("Modification : - add")
         print("####################################")
         print("---- RESULTS ----")
         errs = 0
@@ -409,10 +392,7 @@ def train():
         if errs < best_score:
             best = 0
             best_score = errs
-        if errs == best_score and random.randint(0, 2) == 1:
-            best = 0
-            best_score = errs
-        wa[rand[0]][rand[1]] += 0.1
+        wa[rand[0]][rand[1]] += add
         errs = 0
         good = 0
         for inputs in file1:
@@ -431,15 +411,12 @@ def train():
                 good += 1
             else:
                 errs += 1
-        print("Training WA[{0}][{1}] + 0.1 : {2} errors".format(rand[0], rand[1], errs))
+        print("Training WA[{0}][{1}] + add : {2} errors".format(rand[0], rand[1], errs))
         if errs < best_score:
             best = 1
             best_score = errs
-        if errs == best_score and random.randint(0, 2) == 1:
-            best = 1
-            best_score = errs
-        wa[rand[0]][rand[1]] -= 0.1
-        wa[rand[0]][rand[1]] -= 0.1
+        wa[rand[0]][rand[1]] -= add
+        wa[rand[0]][rand[1]] -= add
         errs = 0
         good = 0
         for inputs in file1:
@@ -458,29 +435,26 @@ def train():
                 good += 1
             else:
                 errs += 1
-        print("Training WA[{0}][{1}] - 0.1 : {2} errors".format(rand[0], rand[1], errs))
+        print("Training WA[{0}][{1}] - add : {2} errors".format(rand[0], rand[1], errs))
         if errs < best_score:
             best = 2
             best_score = errs
-        if errs == best_score and random.randint(0, 2) == 1:
-            best = 2
-            best_score = errs
-        wa[rand[0]][rand[1]] += 0.1
+        wa[rand[0]][rand[1]] += add
         print("#### Updating neural network... ####")
         if best == 0:
             pass  # Il ne faut rien faire...
         elif best == 1:
-            wa[rand[0]][rand[1]] += 0.1
+            wa[rand[0]][rand[1]] += add
         else:
-            wa[rand[0]][rand[1]] -= 0.1
+            wa[rand[0]][rand[1]] -= add
         print("Minimum  : {0}".format(best_score))
         print("Index : {0}".format(rand))
         if best == 0:
             print("Modification : Nothing")
         elif best == 1:
-            print("Modification : + 0.1")
+            print("Modification : + add")
         else:
-            print("Modification : - 0.1")
+            print("Modification : - add")
         print("####################################")
         print("---- RESULTS ----")
         errs = 0
@@ -718,3 +692,660 @@ def train():
     array_to_csv(wa, "wa.csv")
     print("Saved to wa.csv")
 
+
+
+def systematic_train():
+    with open("my_engine/training_boncoups_ouverture_blancs.txt") as file:
+        file1 = file.read()
+        file.close()
+    with open("my_engine/training_mauvaiscoups_ouverture_blancs.txt") as file:
+        file2 = file.read()
+        file.close()
+    file1 = file1.split("\n\n")
+    file2 = file2.split("\n\n")
+    l = len(file1) + len(file2)
+    print("==== CHECKING ====")
+    errs = 0
+    good = 0
+    for inputs in file1:
+        pos = inputs.split("\n")[0]
+        mve = inputs.split("\n")[1]
+        res = nn_opening_white_check_move(pos, mve)
+        if res == 1:
+           good += 1
+        else:
+            errs += 1
+    for inputs in file2:
+        pos = inputs.split("\n")[0]
+        mve = inputs.split("\n")[1]
+        res = nn_opening_white_check_move(pos, mve)
+        if res == -1:
+            good += 1
+        else:
+            errs += 1
+    print("Errors : {0}/{1} tests".format(errs, l))
+    default = copy.copy(errs)
+    print("Good moves : {0}/{1} tests".format(good, l))
+    sessions = 0  # inintialise le nombre de sessions d'optimisation
+    add = float(input("Valeur à ajouter initiale : "))
+    min_add = float(input("Valeur limite pour add : "))
+    multi = float(input("Multiplier : "))
+    while add > min_add:
+        sessions += 1
+        print("==== TRAINING #{0} ====".format(sessions))
+        print("---- WC TRAINING ----")
+        best = -1
+        best_score = float('inf')
+        rand = (random.randint(0, 37), 0)
+        errs = 0
+        good = 0
+        for rand0 in range(len(wc)):
+            for rand1 in range(len(wc[0])):
+                print("Training WC[{0}][{1}]...".format(rand0, rand1), end="\r")
+                best = -1
+                best_score = float('inf')
+                errs = 0
+                good = 0
+                rand = (rand0, rand1)
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                # print("Training WC[{0}][{1}] : {2} errors".format(rand[0], rand[1], errs))
+                if errs < best_score:
+                    best = 0
+                    best_score = errs
+                wc[rand[0]][rand[1]] += add
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                # print("Training WC[{0}][{1}] + add : {2} errors".format(rand[0], rand[1], errs))
+                if errs < best_score:
+                    best = 1
+                    best_score = errs
+                wc[rand[0]][rand[1]] -= add
+                wc[rand[0]][rand[1]] -= add
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                # print("Training WC[{0}][{1}] - add : {2} errors".format(rand[0], rand[1], errs))
+                if errs < best_score:
+                    best = 2
+                    best_score = errs
+                wc[rand[0]][rand[1]] += add
+                # print("#### Updating neural network... ####")
+                if best == 0:
+                    pass  # Il ne faut rien faire...
+                elif best == 1:
+                    wc[rand[0]][rand[1]] += add
+                else:
+                    wc[rand[0]][rand[1]] -= add
+                # print("Minimum  : {0}".format(best_score))
+                # print("Index : {0}".format(rand))
+                """
+                if best == 0:
+                    # print("Modification : Nothing")
+                elif best == 1:
+                    # print("Modification : + add")
+                else:
+                    # print("Modification : - add")
+                """
+                # print("####################################")
+                if best_score == 0:
+                    print("Saving...")
+                    array_to_csv(wc, "wc.csv")
+                    print("Saved to wc.csv")
+                    print("Saving...")
+                    array_to_csv(wb, "wb.csv")
+                    print("Saved to wb.csv")
+                    print("Saving...")
+                    array_to_csv(wa, "wa.csv")
+                    print("Saved to wa.csv")
+                    exit(0)
+        print("---- RESULTS ----")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
+        print("---- WB TRAINING ----")
+        best = -1
+        best_score = float('inf')
+        rand = (random.randint(0, 37), 0)
+        errs = 0
+        good = 0
+        for rand0 in range(len(wb)):
+            for rand1 in range(len(wb[0])):
+                print("Training WB[{0}][{1}]...".format(rand0, rand1), end="\r")
+                best = -1
+                best_score = float('inf')
+                errs = 0
+                good = 0
+                rand = (rand0, rand1)
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                # print("Training WB[{0}][{1}] : {2} errors".format(rand[0], rand[1], errs))
+                if errs < best_score:
+                    best = 0
+                    best_score = errs
+                wb[rand[0]][rand[1]] += add
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                # print("Training WB[{0}][{1}] + add : {2} errors".format(rand[0], rand[1], errs))
+                if errs < best_score:
+                    best = 1
+                    best_score = errs
+                wb[rand[0]][rand[1]] -= add
+                wb[rand[0]][rand[1]] -= add
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                # print("Training WB[{0}][{1}] - add : {2} errors".format(rand[0], rand[1], errs))
+                if errs < best_score:
+                    best = 2
+                    best_score = errs
+                wb[rand[0]][rand[1]] += add
+                # print("#### Updating neural network... ####")
+                if best == 0:
+                    pass  # Il ne faut rien faire...
+                elif best == 1:
+                    wb[rand[0]][rand[1]] += add
+                else:
+                    wb[rand[0]][rand[1]] -= add
+                # print("Minimum  : {0}".format(best_score))
+                # print("Index : {0}".format(rand))
+                """
+                if best == 0:
+                    # print("Modification : Nothing")
+                elif best == 1:
+                    # print("Modification : + add")
+                else:
+                    # print("Modification : - add")
+                """
+                # print("####################################")
+                if best_score == 0:
+                    print("Saving...")
+                    array_to_csv(wc, "wc.csv")
+                    print("Saved to wc.csv")
+                    print("Saving...")
+                    array_to_csv(wb, "wb.csv")
+                    print("Saved to wb.csv")
+                    print("Saving...")
+                    array_to_csv(wa, "wa.csv")
+                    print("Saved to wa.csv")
+                    exit(0)
+        print("---- RESULTS ----")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
+        print("---- WA TRAINING ----")
+        best = -1
+        best_score = float('inf')
+        rand = (random.randint(0, 37), 0)
+        errs = 0
+        good = 0
+        for rand0 in range(len(wa)):
+            for rand1 in range(len(wa[0])):
+                print("Training WA[{0}][{1}]...".format(rand0, rand1), end="\r")
+                best = -1
+                best_score = float('inf')
+                errs = 0
+                good = 0
+                rand = (rand0, rand1)
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+##                print("Training WA[{0}][{1}] : {2} errors".format(rand[0], rand[1], errs))
+                if errs < best_score:
+                    best = 0
+                    best_score = errs
+                wa[rand[0]][rand[1]] += add
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+##                print("Training WA[{0}][{1}] + add : {2} errors".format(rand[0], rand[1], errs))
+                if errs < best_score:
+                    best = 1
+                    best_score = errs
+                wa[rand[0]][rand[1]] -= add
+                wa[rand[0]][rand[1]] -= add
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+##                print("Training WA[{0}][{1}] - add : {2} errors".format(rand[0], rand[1], errs))
+                if errs < best_score:
+                    best = 2
+                    best_score = errs
+                wa[rand[0]][rand[1]] += add
+##                print("#### Updating neural network... ####")
+                if best == 0:
+                    pass  # Il ne faut rien faire...
+                elif best == 1:
+                    wa[rand[0]][rand[1]] += add
+                else:
+                    wa[rand[0]][rand[1]] -= add
+##                print("Minimum  : {0}".format(best_score))
+##                print("Index : {0}".format(rand))
+                """
+                if best == 0:
+##                    print("Modification : Nothing")
+                elif best == 1:
+##                    print("Modification : + add")
+                else:
+##                    print("Modification : - add")
+##                print("####################################")
+                """
+                if best_score == 0:
+                    print("Saving...")
+                    array_to_csv(wc, "wc.csv")
+                    print("Saved to wc.csv")
+                    print("Saving...")
+                    array_to_csv(wb, "wb.csv")
+                    print("Saved to wb.csv")
+                    print("Saving...")
+                    array_to_csv(wa, "wa.csv")
+                    print("Saved to wa.csv")
+                    exit(0)
+        print("---- RESULTS ----")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
+        print("Updating loop system...")
+        add = add * multi
+        print("New add value :", add)
+        """
+        print("==== TRAINING #{0} ====".format(sessions))
+        print("---- WB TRAINING ----")
+        index = (0,0)
+        mini = float('inf')
+        for a in range(len(wb)):
+            for b in range(len(wb[0])):
+                wb[a][b] += 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WB[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
+                if errs < mini:
+                    index = (a, b)
+                    mini = errs
+                    sign = True
+                wb[a][b] -= 0.1
+                wb[a][b] -= 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WB[{0}][{1}] - 0.1 : {2} errors".format(a, b, errs))
+                if errs < mini:
+                    index = (a, b)
+                    mini = errs
+                    sign = False
+                wb[a][b] += 0.1
+        print("#### Updating neural network... ####")
+        if sign:
+            wb[index[0]][index[1]] += 0.1
+        else:
+            wb[index[0]][index[1]] -= 0.1
+        print("Minimum  : {0}".format(mini))
+        print("Index : {0}".format(index))
+        print("Saving...")
+        array_to_csv(wb, "wb.csv")
+        print("Saved to wb.csv")
+        print("####################################")
+        print("---- RESULTS ----")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
+        print("==== TRAINING #{0} ====".format(sessions))
+        print("---- WA TRAINING ----")
+        index = (0,0)
+        mini = float('inf')
+        for a in range(len(wa)):
+            for b in range(len(wa[0])):
+                wa[a][b] += 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WA[{0}][{1}] + 0.1 : {2} errors".format(a, b, errs))
+                if errs < mini:
+                    index = (a, b)
+                    mini = errs
+                    sign = True
+                wa[a][b] -= 0.1
+                wa[a][b] -= 0.1
+                errs = 0
+                good = 0
+                for inputs in file1:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == 1:
+                        good += 1
+                    else:
+                        errs += 1
+                for inputs in file2:
+                    pos = inputs.split("\n")[0]
+                    mve = inputs.split("\n")[1]
+                    res = nn_opening_white_check_move(pos, mve)
+                    if res == -1:
+                        good += 1
+                    else:
+                        errs += 1
+                print("Training WA[{0}][{1}] - 0.1 : {2} errors".format(a, b, errs))
+                if errs < mini:
+                    index = (a, b)
+                    mini = errs
+                    sign = False
+                wa[a][b] += 0.1
+        print("#### Updating neural network... ####")
+        if sign:
+            wa[index[0]][index[1]] += 0.1
+        else:
+            wa[index[0]][index[1]] -= 0.1
+        print("Minimum  : {0}".format(mini))
+        print("Index : {0}".format(index))
+        print("Saving...")
+        array_to_csv(wa, "wa.csv")
+        print("Saved to wa.csv")
+        print("####################################")
+        print("---- RESULTS ----")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
+        print("==== RESULTS ====")
+        errs = 0
+        good = 0
+        for inputs in file1:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == 1:
+               good += 1
+            else:
+                errs += 1
+        for inputs in file2:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            res = nn_opening_white_check_move(pos, mve)
+            if res == -1:
+                good += 1
+            else:
+                errs += 1
+        print("Errors : {0}/{1} tests".format(errs, l))
+        default = copy.copy(errs)
+        print("Good moves : {0}/{1} tests".format(good, l))
+        # return results
+        """
+    
+    print("Saving...")
+    array_to_csv(wc, "wc.csv")
+    print("Saved to wc.csv")
+    print("Saving...")
+    array_to_csv(wb, "wb.csv")
+    print("Saved to wb.csv")
+    print("Saving...")
+    array_to_csv(wa, "wa.csv")
+    print("Saved to wa.csv")
+# return results
