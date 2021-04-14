@@ -2,6 +2,7 @@ import chess
 import csv
 import copy
 import random
+import time
 
 def csv_to_array(csv_path):
     r = []
@@ -734,6 +735,7 @@ def systematic_train():
         sessions += 1
         print("==== TRAINING #{0} ====".format(sessions))
         print("---- WC TRAINING ----")
+        tstart = time.time()
         best = -1
         best_score = float('inf')
         rand = (random.randint(0, 37), 0)
@@ -741,7 +743,7 @@ def systematic_train():
         good = 0
         for rand0 in range(len(wc)):
             for rand1 in range(len(wc[0])):
-                print("Training WC[{0}][{1}]...".format(rand0, rand1), end="\r")
+                print("Training WC[{0}][{1}]...  ".format(rand0, rand1), end="\r")
                 best = -1
                 best_score = float('inf')
                 errs = 0
@@ -834,7 +836,7 @@ def systematic_train():
                 """
                 # print("####################################")
                 if best_score == 0:
-                    print("Saving...")
+                    print("Saving...                        ")
                     array_to_csv(wc, "wc.csv")
                     print("Saved to wc.csv")
                     print("Saving...")
@@ -844,6 +846,7 @@ def systematic_train():
                     array_to_csv(wa, "wa.csv")
                     print("Saved to wa.csv")
                     exit(0)
+        print("Done after {0} s.          ".format(time.time() - tstart))
         print("---- RESULTS ----")
         errs = 0
         good = 0
@@ -867,6 +870,7 @@ def systematic_train():
         default = copy.copy(errs)
         print("Good moves : {0}/{1} tests".format(good, l))
         print("---- WB TRAINING ----")
+        tstart = time.time()
         best = -1
         best_score = float('inf')
         rand = (random.randint(0, 37), 0)
@@ -874,7 +878,7 @@ def systematic_train():
         good = 0
         for rand0 in range(len(wb)):
             for rand1 in range(len(wb[0])):
-                print("Training WB[{0}][{1}]...".format(rand0, rand1), end="\r")
+                print("Training WB[{0}][{1}]...  ".format(rand0, rand1), end="\r")
                 best = -1
                 best_score = float('inf')
                 errs = 0
@@ -967,7 +971,7 @@ def systematic_train():
                 """
                 # print("####################################")
                 if best_score == 0:
-                    print("Saving...")
+                    print("Saving...                      ")
                     array_to_csv(wc, "wc.csv")
                     print("Saved to wc.csv")
                     print("Saving...")
@@ -977,6 +981,7 @@ def systematic_train():
                     array_to_csv(wa, "wa.csv")
                     print("Saved to wa.csv")
                     exit(0)
+        print("Done after {0} s.          ".format(time.time() - tstart))
         print("---- RESULTS ----")
         errs = 0
         good = 0
@@ -1000,6 +1005,7 @@ def systematic_train():
         default = copy.copy(errs)
         print("Good moves : {0}/{1} tests".format(good, l))
         print("---- WA TRAINING ----")
+        tstart = time.time()
         best = -1
         best_score = float('inf')
         rand = (random.randint(0, 37), 0)
@@ -1007,7 +1013,7 @@ def systematic_train():
         good = 0
         for rand0 in range(len(wa)):
             for rand1 in range(len(wa[0])):
-                print("Training WA[{0}][{1}]...".format(rand0, rand1), end="\r")
+                print("Training WA[{0}][{1}]...  ".format(rand0, rand1), end="\r")
                 best = -1
                 best_score = float('inf')
                 errs = 0
@@ -1100,7 +1106,7 @@ def systematic_train():
 ##                print("####################################")
                 """
                 if best_score == 0:
-                    print("Saving...")
+                    print("Saving...                              ")
                     array_to_csv(wc, "wc.csv")
                     print("Saved to wc.csv")
                     print("Saving...")
@@ -1110,6 +1116,7 @@ def systematic_train():
                     array_to_csv(wa, "wa.csv")
                     print("Saved to wa.csv")
                     exit(0)
+        print("Done after {0} s.          ".format(time.time() - tstart))
         print("---- RESULTS ----")
         errs = 0
         good = 0
@@ -1132,9 +1139,20 @@ def systematic_train():
         print("Errors : {0}/{1} tests".format(errs, l))
         default = copy.copy(errs)
         print("Good moves : {0}/{1} tests".format(good, l))
+        print("Saving...")
+        array_to_csv(wc, "wc.csv")
+        print("Saved to wc.csv")
+        print("Saving...")
+        array_to_csv(wb, "wb.csv")
+        print("Saved to wb.csv")
+        print("Saving...")
+        array_to_csv(wa, "wa.csv")
+        print("Saved to wa.csv")
+        print("Saved.")
         print("Updating loop system...")
         add = add * multi
         print("New add value :", add)
+        print("Updated.")
         """
         print("==== TRAINING #{0} ====".format(sessions))
         print("---- WB TRAINING ----")
