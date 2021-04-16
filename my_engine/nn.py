@@ -1371,3 +1371,41 @@ def systematic_train():
     array_to_csv(wa, "wa.csv")
     print("Saved to wa.csv")
 # return results
+
+def check():
+    """Check on complete files."""
+    print("Loading weights...", end=" ")
+    wa = csv_to_array("wa.csv")
+    wb = csv_to_array("wb.csv")
+    wc = csv_to_array("wc.csv")
+    print("Done.")
+    with open("my_engine/training_boncoups_ouverture_blancs.txt") as file:
+        file1 = file.read()
+        file.close()
+    with open("my_engine/training_mauvaiscoups_ouverture_blancs.txt") as file:
+        file2 = file.read()
+        file.close()
+    file1 = file1.split("\n\n")
+    file2 = file2.split("\n\n")
+    l = len(file1) + len(file2)
+    errs = 0
+    good = 0
+    for inputs in file1:
+        pos = inputs.split("\n")[0]
+        mve = inputs.split("\n")[1]
+        res = nn_opening_white_check_move(pos, mve)
+        if res == 1:
+           good += 1
+        else:
+            errs += 1
+    for inputs in file2:
+        pos = inputs.split("\n")[0]
+        mve = inputs.split("\n")[1]
+        res = nn_opening_white_check_move(pos, mve)
+        if res == -1:
+            good += 1
+        else:
+            errs += 1
+    print("Errors : {0}/{1} tests".format(errs, l))
+    default = copy.copy(errs)
+    print("Good moves : {0}/{1} tests".format(good, l))
