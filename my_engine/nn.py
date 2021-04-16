@@ -704,6 +704,10 @@ def systematic_train():
         file.close()
     file1 = file1.split("\n\n")
     file2 = file2.split("\n\n")
+    file1_count = int(input("Nombre de bon coups : "))
+    file2_count = int(input("Nombre de mauvais coups : "))
+    file1 = random.sample(file1, file1_count)
+    file2 = random.sample(file2, file2_count)
     l = len(file1) + len(file2)
     print("==== CHECKING ====")
     errs = 0
