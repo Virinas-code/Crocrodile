@@ -16,17 +16,17 @@ if continuer == "y":
     for a in range(74):
         wa.append([])
         for b in range(38):
-            wa[a].append(random.random() * 2 - 1)
+            wa[a].append((random.random() * 2 - 1) / 10)
     wc = []
     for a in range(38):
         wc.append([])
         for b in range(1):
-            wc[a].append(random.random() * 2 - 1)
+            wc[a].append((random.random() * 2 - 1) / 10)
     wb = []
     for a in range(38):
         wb.append([])
         for b in range(38):
-            wb[a].append(random.random() * 2 - 1)
+            wb[a].append((random.random() * 2 - 1) / 10)
     array_to_csv(wa, "wa.csv")
     array_to_csv(wb, "wb.csv")
     array_to_csv(wc, "wc.csv")
