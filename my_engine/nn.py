@@ -840,7 +840,7 @@ def systematic_train():
                 """
                 # print("####################################")
                 if best_score == 0:
-                    print("Saving...                        ")
+                    print("Errors : 0 - Saving...           ")
                     array_to_csv(wc, "wc.csv")
                     print("Saved to wc.csv")
                     print("Saving...")
@@ -975,7 +975,7 @@ def systematic_train():
                 """
                 # print("####################################")
                 if best_score == 0:
-                    print("Saving...                      ")
+                    print("Errors : 0 - Saving...           ")
                     array_to_csv(wc, "wc.csv")
                     print("Saved to wc.csv")
                     print("Saving...")
@@ -1110,7 +1110,7 @@ def systematic_train():
 ##                print("####################################")
                 """
                 if best_score == 0:
-                    print("Saving...                              ")
+                    print("Errors : 0 - Saving...           ")
                     array_to_csv(wc, "wc.csv")
                     print("Saved to wc.csv")
                     print("Saving...")
