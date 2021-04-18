@@ -43,6 +43,8 @@ class Game(threading.Thread):
                 self.game_state_change(event)
             elif event['type'] == 'chatLine':
                 self.chat(event)
+            else:
+                ldebug(event["type"], ":", event)
     def game_state_change(self, event):
         ldebug("game state change", event)
         if event['status'] == "started":
@@ -95,7 +97,7 @@ while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
         if event['type'] == 'challenge':
-            if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors and event['challenge']['color'] != 'random':
+            if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors:  #  and event['challenge']['color'] != 'random'
                 client.bots.accept_challenge(event['challenge']['id'])
                 colors[event['challenge']['id']] = event['challenge']['color']
             else:
@@ -106,3 +108,5 @@ while continue_loop:
         elif event['type'] == 'gameStart':
             game = Game(client, event['game']['id'], colors[event['game']['id']])
             game.start()
+        else:
+            ldebug(event["type"], ":", event)
