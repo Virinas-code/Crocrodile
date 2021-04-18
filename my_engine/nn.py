@@ -3,6 +3,7 @@ import csv
 import copy
 import random
 import time
+import math
 
 def csv_to_array(csv_path):
     r = []
@@ -27,12 +28,8 @@ wc = csv_to_array("wc.csv")
 print("Done.")
 
 def normalisation(x):
-    if x > 1:
-        return 1
-    elif x < -1:
-        return -1
-    else:
-        return x
+    """Sigmoïde modifiée."""
+    return (1 / (1 + math.exp(-x))) * 2 - 1
 
 def nn_opening_white_check_move(fen, move): # Move is UCI str
     board = chess.Board(fen=fen)
