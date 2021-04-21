@@ -60,7 +60,7 @@ class Game(threading.Thread):
                 if time > 120 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1:
                     score, best_move = yukoo.minimax(board, 3, board.turn, False)
                 else:
-                    score, best_move = yukoo.minimax(board, 2, board.turn, False)
+                    score, best_move = yukoo.minimax(board, 3, board.turn, False)
                 lok("Game", self.game_id, ": best move", best_move)
                 lok("Game", self.game_id, ": score", score)
                 retry = 3
