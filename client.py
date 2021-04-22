@@ -34,8 +34,6 @@ class Game(threading.Thread):
             self.my_turn = chess.WHITE
         else:
             self.my_turn = chess.BLACK
-        if self.my_turn != chess.WHITE:
-            self.game_state_change({'status':'started', 'moves':'0000 0000', 'btime':datetime.datetime(1970, 1, 1, 12)})
         lok("Game", self.game_id, "start")
     def run(self):
         for event in self.stream:
@@ -62,7 +60,7 @@ class Game(threading.Thread):
                 if time > 120 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1:
                     score, best_move = yukoo.minimax(board, 3, board.turn, False)
                 else:
-                    score, best_move = yukoo.minimax(board, 2, board.turn, False)
+                    score, best_move = yukoo.minimax(board, 3, board.turn, False)
                 lok("Game", self.game_id, ": best move", best_move)
                 lok("Game", self.game_id, ": score", score)
                 retry = 3
