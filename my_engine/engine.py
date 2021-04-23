@@ -25,10 +25,6 @@ SEVENTH_ROW = [55, 54, 53, 52, 51, 50, 49, 48]
 SECOND_ROW = [15, 14, 13, 12, 11, 10, 9, 8]
 VARIANTS = ['standard', 'chess960']
 
-wa = csv_to_array("wa.csv")
-wb = csv_to_array("wb.csv")
-wc = csv_to_array("wc.csv")
-
 def csv_to_array(csv_path):
     r = []
     with open(csv_path) as file:
@@ -36,6 +32,10 @@ def csv_to_array(csv_path):
         for row in reader:
             r.append(row)
     return r
+
+wa = csv_to_array("wa.csv")
+wb = csv_to_array("wb.csv")
+wc = csv_to_array("wc.csv")
 
 def normalisation(val):
     """Sigmoïde modifiée."""
