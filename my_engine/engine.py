@@ -5,12 +5,12 @@ MyEngine Engine base.
 Base engine
 """
 from __future__ import print_function
-import chess
-import chess.polyglot
 import math
 # import requests
 # import copy
 import csv
+import chess
+import chess.polyglot
 
 PAWN_VALUE = 100
 KNIGHT_VALUE = 290
@@ -27,12 +27,13 @@ SECOND_ROW = [15, 14, 13, 12, 11, 10, 9, 8]
 VARIANTS = ['standard', 'chess960']
 
 def csv_to_array(csv_path):
-    r = []
+    """CSV file top Python array."""
+    results = []
     with open(csv_path) as file:
         reader = csv.reader(file, quoting=csv.QUOTE_NONNUMERIC)
         for row in reader:
-            r.append(row)
-    return r
+            results.append(row)
+    return results
 
 wa = csv_to_array("wa.csv")
 wb = csv_to_array("wb.csv")
@@ -43,13 +44,15 @@ def normalisation(val):
     return (1 / (1 + math.exp(-val))) * 2 - 1
 
 def nn_opening_white_check_move(fen, move): # Move is UCI str
+    """Neural network check if move is interesting for board."""
     board = chess.Board(fen=fen)
     pieces = board.piece_map()
-    INPUTS_VALUES = {'': 0, 'P': 0.1, 'N': 0.2, 'B': 0.3, 'R': 0.5, 'Q': 0.6, 'K': 0.7, 'p': -0.1, 'n': -0.2, 'b': -0.3, 'r': -0.5, 'q': -0.6, 'k': -0.7}
+    inputs_values = {'': 0, 'P': 0.1, 'N': 0.2, 'B': 0.3, 'R': 0.5, 'Q': 0.6, 'K': 0.7, 'p': -0.1,
+     'n': -0.2, 'b': -0.3, 'r': -0.5, 'q': -0.6, 'k': -0.7}
     inputs = []
-    for a in range(64):
-        if pieces.get(a, None):
-            inputs.append(INPUTS_VALUES.get(pieces[a].symbol(), 0))
+    for count in range(64):
+        if pieces.get(count, None):
+            inputs.append(inputs_values.get(pieces[count].symbol(), 0))
         else:
             inputs.append(0)
     if board.has_kingside_castling_rights(chess.WHITE):
@@ -83,7 +86,7 @@ def nn_opening_white_check_move(fen, move): # Move is UCI str
     # print("Inputs :", inputs)
     cache1 = list()
     cache2 = list()
-    for a in range(38):
+    for count in range(38):
         cache1.append(0)
         cache2.append(0)
     output = float()
@@ -114,7 +117,9 @@ def nn_opening_white_check_move(fen, move): # Move is UCI str
     # print("Output :", output)
     return output
 
-print(nn_opening_white_check_move("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1", "f1c4"), nn_opening_white_check_move("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1", "e1e2"))
+print(nn_opening_white_check_move("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w \
+KQkq - 0 1", "f1c4"), nn_opening_white_check_move("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP\
+1PPP/RNBQKB1R w KQkq - 0 1", "e1e2"))
 
 def printi(*args):
     """Debug mode printer."""
@@ -129,20 +134,20 @@ class EngineBase:
         self.author = author
         self.board = board
 
-    def evaluate(self, board):
+    @staticmethod
+    def evaluate(board):
         """Evaluate position."""
         white_score = 0
         black_score = 0
-        if board.is_stalemate() or board.is_insufficient_material() or board.can_claim_threefold_repetition() or board.can_claim_fifty_moves() or board.can_claim_draw():
+        if board.is_stalemate() or board.is_insufficient_material() or \
+        board.can_claim_threefold_repetition() or board.can_claim_fifty_moves() or \
+        board.can_claim_draw():
             return 0
         if board.is_checkmate():
             if board.turn == chess.WHITE:
                 return -10000
-            else:
-                return 10000
+            return 10000
         piece_map = board.piece_map()
-        """if len(piece_map) <= 7:
-            return float("inf")"""
         for piece in piece_map:
             if piece_map[piece].symbol().isupper():
                 white_score += PIECES_VALUES[piece_map[piece].symbol().lower()]
@@ -179,38 +184,19 @@ class EngineBase:
     def search(self, depth, board):
         """Search best move (Minimax from wikipedia)."""
 
-    def minimax(self, board, depth, maximimize_white, subcall):
+    def minimax(self, board, depth, maximimize_white):
         """Minimax algorithm from Wikipedia."""
         if depth == 0 or board.is_game_over():
             evaluation = self.evaluate(board)
-            """if evaluation == float("inf"):
-                r = requests.get("http://tablebase.lichess.ovh/standard?fen={0}".format(board.fen().replace(" ", "_"))).json()
-                dtm = r["moves"][0]["dtm"]
-                if board.turn == chess.WHITE:
-                    if dtm:
-                        if dtm > 0:
-                            mate_in = -10000 + dtm
-                        else:
-                            mate_in = 10000 - dtm
-                    else:
-                        mate_in = 0
-                else:
-                    if dtm:
-                        if dtm > 0:
-                            mate_in = 10000 - dtm
-                        else:
-                            mate_in = -10000 + dtm
-                    else:
-                        mate_in = 0
-                return mate_in, r["moves"][0]["uci"]
-                # color will be mated in..."""
             attackers = board.attackers(board.turn, board.peek().to_square)
             if len(attackers) > 0:
                 # print("retake ! board : \n", board, "\n last move :", board.peek())
                 if board.turn == chess.WHITE:
-                    evaluation += PIECES_VALUES[board.piece_map()[board.peek().to_square].symbol().lower()]
+                    evaluation += PIECES_VALUES[board.piece_map()\
+                    [board.peek().to_square].symbol().lower()]
                 else:
-                    evaluation -= PIECES_VALUES[board.piece_map()[board.peek().to_square].symbol().lower()]
+                    evaluation -= PIECES_VALUES[board.piece_map()\
+                    [board.peek().to_square].symbol().lower()]
             return evaluation, chess.Move.from_uci("0000")
         if maximimize_white:
             value = -float('inf')
@@ -218,10 +204,10 @@ class EngineBase:
                 best_move = move
                 break
             for move in board.legal_moves:
-                e = chess.Board(fen=board.fen())
-                if nn_opening_white_check_move(e.fen(), move.uci()) == 1:
-                    e.push(move)
-                    evaluation = self.minimax(e, depth-1, False, True)[0]
+                test_board = chess.Board(fen=board.fen())
+                if nn_opening_white_check_move(test_board.fen(), move.uci()) == 1:
+                    test_board.push(move)
+                    evaluation = self.minimax(test_board, depth-1, False)[0]
                     if move.uci() in ['e1g1', 'e1c1']:
                         evaluation += 11
                         # print('castle')
@@ -232,23 +218,22 @@ class EngineBase:
                         value = evaluation
                         best_move = move
             return value, best_move
-        else:
-            # minimizing white
-            value = float('inf')
-            for move in board.legal_moves:
+        # minimizing white
+        value = float('inf')
+        for move in board.legal_moves:
+            best_move = move
+            break
+        for move in board.legal_moves:
+            test_boars = chess.Board(fen=board.fen())
+            test_boars.push(move)
+            evaluation = self.minimax(test_boars, depth-1, True)[0]
+            if move.uci() in ['e1g1', 'e1c1']:
+                evaluation += 11
+                #print('castle')
+            if move.uci() in ['e8g8', 'e8c8']:
+                evaluation -= 11
+                # print('castle')
+            if value > evaluation:
+                value = evaluation
                 best_move = move
-                break
-            for move in board.legal_moves:
-                e = chess.Board(fen=board.fen())
-                e.push(move)
-                evaluation = self.minimax(e, depth-1, True, True)[0]
-                if move.uci() in ['e1g1', 'e1c1']:
-                    evaluation += 11
-                    #print('castle')
-                if move.uci() in ['e8g8', 'e8c8']:
-                    evaluation -= 11
-                    # print('castle')
-                if value > evaluation:
-                    value = evaluation
-                    best_move = move
-            return value, best_move
+        return value, best_move
