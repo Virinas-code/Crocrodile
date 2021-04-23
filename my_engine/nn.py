@@ -679,7 +679,7 @@ def train():
         print("Good moves : {0}/{1} tests".format(good, l))
         # return results
         """
-    
+
     print("Saving...")
     array_to_csv(wc, "wc.csv")
     print("Saved to wc.csv")
@@ -744,6 +744,7 @@ def systematic_train():
         good = 0
         for rand0 in range(len(wc)):
             for rand1 in range(len(wc[0])):
+                equals = 0
                 print("Training WC[{0}][{1}]...  ".format(rand0, rand1), end="\r")
                 best = -1
                 best_score = float('inf')
@@ -793,6 +794,8 @@ def systematic_train():
                 if errs < best_score:
                     best = 1
                     best_score = errs
+                if errs == best_score:
+                    equals += 1
                 wc[rand[0]][rand[1]] -= add
                 wc[rand[0]][rand[1]] -= add
                 errs = 0
@@ -817,7 +820,11 @@ def systematic_train():
                 if errs < best_score:
                     best = 2
                     best_score = errs
+                if errs == best_score:
+                    equals += 1
                 wc[rand[0]][rand[1]] += add
+                if equals == 2:
+                    wc[rand[0]][rand[1]] += min_add
                 # print("#### Updating neural network... ####")
                 if best == 0:
                     pass  # Il ne faut rien faire...
@@ -879,6 +886,7 @@ def systematic_train():
         good = 0
         for rand0 in range(len(wb)):
             for rand1 in range(len(wb[0])):
+                equals = 0
                 print("Training WB[{0}][{1}]...  ".format(rand0, rand1), end="\r")
                 best = -1
                 best_score = float('inf')
@@ -928,6 +936,8 @@ def systematic_train():
                 if errs < best_score:
                     best = 1
                     best_score = errs
+                if errs == best_score:
+                    equals += 1
                 wb[rand[0]][rand[1]] -= add
                 wb[rand[0]][rand[1]] -= add
                 errs = 0
@@ -952,7 +962,11 @@ def systematic_train():
                 if errs < best_score:
                     best = 2
                     best_score = errs
+                if errs == best_score:
+                    equals += 1
                 wb[rand[0]][rand[1]] += add
+                if equals == 2:
+                    wb[rand[0]][rand[1]] += min_add
                 # print("#### Updating neural network... ####")
                 if best == 0:
                     pass  # Il ne faut rien faire...
@@ -1014,6 +1028,7 @@ def systematic_train():
         good = 0
         for rand0 in range(len(wa)):
             for rand1 in range(len(wa[0])):
+                equals = 0
                 print("Training WA[{0}][{1}]...  ".format(rand0, rand1), end="\r")
                 best = -1
                 best_score = float('inf')
@@ -1063,6 +1078,8 @@ def systematic_train():
                 if errs < best_score:
                     best = 1
                     best_score = errs
+                if errs == best_score:
+                    equals += 1
                 wa[rand[0]][rand[1]] -= add
                 wa[rand[0]][rand[1]] -= add
                 errs = 0
@@ -1087,7 +1104,11 @@ def systematic_train():
                 if errs < best_score:
                     best = 2
                     best_score = errs
+                if errs == best_score:
+                    equals += 1
                 wa[rand[0]][rand[1]] += add
+                if equals == 2:
+                    wa[rand[0]][rand[1]] += min_add
 ##                print("#### Updating neural network... ####")
                 if best == 0:
                     pass  # Il ne faut rien faire...
@@ -1357,7 +1378,7 @@ def systematic_train():
         print("Good moves : {0}/{1} tests".format(good, l))
         # return results
         """
-    
+
     print("Saving...")
     array_to_csv(wc, "wc.csv")
     print("Saved to wc.csv")
