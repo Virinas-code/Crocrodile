@@ -59,8 +59,9 @@ class Game(threading.Thread):
                 t = event['btime'].time()
                 time = (t.hour *60 + t.minute) *60 + t.second
                 lok("Game", self.game_id, ": time", time)
-                if time > 120 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1:
-                    score, best_move = yukoo.minimax(board, 3, board.turn, False)
+                if time > 120 and len(mvs) % 12 == 0 or len(mvs) % 12 == 1:
+                    score, best_move = yukoo.minimax(board, 4, board.turn, False)
+                    lok("Long calcul time")
                 else:
                     score, best_move = yukoo.minimax(board, 3, board.turn, False)
                 lok("Game", self.game_id, ": best move", best_move)
