@@ -35,7 +35,10 @@ class Game(threading.Thread):
         else:
             self.my_turn = chess.BLACK
         if self.my_turn != chess.WHITE:
-            self.game_state_change({'status':'started', 'moves':'0000 0000', 'btime':datetime.datetime(1970, 1, 1, 12)})
+            self.time_control = "wtime"
+            self.game_state_change({'status':'started', 'moves':'0000 0000', 'btime':datetime.datetime(1970, 1, 1, 12), 'wtime': datetime.datetime(1970, 1, 1, 12)})
+        else:
+            self.time_control = "btime"
         lok("Game", self.game_id, "start")
     def run(self):
         for event in self.stream:
@@ -56,7 +59,7 @@ class Game(threading.Thread):
             ldebug("\n" + str(board))
             if board.turn != self.my_turn:
                 lok("Game", self.game_id, ": Calculating...")
-                t = event['btime'].time()
+                t = event[self.time_control].time()
                 time = (t.hour * 60 + t.minute) * 60 + t.second
                 lok("Game", self.game_id, ": time", time)
                 if time > 600 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1:
