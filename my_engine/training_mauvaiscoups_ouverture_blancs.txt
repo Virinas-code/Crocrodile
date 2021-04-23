@@ -1908,3 +1908,159 @@ e1d2
 
 rnbqk2r/1p2ppb1/p2p3p/6p1/3NP1n1/2N3B1/PPP2PPP/R2QKB1R w KQkq - 2 10
 e4e5
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+e1e2
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+e1d2
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+d1d3
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+d1f3
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+d1g4
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+d1c1
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+d1b1
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+f1c4
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+f1b5
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+f1a6
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+g3h4
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+g3f4
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+d4c6
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+d4e6
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+d4b5
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+d4e2
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+c3b5
+
+rnbqk2r/1p2ppb1/p2p3p/4n1p1/3NP3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 1 11
+c3b1
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+a2a3
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+a2a4
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+b2b3
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+b2b4
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+a1b1
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+a1c1
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+c3a4
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+c3b5
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+c3d5
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+c3e2
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+c3b1
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1c1
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1b1
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1d2
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1d3
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1d4
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1d5
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1d6
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1e2
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1f3
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1g4
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+d1h5
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+e1e2
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+e1d2
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+f1e2
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+f1d3
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+f1c4
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+f1b5
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+f1a6
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+h3h4
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+h1h2
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+h1g2
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+g3h2
+
+rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
+g3f4
