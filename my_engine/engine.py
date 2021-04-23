@@ -7,6 +7,7 @@ Base engine
 from __future__ import print_function
 import chess
 import chess.polyglot
+import math
 # import requests
 # import copy
 import csv
@@ -39,7 +40,7 @@ wc = csv_to_array("wc.csv")
 
 def normalisation(val):
     """Sigmoïde modifiée."""
-    return (1 / (1 + math.exp(-x))) * 2 - 1
+    return (1 / (1 + math.exp(-val))) * 2 - 1
 
 def nn_opening_white_check_move(fen, move): # Move is UCI str
     board = chess.Board(fen=fen)
@@ -112,6 +113,8 @@ def nn_opening_white_check_move(fen, move): # Move is UCI str
         output = -1
     # print("Output :", output)
     return output
+
+print(nn_opening_white_check_move("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1", "f1c4"), nn_opening_white_check_move("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1", "e1e2"))
 
 def printi(*args):
     """Debug mode printer."""
@@ -216,17 +219,18 @@ class EngineBase:
                 break
             for move in board.legal_moves:
                 e = chess.Board(fen=board.fen())
-                e.push(move)
-                evaluation = self.minimax(e, depth-1, False, True)[0]
-                if move.uci() in ['e1g1', 'e1c1']:
-                    evaluation += 11
-                    # print('castle')
-                if move.uci() in ['e8g8', 'e8c8']:
-                    evaluation -= 11
-                    # print('castle')
-                if value < evaluation:
-                    value = evaluation
-                    best_move = move
+                if nn_opening_white_check_move(e.fen(), move.uci()) == 1:
+                    e.push(move)
+                    evaluation = self.minimax(e, depth-1, False, True)[0]
+                    if move.uci() in ['e1g1', 'e1c1']:
+                        evaluation += 11
+                        # print('castle')
+                    if move.uci() in ['e8g8', 'e8c8']:
+                        evaluation -= 11
+                        # print('castle')
+                    if value < evaluation:
+                        value = evaluation
+                        best_move = move
             return value, best_move
         else:
             # minimizing white
