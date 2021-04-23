@@ -1,7 +1,13 @@
+"""
+NN Random.
+
+Reset NN wa, wb and wc.
+"""
 import csv
 import random
 
 def array_to_csv(array, csv_path):
+    """Python array to CSV file."""
     with open(csv_path, 'w', newline='') as file:
         writer = csv.writer(file)
         for row in array:
@@ -31,4 +37,3 @@ if continuer == "y":
     array_to_csv(wb, "wb.csv")
     array_to_csv(wc, "wc.csv")
     print("Done.")
-
