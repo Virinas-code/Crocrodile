@@ -60,10 +60,18 @@ class Game(threading.Thread):
                 time = (t.hour * 60 + t.minute) * 60 + t.second
                 lok("Game", self.game_id, ": time", time)
                 if time > 600 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1:
-                    lok("Long calcul time")
+                    lok("Game", self.game_id, ": depth", 4)
                     score, best_move = yukoo.minimax(board, 4, board.turn, False)
-                else:
+                elif time < 120:
+                    lok("Game", self.game_id, ": depth", 3)
                     score, best_move = yukoo.minimax(board, 3, board.turn, False)
+                else:
+                    if len(mvs) % 8 == 0 or len(mvs) % 8 == 1:
+                        lok("Game", self.game_id, ": depth", 4)
+                        score, best_move = yukoo.minimax(board, 4, board.turn, False)
+                    else:
+                        lok("Game", self.game_id, ": depth", 3)
+                        score, best_move = yukoo.minimax(board, 3, board.turn, False)
                 lok("Game", self.game_id, ": best move", best_move)
                 lok("Game", self.game_id, ": score", score)
                 retry = 3
