@@ -267,3 +267,9 @@ d1d2
 
 rn1qk2r/1p2ppb1/p2p3p/4nbp1/4P3/2N3BP/PPP2PP1/R2QKB1R w KQkq - 0 12
 e4f5
+
+rnbqkb1r/1p3ppp/p2ppn2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq - 0 7
+f2f4
+
+rnbqkb1r/1p3ppp/p2ppn2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq - 0 7
+d1f3
