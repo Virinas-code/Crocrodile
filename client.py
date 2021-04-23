@@ -10,7 +10,7 @@ import my_engine
 yukoo = my_engine.EngineBase("Yukoo", "Virinas-code")
 print(yukoo)
 
-SPEEDS = ['classical', 'correspondence']
+SPEEDS = ['classical', 'rapid', 'blitz']
 VARIANTS = ['standard']
 
 colorama.init()
