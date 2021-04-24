@@ -205,18 +205,17 @@ class EngineBase:
                 break
             for move in board.legal_moves:
                 test_board = chess.Board(fen=board.fen())
-                if nn_opening_white_check_move(test_board.fen(), move.uci()) == 1:
-                    test_board.push(move)
-                    evaluation = self.minimax(test_board, depth-1, False)[0]
-                    if move.uci() in ['e1g1', 'e1c1']:
-                        evaluation += 11
-                        # print('castle')
-                    if move.uci() in ['e8g8', 'e8c8']:
-                        evaluation -= 11
-                        # print('castle')
-                    if value < evaluation:
-                        value = evaluation
-                        best_move = move
+                test_board.push(move)
+                evaluation = self.minimax(test_board, depth-1, False)[0]
+                if move.uci() in ['e1g1', 'e1c1']:
+                    evaluation += 11
+                    # print('castle')
+                if move.uci() in ['e8g8', 'e8c8']:
+                    evaluation -= 11
+                    # print('castle')
+                if value < evaluation:
+                    value = evaluation
+                    best_move = move
             return value, best_move
         # minimizing white
         value = float('inf')
