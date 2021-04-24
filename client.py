@@ -62,9 +62,9 @@ class Game(threading.Thread):
                 t = event[self.time_control].time()
                 time = (t.hour * 60 + t.minute) * 60 + t.second
                 lok("Game", self.game_id, ": time", time)
-                if time > 600 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1:
-                    lok("Game", self.game_id, ": depth", 4)
-                    score, best_move = yukoo.minimax(board, 4, board.turn, False)
+                if True:  # time > 600 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1
+                    lok("Game", self.game_id, ": depth", 3)  # depth 4
+                    score, best_move = yukoo.minimax(board, 3, board.turn)
                 elif time < 120:
                     lok("Game", self.game_id, ": depth", 3)
                     score, best_move = yukoo.minimax(board, 3, board.turn, False)
