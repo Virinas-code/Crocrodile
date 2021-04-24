@@ -21,8 +21,14 @@ if __name__ == '__main__':
             GOOD_MOVE_INPUT = "continue"
             while GOOD_MOVE_INPUT != "":
                 GOOD_MOVE_INPUT = input()
-                good_moves.append(GOOD_MOVE_INPUT)
-            good_moves.pop()
+                if GOOD_MOVE_INPUT:
+                    if chess.Move.from_uci(GOOD_MOVE_INPUT) in board.legal_moves:
+                        if GOOD_MOVE_INPUT in good_moves:
+                            print("This move is in the good moves.")
+                        else:
+                            good_moves.append(GOOD_MOVE_INPUT)
+                    else:
+                        print("This is not a legal move. It will be ignored.")
             moves = list()
             for move in board.legal_moves:
                 moves.append(move)
