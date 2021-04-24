@@ -2130,3 +2130,1407 @@ c3d5
 
 rnbqkb1r/1p3ppp/p2ppn2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq - 0 7
 c3b1
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+g5h6
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+g5h4
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d4e6
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d4c6
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d4f5
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d4b5
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d4f3
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d4e2
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+c3d5
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+c3b5
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+c3a4
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+c3e2
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+c3b1
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+h1g1
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+f1a6
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+f1b5
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+f1c4
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+f1d3
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+f1e2
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+e1f2
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+e1e2
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+e1d2
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d1h5
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d1g4
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d1f3
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d1e2
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d1c1
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+d1b1
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+a1c1
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+h2h3
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+g2g3
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+b2b3
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+h2h4
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+g2g4
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+b2b4
+
+rnb1kb1r/1p3ppp/pq1ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq - 1 8
+a2a4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+g5h6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+g5f6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+g5h4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d4e6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d4c6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d4f5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d4b5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d4f3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d4e2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+c3d5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+c3b5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+c3a4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+c3e2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+c3d1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+c3b1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d2e3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d2d3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d2f2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d2e2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d2d1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+d2c1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+h1g1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+f1a6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+f1b5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+f1c4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+f1d3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+f1e2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+e1f2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+e1e2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+e1d1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+a1c1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+f4f5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+e4e5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+h2h3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+g2g3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+a2a3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+h2h4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+g2g4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/2N5/PqPQ2PP/R3KB1R w KQkq - 0 9
+a2a4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+g5h6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+g5h4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d4e6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d4c6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d4f5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d4b5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d4f3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d4b3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d4e2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+c3d5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+c3b5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+c3a4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+c3e2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+c3d1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d2e3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d2d3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d2f2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d2e2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d2d1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+d2c1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+h1g1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+f1a6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+f1b5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+f1c4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+f1d3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+e1f2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+e1e2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+e1d1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+b1b7
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+b1b6
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+b1b5
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+b1b4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+b1b3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+b1b2
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+b1d1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+b1c1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+b1a1
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+h2h3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+g2g3
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+h2h4
+
+rnb1kb1r/1p3ppp/p2ppn2/6B1/3NPP2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 2 10
+g2g4
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+g5h6
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4e6
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4c6
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4f5
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4b5
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4f3
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4b3
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4e2
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3d5
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3b5
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3e4
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3a4
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3e2
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3d1
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2e3
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2d3
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2f2
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2e2
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2d1
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2c1
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+h1g1
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1a6
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1b5
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1c4
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1d3
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1e2
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+e1f2
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+e1e2
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+e1d1
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b7
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b6
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b5
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b4
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b3
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b2
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1d1
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1c1
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1a1
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+e5d6
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f4f5
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+h2h3
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+g2g3
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+h2h4
+
+rnb1kb1r/1p3pp1/p2ppn1p/4P1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+g2g4
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+h4f6
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+h4g5
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+h4g3
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+h4f2
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4e6
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4c6
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4f5
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4b5
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4f3
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4b3
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4e2
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3d5
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3b5
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3e4
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3a4
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3e2
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3d1
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2e3
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2d3
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2f2
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2e2
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2d1
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2c1
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+h1g1
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f1a6
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f1b5
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f1c4
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f1d3
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f1e2
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+e1f2
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+e1e2
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+e1d1
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b7
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b6
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b5
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b4
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b3
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b2
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1d1
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1c1
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1a1
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f4f5
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+h2h3
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+g2g3
+
+rnb1kb1r/1p3pp1/p3pn1p/4p3/3N1P1B/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+g2g4
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+g5h6
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+g5f6
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+g5h4
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4e6
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4c6
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4f5
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4b5
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4f3
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4b3
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d4e2
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3d5
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3b5
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3e4
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3a4
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3e2
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+c3d1
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2e3
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2d3
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2f2
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2e2
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2d1
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+d2c1
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+h1g1
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1a6
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1b5
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1c4
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1d3
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f1e2
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+e1f2
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+e1e2
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+e1d1
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b7
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b6
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b5
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b4
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b3
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1b2
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1d1
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1c1
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+b1a1
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+f4f5
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+h2h3
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+g2g3
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+h2h4
+
+rnb1kb1r/1p3ppp/p3pn2/4p1B1/3N1P2/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 11
+g2g4
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+g5d8
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+g5e7
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+g5h6
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+g5f6
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+g5h4
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+g5f4
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+g5e3
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d4e6
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d4c6
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d4f5
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d4b5
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d4f3
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d4b3
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d4e2
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+c3d5
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+c3b5
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+c3a4
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+c3e2
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+c3d1
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d2f4
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d2e3
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d2d3
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d2f2
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d2e2
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d2d1
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+d2c1
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+h1g1
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+f1a6
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+f1b5
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+f1d3
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+f1e2
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+e1f2
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+e1e2
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+e1d1
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+b1b7
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+b1b6
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+b1b5
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+b1b4
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+b1b3
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+b1b2
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+b1d1
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+b1c1
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+b1a1
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+h2h3
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+g2g3
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+h2h4
+
+rnb1kb1r/1p1n1ppp/p3p3/4P1B1/3N4/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 12
+g2g4
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+g5h6
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+g5f6
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+g5h4
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+g5f4
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+g5e3
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d4e6
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d4b5
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d4f3
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d4b3
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d4e2
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+c3d5
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+c3b5
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+c3a4
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+c3e2
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+c3d1
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d2f4
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d2e3
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d2d3
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d2f2
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d2e2
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d2d1
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+d2c1
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+h1g1
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+f1a6
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+f1b5
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+f1c4
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+f1d3
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+f1e2
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+e1f2
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+e1e2
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+e1d1
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+b1b7
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+b1b6
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+b1b5
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+b1b4
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+b1b3
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+b1b2
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+b1d1
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+b1c1
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+b1a1
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+e4e5
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+h2h3
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+g2g3
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+h2h4
+
+r1b1kb1r/1p3ppp/p1nppn2/5PB1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 1 11
+g2g4
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+g5h6
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+g5f6
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+g5h4
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+g5f4
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+g5e3
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4e6
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4f5
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4b5
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4f3
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4b3
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d4e2
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3d5
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3b5
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3a4
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3e2
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+c3d1
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2f4
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2e3
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2d3
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2f2
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2e2
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2d1
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+d2c1
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+h1g1
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f1a6
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f1b5
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f1d3
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+f1e2
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+e1f2
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+e1e2
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+e1d1
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b7
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b6
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b5
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b4
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b3
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1b2
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1d1
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1c1
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+b1a1
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+e4e5
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+h2h3
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+g2g3
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+h2h4
+
+r1b1kb1r/1p4pp/p1nppn2/6B1/3NP3/q1N5/P1PQ2PP/1R2KB1R w Kkq - 0 12
+g2g4
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d4e6
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d4c6
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d4f5
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d4b5
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d4f3
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d4b3
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d4e2
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c4e6
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c4a6
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c4d5
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c4b5
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c4d3
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c4e2
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c4f1
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c3d5
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c3b5
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c3a4
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c3e2
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c3b1
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+h1g1
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+h1f1
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+e1e2
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+e1d2
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+e1f1
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d1h5
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d1g4
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d1f3
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d1d3
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+d1d2
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c1h6
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c1g5
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c1f4
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+c1d2
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+a1b1
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+e4e5
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+h2h3
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+g2g3
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+f2f3
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+b2b3
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+h2h4
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+g2g4
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+f2f4
+
+rnbqkb1r/1p3ppp/p2ppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7
+b2b4
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d4e6
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d4c6
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d4f5
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d4b5
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d4f3
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d4e2
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+c3d5
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+c3b5
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+c3a4
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+c3e2
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+c3b1
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+b3e6
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+b3d5
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+b3c4
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+b3a4
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+h1g1
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+h1f1
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+e1e2
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+e1d2
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+e1f1
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d1h5
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d1g4
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d1d3
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d1e2
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+d1d2
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+c1h6
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+c1f4
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+c1e3
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+c1d2
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+a1b1
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+e4e5
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+h2h3
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+g2g3
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+f2f3
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+a2a3
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+h2h4
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+g2g4
+
+rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq - 0 8
+a2a4
