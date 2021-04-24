@@ -14,6 +14,7 @@ if __name__ == '__main__':
         INNER = input("FEN: ")
         if INNER:
             board = chess.Board(INNER)
+            print(board)
             print("Legal moves :", ", ".join(move.uci() for move in board.legal_moves))
             print("Good moves :")
             good_moves = list()
@@ -30,7 +31,13 @@ if __name__ == '__main__':
                 moves.remove(uci_move)
             print("Bad moves :", ", ".join(move.uci() for move in moves))
             print("Generated file extension :")
-            print("====================")
+            print("========== GOOD MOVES ==========")
+            GOOD_STRING = str()
+            for move in good_moves:
+                GOOD_STRING += board.fen() + "\n"
+                GOOD_STRING += move + "\n\n"
+            print(GOOD_STRING)
+            print("========== BAD MOVES ==========")
             STRING = str()
             for move in moves:
                 STRING += board.fen() + "\n"
@@ -41,15 +48,28 @@ if __name__ == '__main__':
             if confirm.lower() == "n" or confirm.lower() == "no":
                 pass
             else:
-                read = open("my_engine/training_boncoups_ouverture_blancs.txt")
-                read = read.read()
+                read = open("my_engine/training_mauvaiscoups_ouverture_blancs.txt")
+                read_content = read.read()
                 file = open("my_engine/training_mauvaiscoups_ouverture_blancs.txt", 'a')
-                if read[-2:] == "\n\n":
+                if read_content[-2:] == "\n\n":
                     pass
-                elif STRING[-1] == "\n":
+                elif read_content[-1] == "\n":
                     file.write("\n")
-                elif STRING[-1] != "\n":
+                elif read_content[-1] != "\n":
                     file.write("\n\n")
                 file.write(STRING[:-2])
                 file.close()
+                read.close()
+                read = open("my_engine/training_boncoups_ouverture_blancs.txt")
+                read_content = read.read()
+                file = open("my_engine/training_boncoups_ouverture_blancs.txt", 'a')
+                if read_content[-2:] == "\n\n":
+                    pass
+                elif read_content[-1] == "\n":
+                    file.write("\n")
+                elif read_content[-1] != "\n":
+                    file.write("\n\n")
+                file.write(GOOD_STRING[:-2])
+                file.close()
+                read.close()
                 print("Done.")
