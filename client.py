@@ -11,7 +11,7 @@ yukoo = my_engine.EngineBase("Yukoo", "Virinas-code")
 print(yukoo)
 
 SPEEDS = ['classical', 'rapid', 'blitz']
-VARIANTS = ['standard']
+VARIANTS = ['standard', "fromPosition"]
 
 colorama.init()
 def lok(*args):
