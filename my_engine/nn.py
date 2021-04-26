@@ -716,7 +716,7 @@ def systematic_train():
         if res == 1:
            good += 1
         else:
-            errs += 1
+            errs += 5
     for inputs in file2:
         pos = inputs.split("\n")[0]
         mve = inputs.split("\n")[1]
@@ -725,7 +725,7 @@ def systematic_train():
             good += 1
         else:
             errs += 1
-    print("Errors : {0}/{1} tests".format(errs, l))
+    print("Errors : {0} ({1} tests)".format(errs, l))
     default = copy.copy(errs)
     print("Good moves : {0}/{1} tests".format(good, l))
     sessions = 0  # inintialise le nombre de sessions d'optimisation
@@ -758,7 +758,7 @@ def systematic_train():
                     if res == 1:
                         good += 1
                     else:
-                        errs += 1
+                        errs += 5
                 for inputs in file2:
                     pos = inputs.split("\n")[0]
                     mve = inputs.split("\n")[1]
@@ -781,7 +781,7 @@ def systematic_train():
                     if res == 1:
                         good += 1
                     else:
-                        errs += 1
+                        errs += 5
                 for inputs in file2:
                     pos = inputs.split("\n")[0]
                     mve = inputs.split("\n")[1]
@@ -807,7 +807,7 @@ def systematic_train():
                     if res == 1:
                         good += 1
                     else:
-                        errs += 1
+                        errs += 5
                 for inputs in file2:
                     pos = inputs.split("\n")[0]
                     mve = inputs.split("\n")[1]
@@ -866,8 +866,8 @@ def systematic_train():
             if res == 1:
                good += 1
             else:
-                errs += 1
-                ogm += 1
+                errs += 5
+                ogm += 5
         for inputs in file2:
             pos = inputs.split("\n")[0]
             mve = inputs.split("\n")[1]
@@ -876,7 +876,7 @@ def systematic_train():
                 good += 1
             else:
                 errs += 1
-        print("Errors : {0}/{1} tests (on good moves : {2}/{3} tests)".format(errs, l, ogm, len(file1)))
+        print("Errors : {0} ({1} tests) (on good moves : {2}/{3} tests)".format(errs, l, ogm, len(file1)))
         default = copy.copy(errs)
         print("Good moves : {0}/{1} tests".format(good, l))
         print("---- WB TRAINING ----")
@@ -902,7 +902,7 @@ def systematic_train():
                     if res == 1:
                         good += 1
                     else:
-                        errs += 1
+                        errs += 5
                 for inputs in file2:
                     pos = inputs.split("\n")[0]
                     mve = inputs.split("\n")[1]
@@ -925,7 +925,7 @@ def systematic_train():
                     if res == 1:
                         good += 1
                     else:
-                        errs += 1
+                        errs += 5
                 for inputs in file2:
                     pos = inputs.split("\n")[0]
                     mve = inputs.split("\n")[1]
@@ -951,7 +951,7 @@ def systematic_train():
                     if res == 1:
                         good += 1
                     else:
-                        errs += 1
+                        errs += 5
                 for inputs in file2:
                     pos = inputs.split("\n")[0]
                     mve = inputs.split("\n")[1]
@@ -1010,8 +1010,8 @@ def systematic_train():
             if res == 1:
                good += 1
             else:
-                errs += 1
-                ogm += 1
+                errs += 5
+                ogm += 5
         for inputs in file2:
             pos = inputs.split("\n")[0]
             mve = inputs.split("\n")[1]
@@ -1020,7 +1020,7 @@ def systematic_train():
                 good += 1
             else:
                 errs += 1
-        print("Errors : {0}/{1} tests (on good moves : {2}/{3} tests)".format(errs, l, ogm, len(file1)))
+        print("Errors : {0} ({1} tests) (on good moves : {2}/{3} tests)".format(errs, l, ogm, len(file1)))
         default = copy.copy(errs)
         print("Good moves : {0}/{1} tests".format(good, l))
         print("---- WA TRAINING ----")
@@ -1046,7 +1046,7 @@ def systematic_train():
                     if res == 1:
                         good += 1
                     else:
-                        errs += 1
+                        errs += 5
                 for inputs in file2:
                     pos = inputs.split("\n")[0]
                     mve = inputs.split("\n")[1]
@@ -1069,7 +1069,7 @@ def systematic_train():
                     if res == 1:
                         good += 1
                     else:
-                        errs += 1
+                        errs += 5
                 for inputs in file2:
                     pos = inputs.split("\n")[0]
                     mve = inputs.split("\n")[1]
@@ -1095,7 +1095,7 @@ def systematic_train():
                     if res == 1:
                         good += 1
                     else:
-                        errs += 1
+                        errs += 5
                 for inputs in file2:
                     pos = inputs.split("\n")[0]
                     mve = inputs.split("\n")[1]
@@ -1154,8 +1154,8 @@ def systematic_train():
             if res == 1:
                good += 1
             else:
-                errs += 1
-                ogm += 1
+                errs += 5
+                ogm += 5
         for inputs in file2:
             pos = inputs.split("\n")[0]
             mve = inputs.split("\n")[1]
@@ -1164,7 +1164,7 @@ def systematic_train():
                 good += 1
             else:
                 errs += 1
-        print("Errors : {0}/{1} tests (on good moves : {2}/{3} tests)".format(errs, l, ogm, len(file1)))
+        print("Errors : {0} ({1} tests) (on good moves : {2}/{3} tests)".format(errs, l, ogm, len(file1)))
         default = copy.copy(errs)
         print("Good moves : {0}/{1} tests".format(good, l))
         print("Saving...")
