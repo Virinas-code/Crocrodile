@@ -24,9 +24,11 @@ def lerr(*args):
     print(colorama.Style.RESET_ALL + colorama.Fore.RED + time.asctime(time.localtime()) + ":", *args)
 
 class Game(threading.Thread):
-    def __init__(self, client, game_id, color, **kwargs):
+    def __init__(self, client, game_id, color, fen, **kwargs):
         super().__init__(**kwargs)
+        lok("Game", game_id, ": initial FEN", fen)
         self.game_id = game_id
+        self.initial_fen = fen
         self.client = client
         self.stream = client.bots.stream_game_state(game_id)
         self.current_state = next(self.stream)
@@ -53,7 +55,7 @@ class Game(threading.Thread):
         if event['status'] == "started":
             lok("Game", self.game_id, ": moves", event['moves'])
             mvs = event['moves'].split(" ")
-            board = chess.Board()
+            board = chess.Board(self.initial_fen)
             for move in mvs:
                 board.push(chess.Move.from_uci(move))
             ldebug("\n" + str(board))
@@ -105,6 +107,7 @@ lok("Connected to", client.account.get().get("title", "USER"), client.account.ge
 lok("Waiting for challenges")
 continue_loop = True
 colors = {}
+fens = {}
 while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
@@ -112,13 +115,14 @@ while continue_loop:
             if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors:  #  and event['challenge']['color'] != 'random'
                 client.bots.accept_challenge(event['challenge']['id'])
                 colors[event['challenge']['id']] = event['challenge']['color']
+                fens[event["challenge"]["id"]] = event["challenge"]["initialFen"]
             else:
                 client.bots.decline_challenge(event['challenge']['id'])
                 lok("Don't accept challenge in", event['challenge']['speed'].capitalize(), ("because it's a rematch" if event['challenge']['id'] in colors else "because the bot don't play this speed"))
                 if event['challenge']['id'] in colors:
                     client.bots.post_message(event['challenge']['id'], "I don't aceppt rematches (lot of bugs)")
         elif event['type'] == 'gameStart':
-            game = Game(client, event['game']['id'], colors[event['game']['id']])
+            game = Game(client, event['game']['id'], colors[event['game']['id']], fens[event["game"]["id"]])
             game.start()
         else:
             ldebug(event["type"], ":", event)
