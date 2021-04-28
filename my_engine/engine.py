@@ -27,6 +27,7 @@ SEVENTH_ROW = [55, 54, 53, 52, 51, 50, 49, 48]
 SECOND_ROW = [15, 14, 13, 12, 11, 10, 9, 8]
 VARIANTS = ['standard', 'chess960']
 
+
 def csv_to_array(csv_path):
     """CSV file top Python array."""
     results = []
@@ -36,20 +37,23 @@ def csv_to_array(csv_path):
             results.append(row)
     return results
 
+
 wa = csv_to_array("wa.csv")
 wb = csv_to_array("wb.csv")
 wc = csv_to_array("wc.csv")
 
+
 def normalisation(val):
     """Sigmoïde modifiée."""
     return (1 / (1 + math.exp(-val))) * 2 - 1
+
 
 def nn_opening_white_check_move(fen, move): # Move is UCI str
     """Neural network check if move is interesting for board."""
     board = chess.Board(fen=fen)
     pieces = board.piece_map()
     inputs_values = {'': 0, 'P': 0.1, 'N': 0.2, 'B': 0.3, 'R': 0.5, 'Q': 0.6, 'K': 0.7, 'p': -0.1,
-     'n': -0.2, 'b': -0.3, 'r': -0.5, 'q': -0.6, 'k': -0.7}
+                     'n': -0.2, 'b': -0.3, 'r': -0.5, 'q': -0.6, 'k': -0.7}
     inputs = []
     for count in range(64):
         if pieces.get(count, None):
@@ -97,7 +101,7 @@ def nn_opening_white_check_move(fen, move): # Move is UCI str
             current += inputs[i] * wa[i][j]
         cache1[j] = normalisation(current)
     # print(cache1)
-    #print("Moyenne :", sum(cache1) / len(cache1))
+    # print("Moyenne :", sum(cache1) / len(cache1))
     for j in range(38):
         current = 0
         for i in range(38):
@@ -110,7 +114,7 @@ def nn_opening_white_check_move(fen, move): # Move is UCI str
         for i in range(38):
             current += cache2[i] * wc[i][j]
         output = current
-    #print("Brut :", output)
+    # print("Brut :", output)
     if output >= 0:
         output = 1
     else:
@@ -118,13 +122,11 @@ def nn_opening_white_check_move(fen, move): # Move is UCI str
     # print("Output :", output)
     return output
 
-print(nn_opening_white_check_move("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w \
-KQkq - 0 1", "f1c4"), nn_opening_white_check_move("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP\
-1PPP/RNBQKB1R w KQkq - 0 1", "e1e2"))
 
 def printi(*args):
     """Debug mode printer."""
     print("info string", args)
+
 
 class EngineBase:
     """Engine base."""
