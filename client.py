@@ -18,15 +18,15 @@ debug_log = open("debug.log", 'w')
 
 colorama.init()
 def _lok(*args):
-    main_log.write(" ".join(args) + "\n")
+    main_log.write(" ".join(str(arg) for arg in args) + "\n")
     print(colorama.Style.RESET_ALL + colorama.Fore.GREEN + time.asctime(time.localtime()) + ":", *args)
 
 def _ldebug(*args):
-    debug_log.write(" ".join(args) + "\n")
+    debug_log.write(" ".join(str(arg) for arg in args) + "\n")
     print(colorama.Style.RESET_ALL + colorama.Fore.MAGENTA + time.asctime(time.localtime()) + ":", *args)
 
 def _lerr(*args):
-    error_log.write(" ".join(args) + "\n")
+    error_log.write(" ".join(str(arg) for arg in args) + "\n")
     print(colorama.Style.RESET_ALL + colorama.Fore.RED + time.asctime(time.localtime()) + ":", *args)
 
 def lnone(*args):
@@ -48,23 +48,24 @@ if len(sys.argv) > 1:
                 ldebug = lnone
                 lerr = lnone
             if arg == "-h" or arg == "--help":
-                print("Usage : client.py [-v | -q] [-h] [-c \"user time increment\" | --challenge \"user time increment\"]")
+                print("Usage : client.py [-v | -q] [-h] [-c \"user time increment color\" | --challenge \"user time increment color\"]")
                 print("Description : Crocrodile Lichess client")
                 print("Commands :")
                 print("\t-h, --help : Show this message and exit")
                 print("\t-v, --verbose : Show debug logs")
                 print("\t-q, --quiet : Don't show any logs")
-                print("\t-c, --challenge \"user time increment\" : Challenge user in time+increment")
+                print("\t-c, --challenge \"user time increment color\" : Challenge user in time+increment, BOT is playing with color ('white' or 'black')")
                 exit(0)
             if arg == "-c" or arg == "--challenge":
                 argc = 1
         else:
             arg = arg.split(" ")
-            if len(arg) > 2:
+            if len(arg) > 3:
                 challenge = True
                 challenge_user = arg[0]
                 challenge_time = arg[1]
                 challenge_increment = arg[2]
+                challenge_color = arg[3]
             argc = 0
 else:
     ldebug = lnone
@@ -152,6 +153,15 @@ lok("Waiting for challenges")
 continue_loop = True
 colors = {}
 fens = {}
+if challenge:
+    print(challenge_time)
+    challenge = client.challenges.create(challenge_user, True, clock_limit=int(challenge_time), clock_increment=int(challenge_increment), color=challenge_color)
+    ldebug(challenge)
+    if challenge["challenge"]["color"] == "white":
+        colors[challenge["challenge"]["id"]] = "black"
+    else:
+        colors[challenge["challenge"]["id"]] = "white"
+    fens[challenge["challenge"]["id"]] = chess.STARTING_FEN
 while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
@@ -173,4 +183,3 @@ while continue_loop:
             game.start()
         else:
             ldebug(event["type"], ":", event)
-
