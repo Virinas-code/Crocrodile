@@ -18,6 +18,7 @@ BISHOP_VALUE = 310
 ROOK_VALUE = 500
 QUEEN_VALUE = 900
 KING_VALUE = 0  # Infinity is too complex
+BISHOPS_PAIR = 0.5
 PIECES_VALUES = {"p": PAWN_VALUE, "n": KNIGHT_VALUE, "b": BISHOP_VALUE,
                  "r": ROOK_VALUE, "q": QUEEN_VALUE, "k": KING_VALUE}
 CENTRAL_SQUARES = [36, 35, 28, 27]
@@ -148,6 +149,8 @@ class EngineBase:
                 return -10000
             return 10000
         piece_map = board.piece_map()
+        white_bishops = 0
+        black_bishops = 0
         for piece in piece_map:
             if piece_map[piece].symbol().isupper():
                 white_score += PIECES_VALUES[piece_map[piece].symbol().lower()]
@@ -157,6 +160,8 @@ class EngineBase:
                     white_score += 5
                 if piece_map[piece].symbol().lower() == 'p' and piece in SEVENTH_ROW:
                     white_score += 20
+                if piece_map[piece].symbol().lower() == 'b':
+                    white_bishops += 1
             else:
                 black_score += PIECES_VALUES[piece_map[piece].symbol()]
                 if piece in CENTRAL_SQUARES:
@@ -165,6 +170,12 @@ class EngineBase:
                     black_score += 5
                 if piece_map[piece].symbol().lower() == 'p' and piece in SECOND_ROW:
                     black_score += 20
+                if piece_map[piece].symbol().lower() == 'b':
+                    black_bishops += 1
+        if white_bishops >= 2:
+            white_score += BISHOPS_PAIR
+        if black_bishops >= 2:
+            black_score += BISHOPS_PAIR
         if board.has_kingside_castling_rights(chess.WHITE):
             white_score += 7
         if board.has_kingside_castling_rights(chess.BLACK):
