@@ -1,10 +1,17 @@
-import berserk
-import colorama
-import time
-import sys
-import chess
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Crocrodile client.
+
+Lichess client for Crocrodile
+"""
 import threading
 import datetime
+import time
+import sys
+import berserk
+import colorama
+import chess
 # from Crocrodile.main import yukoo
 import my_engine
 yukoo = my_engine.EngineBase("Yukoo", "Virinas-code")
@@ -17,19 +24,27 @@ error_log = open("error.log", 'w')
 debug_log = open("debug.log", 'w')
 
 colorama.init()
+
+
 def _lok(*args):
     main_log.write(" ".join(str(arg) for arg in args) + "\n")
-    print(colorama.Style.RESET_ALL + colorama.Fore.GREEN + time.asctime(time.localtime()) + ":", *args)
+    print(colorama.Style.RESET_ALL + colorama.Fore.GREEN + \
+          time.asctime(time.localtime()) + ":", *args)
+
 
 def _ldebug(*args):
     debug_log.write(" ".join(str(arg) for arg in args) + "\n")
-    print(colorama.Style.RESET_ALL + colorama.Fore.MAGENTA + time.asctime(time.localtime()) + ":", *args)
+    print(colorama.Style.RESET_ALL + colorama.Fore.MAGENTA + \
+          time.asctime(time.localtime()) + ":", *args)
+
 
 def _lerr(*args):
     error_log.write(" ".join(str(arg) for arg in args) + "\n")
-    print(colorama.Style.RESET_ALL + colorama.Fore.RED + time.asctime(time.localtime()) + ":", *args)
+    print(colorama.Style.RESET_ALL + colorama.Fore.RED + \
+          time.asctime(time.localtime()) + ":", *args)
 
 def lnone(*args):
+    """Don't log anything."""
     pass
 
 ldebug = lnone
@@ -48,7 +63,8 @@ if len(sys.argv) > 1:
                 ldebug = lnone
                 lerr = lnone
             if arg == "-h" or arg == "--help":
-                print("Usage : client.py [-v | -q] [-h] [-c \"user time increment color\" | --challenge \"user time increment color\"]")
+                print("Usage : client.py [-v | -q] [-h] [-c \"user time increm\
+                      ent color\" | --challenge \"user time increment color\"]")
                 print("Description : Crocrodile Lichess client")
                 print("Commands :")
                 print("\t-h, --help : Show this message and exit")
@@ -109,21 +125,16 @@ class Game(threading.Thread):
             if board.turn != self.my_turn:
                 t = event[self.time_control].time()
                 time = (t.hour * 60 + t.minute) * 60 + t.second
-                lok("Game", self.game_id, ": Calculating (time", str(time) + ")...")
-                if True:  # time > 600 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1
-                    lok("Game", self.game_id, ": depth", 3)  # depth 4
-                    score, best_move = yukoo.minimax(board, 3, board.turn)
-                elif time < 120:
-                    lok("Game", self.game_id, ": depth", 3)
-                    score, best_move = yukoo.minimax(board, 3, board.turn, False)
+                lok("Game", self.game_id, ": Calculating (time", str(time) + "\
+                    )...")
+                if time < 120:
+                    lok("Game", self.game_id, ": depth", 2)
+                    score, best_move = yukoo.minimax(board, 2, board.turn)
                 else:
-                    if len(mvs) % 8 == 0 or len(mvs) % 8 == 1:
-                        lok("Game", self.game_id, ": depth", 4)
-                        score, best_move = yukoo.minimax(board, 4, board.turn, False)
-                    else:
-                        lok("Game", self.game_id, ": depth", 3)
-                        score, best_move = yukoo.minimax(board, 3, board.turn, False)
-                lok("Game", self.game_id, ": score", score, "(best move", str(best_move) + ")")
+                    lok("Game", self.game_id, ": depth", 3)
+                    score, best_move = yukoo.minimax(board, 3, board.turn)
+                lok("Game", self.game_id, ": score", score, "(best move", \
+                    str(best_move) + ")")
                 retry = 3
                 while retry > 0:
                     try:
