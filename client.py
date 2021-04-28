@@ -8,20 +8,66 @@ import datetime
 # from Crocrodile.main import yukoo
 import my_engine
 yukoo = my_engine.EngineBase("Yukoo", "Virinas-code")
-print(yukoo)
 
 SPEEDS = ['classical', 'rapid', 'blitz']
 VARIANTS = ['standard', "fromPosition"]
 
+main_log = open("main.log", 'w')
+error_log = open("error.log", 'w')
+debug_log = open("debug.log", 'w')
+
 colorama.init()
-def lok(*args):
+def _lok(*args):
+    main_log.write(" ".join(args) + "\n")
     print(colorama.Style.RESET_ALL + colorama.Fore.GREEN + time.asctime(time.localtime()) + ":", *args)
 
-def ldebug(*args):
+def _ldebug(*args):
+    debug_log.write(" ".join(args) + "\n")
     print(colorama.Style.RESET_ALL + colorama.Fore.MAGENTA + time.asctime(time.localtime()) + ":", *args)
 
-def lerr(*args):
+def _lerr(*args):
+    error_log.write(" ".join(args) + "\n")
     print(colorama.Style.RESET_ALL + colorama.Fore.RED + time.asctime(time.localtime()) + ":", *args)
+
+def lnone(*args):
+    pass
+
+ldebug = lnone
+lok = _lok
+lerr = _lerr
+challenge = False
+
+if len(sys.argv) > 1:
+    argc = 0
+    for arg in sys.argv:
+        if argc == 0:
+            if arg == "-v" or arg == "--verbose":
+                ldebug = _ldebug
+            if arg == "-q" or arg == "--quiet":
+                lok = lnone
+                ldebug = lnone
+                lerr = lnone
+            if arg == "-h" or arg == "--help":
+                print("Usage : client.py [-v | -q] [-h] [-c \"user time increment\" | --challenge \"user time increment\"]")
+                print("Description : Crocrodile Lichess client")
+                print("Commands :")
+                print("\t-h, --help : Show this message and exit")
+                print("\t-v, --verbose : Show debug logs")
+                print("\t-q, --quiet : Don't show any logs")
+                print("\t-c, --challenge \"user time increment\" : Challenge user in time+increment")
+                exit(0)
+            if arg == "-c" or arg == "--challenge":
+                argc = 1
+        else:
+            arg = arg.split(" ")
+            if len(arg) > 2:
+                challenge = True
+                challenge_user = arg[0]
+                challenge_time = arg[1]
+                challenge_increment = arg[2]
+            argc = 0
+else:
+    ldebug = lnone
 
 class Game(threading.Thread):
     def __init__(self, client, game_id, color, fen, **kwargs):
@@ -60,10 +106,9 @@ class Game(threading.Thread):
                 board.push(chess.Move.from_uci(move))
             ldebug("\n" + str(board))
             if board.turn != self.my_turn:
-                lok("Game", self.game_id, ": Calculating...")
                 t = event[self.time_control].time()
                 time = (t.hour * 60 + t.minute) * 60 + t.second
-                lok("Game", self.game_id, ": time", time)
+                lok("Game", self.game_id, ": Calculating (time", str(time) + ")...")
                 if True:  # time > 600 and len(mvs) % 4 == 0 or len(mvs) % 4 == 1
                     lok("Game", self.game_id, ": depth", 3)  # depth 4
                     score, best_move = yukoo.minimax(board, 3, board.turn)
@@ -77,8 +122,7 @@ class Game(threading.Thread):
                     else:
                         lok("Game", self.game_id, ": depth", 3)
                         score, best_move = yukoo.minimax(board, 3, board.turn, False)
-                lok("Game", self.game_id, ": best move", best_move)
-                lok("Game", self.game_id, ": score", score)
+                lok("Game", self.game_id, ": score", score, "(best move", str(best_move) + ")")
                 retry = 3
                 while retry > 0:
                     try:
@@ -115,7 +159,10 @@ while continue_loop:
             if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors:  #  and event['challenge']['color'] != 'random'
                 client.bots.accept_challenge(event['challenge']['id'])
                 colors[event['challenge']['id']] = event['challenge']['color']
-                fens[event["challenge"]["id"]] = event["challenge"]["initialFen"]
+                if event["challenge"]["variant"]["key"] == "fromPosition":
+                    fens[event["challenge"]["id"]] = event["challenge"]["initialFen"]
+                else:
+                    fens[event["challenge"]["id"]]  = chess.STARTING_FEN
             else:
                 client.bots.decline_challenge(event['challenge']['id'])
                 lok("Don't accept challenge in", event['challenge']['speed'].capitalize(), ("because it's a rematch" if event['challenge']['id'] in colors else "because the bot don't play this speed"))
@@ -126,3 +173,4 @@ while continue_loop:
             game.start()
         else:
             ldebug(event["type"], ":", event)
+
