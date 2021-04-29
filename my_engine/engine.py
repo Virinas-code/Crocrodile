@@ -6,6 +6,7 @@ Base engine
 """
 from __future__ import print_function
 import math
+import random
 # import requests
 # import copy
 import csv
@@ -165,6 +166,7 @@ class EngineBase:
                     white_score += 20
                 if piece_map[piece].symbol().lower() == 'b':
                     white_bishops += 1
+
             else:
                 black_score += PIECES_VALUES[piece_map[piece].symbol()]
                 if piece in CENTRAL_SQUARES:
@@ -214,37 +216,42 @@ class EngineBase:
             evaluation = self.evaluate(board)
             attackers = board.attackers(board.turn, board.peek().to_square)
             if len(attackers) > 0:
-                # print("retake ! board : \n", board, "\n last move :", board.peek())
+                # Quiescent
                 if board.turn == chess.WHITE:
                     evaluation += PIECES_VALUES[board.piece_map()\
-                    [board.peek().to_square].symbol().lower()]
+                                                [board.peek().to_square].\
+                                                symbol().lower()]
                 else:
                     evaluation -= PIECES_VALUES[board.piece_map()\
-                    [board.peek().to_square].symbol().lower()]
+                                                [board.peek().to_square].\
+                                                symbol().lower()]
             return evaluation, chess.Move.from_uci("0000")
         if maximimize_white:
             value = -float('inf')
             for move in board.legal_moves:
-                best_move = move
+                list_good_moves = [move]
                 break
             for move in board.legal_moves:
-                test_board = chess.Board(fen=board.fen())
-                test_board.push(move)
-                evaluation = self.minimax(test_board, depth-1, False)[0]
-                if move.uci() in ['e1g1', 'e1c1']:
-                    evaluation += 11
-                    # print('castle')
-                if move.uci() in ['e8g8', 'e8c8']:
-                    evaluation -= 11
-                    # print('castle')
-                if value < evaluation:
-                    value = evaluation
-                    best_move = move
-            return value, best_move
+                if nn_opening_white_check_move(board.fen(), move.uci()):
+                    test_board = chess.Board(fen=board.fen())
+                    test_board.push(move)
+                    evaluation = self.minimax(test_board, depth-1, False)[0]
+                    if move.uci() in ['e1g1', 'e1c1']:
+                        evaluation += 11
+                        # print('castle')
+                    elif move.uci() in ['e8g8', 'e8c8']:
+                        evaluation -= 11
+                        # print('castle')
+                    if value == evaluation:
+                        list_good_moves.append(move)
+                    elif value < evaluation:
+                        value = evaluation
+                        list_good_moves = [move]
+            return value, random.choice(list_good_moves)
         # minimizing white
         value = float('inf')
         for move in board.legal_moves:
-            best_move = move
+            list_good_moves = [move]
             break
         for move in board.legal_moves:
             test_boars = chess.Board(fen=board.fen())
@@ -252,11 +259,13 @@ class EngineBase:
             evaluation = self.minimax(test_boars, depth-1, True)[0]
             if move.uci() in ['e1g1', 'e1c1']:
                 evaluation += 11
-                #print('castle')
+                # print('castle')
             if move.uci() in ['e8g8', 'e8c8']:
                 evaluation -= 11
                 # print('castle')
+            if value == evaluation:
+                list_good_moves.append(move)
             if value > evaluation:
                 value = evaluation
-                best_move = move
-        return value, best_move
+                list_good_moves = [move]
+        return value, random.choice(list_good_moves)
