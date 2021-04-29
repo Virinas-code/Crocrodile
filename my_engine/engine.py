@@ -179,6 +179,16 @@ class EngineBase:
         # if board.peek().uci() in ['e8g8', 'e8c8']:
             # black_score += 101
             # print("black castle !")
+        if board.turn == chess.WHITE:
+            white_score += len(list(board.legal_moves)) / 100
+            board.push(chess.Move.from_uci("0000"))
+            black_score += len(list(board.legal_moves)) / 100
+            board.pop()
+        else:
+            black_score += len(list(board.legal_moves)) / 100
+            board.push(chess.Move.from_uci("0000"))
+            white_score += len(list(board.legal_moves)) / 100
+            board.pop()
         return white_score-black_score
 
     def search(self, depth, board):
