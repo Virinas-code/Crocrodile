@@ -169,7 +169,7 @@ colors = {}
 fens = {}
 if challenge:
     print(challenge_time)
-    challenge = client.challenges.create(challenge_user, True, clock_limit=int(challenge_time), clock_increment=int(challenge_increment), color=challenge_color)
+    challenge = client.challenges.create(challenge_user, True, clock_limit=int(challenge_time) * 60, clock_increment=int(challenge_increment), color=challenge_color)
     ldebug(challenge)
     if challenge["challenge"]["color"] == "white":
         colors[challenge["challenge"]["id"]] = "black"
