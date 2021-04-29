@@ -143,8 +143,9 @@ class EngineBase:
         white_score = 0
         black_score = 0
         if board.is_stalemate() or board.is_insufficient_material() or \
-        board.can_claim_threefold_repetition() or board.can_claim_fifty_moves() or \
-        board.can_claim_draw():
+            board.can_claim_threefold_repetition() or \
+                board.can_claim_fifty_moves() or \
+                board.can_claim_draw():
             return 0
         if board.is_checkmate():
             if board.turn == chess.WHITE:
