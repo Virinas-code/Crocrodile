@@ -693,10 +693,10 @@ def train():
 
 
 def systematic_train():
-    with open("my_engine/training_boncoups_ouverture_blancs.txt") as file:
+    with open("my_engine/train_data_goodmoves.txt") as file:
         file1 = file.read()
         file.close()
-    with open("my_engine/training_mauvaiscoups_ouverture_blancs.txt") as file:
+    with open("my_engine/train_data_badmoves.txt") as file:
         file2 = file.read()
         file.close()
     file1 = file1.split("\n\n")
@@ -1396,17 +1396,17 @@ def systematic_train():
     print("Saved to wa.csv")
 # return results
 
-def check():
+def check_training():
     """Check on complete files."""
     print("Loading weights...", end=" ")
     wa = csv_to_array("wa.csv")
     wb = csv_to_array("wb.csv")
     wc = csv_to_array("wc.csv")
     print("Done.")
-    with open("my_engine/training_boncoups_ouverture_blancs.txt") as file:
+    with open("my_engine/train_data_goodmoves.txt") as file:
         file1 = file.read()
         file.close()
-    with open("my_engine/training_mauvaiscoups_ouverture_blancs.txt") as file:
+    with open("my_engine/train_data_badmoves.txt") as file:
         file2 = file.read()
         file.close()
     file1 = file1.split("\n\n")
@@ -1415,6 +1415,7 @@ def check():
     errs = 0
     good = 0
     ogm = 0
+    obm = 0
     for inputs in file1:
         pos = inputs.split("\n")[0]
         mve = inputs.split("\n")[1]
@@ -1432,6 +1433,50 @@ def check():
             good += 1
         else:
             errs += 1
+            obm += 1
     print("Errors : {0}/{1} tests (on good moves : {2}/{3} tests)".format(errs, l, ogm, len(file1)))
     default = copy.copy(errs)
-    print("Good moves : {0}/{1} tests".format(good, l))
+    print("Good answers : {0:.2f}% (On good moves : {1:.2f}% | On bad moves : {2:.2f}%)".format(good/l*100, (len(file1)-ogm)/len(file1)*100, (len(file2)-obm)/len(file2)*100))
+
+
+def check_test():
+    """Check on complete files."""
+    print("Loading weights...", end=" ")
+    wa = csv_to_array("wa.csv")
+    wb = csv_to_array("wb.csv")
+    wc = csv_to_array("wc.csv")
+    print("Done.")
+    with open("my_engine/test_data_goodmoves.txt") as file:
+        file1 = file.read()
+        file.close()
+    with open("my_engine/test_data_badmoves.txt") as file:
+        file2 = file.read()
+        file.close()
+    file1 = file1.split("\n\n")
+    file2 = file2.split("\n\n")
+    l = len(file1) + len(file2)
+    errs = 0
+    good = 0
+    ogm = 0
+    obm = 0
+    for inputs in file1:
+        pos = inputs.split("\n")[0]
+        mve = inputs.split("\n")[1]
+        res = nn_opening_white_check_move(pos, mve)
+        if res == 1:
+           good += 1
+        else:
+            errs += 1
+            ogm += 1
+    for inputs in file2:
+        pos = inputs.split("\n")[0]
+        mve = inputs.split("\n")[1]
+        res = nn_opening_white_check_move(pos, mve)
+        if res == -1:
+            good += 1
+        else:
+            errs += 1
+            obm += 1
+    print("Errors : {0}/{1} tests (on good moves : {2}/{3} tests)".format(errs, l, ogm, len(file1)))
+    default = copy.copy(errs)
+    print("Good answers : {0:.2f}% (On good moves : {1:.2f}% | On bad moves : {2:.2f}%)".format(good/l*100, (len(file1)-ogm)/len(file1)*100, (len(file2)-obm)/len(file2)*100))
