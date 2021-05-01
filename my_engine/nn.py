@@ -6,9 +6,9 @@ Crocrodile Neural Network.
 Base class for Crocrodile NN.
 """
 import csv
+import math
 import numpy
 import chess
-import math
 
 
 class NeuralNetwork:
@@ -162,6 +162,80 @@ class NeuralNetwork:
                 errs += 1
         return good / length * 100
 
+    def train(self):
+        """Train Neural Network."""
+        max_iters = int(input("Maximum iterations : "))
+        iters = 0
+        success_objective = float(input("Success objective (in percents) : "))
+        max_diff = float(input("Maximal difference between training and test" +
+                               " success rates : "))
+        success = self.check_train()
+        diff = self.check_train() - self.check_test()
+        mutation_rate = float(input("Mutation rate (in percents) : "))
+        mutation_change = float(input("Mutation change : "))
+        inverse_rate = 100 / mutation_rate
+        while iters < max_iters and success_objective > success and diff < max_diff:
+            iters += 1
+            print("Training #" + str(iters))
+            # Code here
+            # Ready
+            # DECIDE
+            random_matrix1 = numpy.random.rand(74, 74) * (2 * mutation_change) - mutation_change
+            random_matrix4 = numpy.random.rand(74, 1) * (2 * mutation_change) - mutation_change
+            # x2 is zero
+            new_weight1 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight2 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight3 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight4 = numpy.heaviside(numpy.random.rand(74, 1) * inverse_rate + (1 - inverse_rate), 0)
+            self.weight1 = self.weight1 + random_matrix1 * new_weight1
+            self.weight2 = self.weight2 + random_matrix1 * new_weight2
+            self.weight3 = self.weight3 + random_matrix1 * new_weight3
+            self.weight4 = self.weight4 + random_matrix4 * new_weight4
+            next_success = self.check_train()
+            if next_success < success:
+                self.weight1 = self.weight1 - random_matrix1 * new_weight1
+                self.weight2 = self.weight2 - random_matrix1 * new_weight2
+                self.weight3 = self.weight3 - random_matrix1 * new_weight3
+                self.weight4 = self.weight4 - random_matrix4 * new_weight4
+            success = self.check_train()
+            diff = self.check_train() - self.check_test()
+            print("New success rate :", success)
+        self.save()
+        print("Saved.")
+
+    def check_always_same(self):
+        """Check success rating on good moves and on bad moves."""
+        with open("my_engine/train_data_goodmoves.txt") as file:
+            file_goodmoves = file.read()
+            file.close()
+        with open("my_engine/train_data_badmoves.txt") as file:
+            file_badmoves = file.read()
+            file.close()
+        file_goodmoves = file_goodmoves.split("\n\n")
+        file_badmoves = file_badmoves.split("\n\n")
+        errs = 0
+        good = 0
+        good_on_good_moves = 0
+        good_on_bad_moves = 0
+        for inputs in file_goodmoves:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            if self.check_move(pos, mve):
+                good += 1
+                good_on_good_moves += 1
+            else:
+                errs += 1
+        for inputs in file_badmoves:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            if not self.check_move(pos, mve):
+                good += 1
+                good_on_bad_moves += 1
+            else:
+                errs += 1
+        print("Success rate on good moves : {0}%".format(good_on_good_moves / len(file_goodmoves) * 100))
+        print("Success rate on bad moves : {0}%".format(good_on_bad_moves / len(file_badmoves) * 100))
+
     @staticmethod
     def array_to_csv(array, csv_path):
         """Write array in csv_path CSV file."""
@@ -172,6 +246,13 @@ class NeuralNetwork:
                 writer.writerow(row)
             file.close()
         return 0
+
+    def save(self):
+        """Save Neural Network."""
+        self.array_to_csv(self.weight1, "w1.csv")
+        self.array_to_csv(self.weight2, "w2.csv")
+        self.array_to_csv(self.weight3, "w3.csv")
+        self.array_to_csv(self.weight4, "w4.csv")
 
     @staticmethod
     def normalisation(value):
