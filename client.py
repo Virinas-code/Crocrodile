@@ -50,7 +50,8 @@ def lnone(*args):
 ldebug = lnone
 lok = _lok
 lerr = _lerr
-challenge = False
+CHALLENGE = False
+AUTO_CHALLENGE = False
 
 if len(sys.argv) > 1:
     argc = 0
@@ -64,20 +65,23 @@ if len(sys.argv) > 1:
                 lerr = lnone
             if arg == "-h" or arg == "--help":
                 print("Usage : client.py [-v | -q] [-h] [-c \"user time increm\
-                      ent color\" | --challenge \"user time increment color\"]")
+                      ent color\" | --challenge \"user time increment color\" | -a | --auto]")
                 print("Description : Crocrodile Lichess client")
                 print("Commands :")
                 print("\t-h, --help : Show this message and exit")
                 print("\t-v, --verbose : Show debug logs")
                 print("\t-q, --quiet : Don't show any logs")
                 print("\t-c, --challenge \"user time increment color\" : Challenge user in time+increment, BOT is playing with color ('white' or 'black')")
-                exit(0)
+                print("\t-a, --auto : Auto challenge BOTs")
+                sys.exit(0)
             if arg == "-c" or arg == "--challenge":
                 argc = 1
+            if arg in ("-a", "--auto"):
+                AUTO_CHALLENGE = True
         else:
             arg = arg.split(" ")
             if len(arg) > 3:
-                challenge = True
+                CHALLENGE = True
                 challenge_user = arg[0]
                 challenge_time = arg[1]
                 challenge_increment = arg[2]
@@ -128,11 +132,14 @@ class Game(threading.Thread):
                 lok("Game", self.game_id, \
                     ": Calculating (time", str(time) + ")...")
                 if time > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0):
-                    lok("Game", self.game_id, ": depth", 4)
-                    score, best_move = yukoo.minimax(board, 4, board.turn)
+                    lok("Game", self.game_id, ": depth", 3)
+                    score, best_move = yukoo.minimax(board, 3, board.turn)
                 elif time < 120:
                     lok("Game", self.game_id, ": depth", 2)
                     score, best_move = yukoo.minimax(board, 2, board.turn)
+                elif time < 30:
+                    lok("Game", self.game_id, ": depth", 1)
+                    score, best_move = yukoo.minimax(board, 1, board.turn)
                 else:
                     lok("Game", self.game_id, ": depth", 3)
                     score, best_move = yukoo.minimax(board, 3, board.turn)
@@ -167,7 +174,7 @@ lok("Waiting for challenges")
 continue_loop = True
 colors = {}
 fens = {}
-if challenge:
+if CHALLENGE:
     print(challenge_time)
     challenge = client.challenges.create(challenge_user, True, clock_limit=int(challenge_time) * 60, clock_increment=int(challenge_increment), color=challenge_color)
     ldebug(challenge)
@@ -176,6 +183,8 @@ if challenge:
     else:
         colors[challenge["challenge"]["id"]] = "white"
     fens[challenge["challenge"]["id"]] = chess.STARTING_FEN
+elif AUTO_CHALLENGE:
+    pass
 while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
