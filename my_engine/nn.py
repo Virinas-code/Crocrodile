@@ -171,6 +171,7 @@ class NeuralNetwork:
                                " success rates : "))
         success = self.check_train()
         diff = self.check_train() - self.check_test()
+        precedent_difference = self.check_difference()
         mutation_rate = float(input("Mutation rate (in percents) : "))
         mutation_change = float(input("Mutation change : "))
         inverse_rate = 100 / mutation_rate
@@ -192,13 +193,16 @@ class NeuralNetwork:
             self.weight3 = self.weight3 + random_matrix1 * new_weight3
             self.weight4 = self.weight4 + random_matrix4 * new_weight4
             next_success = self.check_train()
-            if next_success < success:
+            print(f"{next_success}, {success}")
+            if next_success < success or self.check_difference() > precedent_difference:
+                print("Reseting")
                 self.weight1 = self.weight1 - random_matrix1 * new_weight1
                 self.weight2 = self.weight2 - random_matrix1 * new_weight2
                 self.weight3 = self.weight3 - random_matrix1 * new_weight3
                 self.weight4 = self.weight4 - random_matrix4 * new_weight4
+            precedent_difference = self.check_difference()
             success = self.check_train()
-            diff = self.check_train() - self.check_test()
+            diff = success - self.check_test()
             print("New success rate :", success)
         self.save()
         print("Saved.")
