@@ -1,10 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 NN Random.
 
 Reset NN wa, wb and wc.
 """
 import csv
-import random
+import numpy
+
 
 def array_to_csv(array, csv_path):
     """Python array to CSV file."""
@@ -15,25 +18,16 @@ def array_to_csv(array, csv_path):
         file.close()
     return 0
 
+
 continuer = input("Do you REALLY want to reset wa, wb and wc ? [y/N] ")
 
 if continuer == "y":
-    wa = []
-    for a in range(74):
-        wa.append([])
-        for b in range(38):
-            wa[a].append((random.random() * 2 - 1))
-    wc = []
-    for a in range(38):
-        wc.append([])
-        for b in range(1):
-            wc[a].append((random.random() * 2 - 1))
-    wb = []
-    for a in range(38):
-        wb.append([])
-        for b in range(38):
-            wb[a].append((random.random() * 2 - 1))
-    array_to_csv(wa, "wa.csv")
-    array_to_csv(wb, "wb.csv")
-    array_to_csv(wc, "wc.csv")
+    w1 = numpy.random.rand(74, 74) * 2 - 1
+    w2 = numpy.random.rand(74, 74) * 2 - 1
+    w3 = numpy.random.rand(74, 74) * 2 - 1
+    w4 = numpy.random.rand(74, 1) * 2 - 1
+    array_to_csv(w1, "w1.csv")
+    array_to_csv(w2, "w2.csv")
+    array_to_csv(w3, "w3.csv")
+    array_to_csv(w4, "w4.csv")
     print("Done.")
