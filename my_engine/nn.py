@@ -236,6 +236,38 @@ class NeuralNetwork:
         print("Success rate on good moves : {0}%".format(good_on_good_moves / len(file_goodmoves) * 100))
         print("Success rate on bad moves : {0}%".format(good_on_bad_moves / len(file_badmoves) * 100))
 
+    def check_difference(self):
+        """Check success rating on good moves and on bad moves and return it."""
+        with open("my_engine/train_data_goodmoves.txt") as file:
+            file_goodmoves = file.read()
+            file.close()
+        with open("my_engine/train_data_badmoves.txt") as file:
+            file_badmoves = file.read()
+            file.close()
+        file_goodmoves = file_goodmoves.split("\n\n")
+        file_badmoves = file_badmoves.split("\n\n")
+        errs = 0
+        good = 0
+        good_on_good_moves = 0
+        good_on_bad_moves = 0
+        for inputs in file_goodmoves:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            if self.check_move(pos, mve):
+                good += 1
+                good_on_good_moves += 1
+            else:
+                errs += 1
+        for inputs in file_badmoves:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            if not self.check_move(pos, mve):
+                good += 1
+                good_on_bad_moves += 1
+            else:
+                errs += 1
+        return abs((good_on_good_moves / len(file_goodmoves) * 100) - (good_on_bad_moves / len(file_badmoves) * 100))
+
     @staticmethod
     def array_to_csv(array, csv_path):
         """Write array in csv_path CSV file."""
