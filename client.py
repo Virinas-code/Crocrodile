@@ -16,7 +16,7 @@ import chess
 import my_engine
 yukoo = my_engine.EngineBase("Yukoo", "Virinas-code")
 
-SPEEDS = ['classical', 'rapid', 'blitz']
+SPEEDS = ['classical', 'rapid', 'blitz', 'bullet']
 VARIANTS = ['standard', "fromPosition"]
 
 main_log = open("main.log", 'w')
@@ -183,8 +183,6 @@ if CHALLENGE:
     else:
         colors[challenge["challenge"]["id"]] = "white"
     fens[challenge["challenge"]["id"]] = chess.STARTING_FEN
-elif AUTO_CHALLENGE:
-    pass
 while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
