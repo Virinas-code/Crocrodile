@@ -12,6 +12,7 @@ import random
 import csv
 import chess
 import chess.polyglot
+import my_engine.nn as nn
 
 PAWN_VALUE = 100
 KNIGHT_VALUE = 290
@@ -27,6 +28,7 @@ ELARGED_SQUARES = [45, 44, 43, 42, 37, 34, 29, 26, 21, 20, 19, 18]
 SEVENTH_ROW = [55, 54, 53, 52, 51, 50, 49, 48]
 SECOND_ROW = [15, 14, 13, 12, 11, 10, 9, 8]
 VARIANTS = ['standard', 'chess960']
+neural_network = nn.NeuralNetwork()
 
 
 def csv_to_array(csv_path):
@@ -232,7 +234,7 @@ class EngineBase:
                 list_good_moves = [move]
                 break
             for move in board.legal_moves:
-                if nn_opening_white_check_move(board.fen(), move.uci()):
+                if neural_network.check_move(board.fen(), move.uci()):
                     test_board = chess.Board(fen=board.fen())
                     test_board.push(move)
                     evaluation = self.minimax(test_board, depth-1, False)[0]
