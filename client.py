@@ -131,7 +131,7 @@ class Game(threading.Thread):
                 time = (t.hour * 60 + t.minute) * 60 + t.second
                 lok("Game", self.game_id, \
                     ": Calculating (time", str(time) + ")...")
-                if time > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0):
+                if time > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0) and len(mvs) > 2:
                     lok("Game", self.game_id, ": depth", 3)
                     score, best_move = yukoo.minimax(board, 3, board.turn)
                 elif time < 120:
@@ -140,6 +140,9 @@ class Game(threading.Thread):
                 elif time < 30:
                     lok("Game", self.game_id, ": depth", 1)
                     score, best_move = yukoo.minimax(board, 1, board.turn)
+                elif len(mvs) <= 2:
+                    lok("Game", self.game_id, ": depth", 2)
+                    score, best_move = yukoo.minimax(board, 2, board.turn)
                 else:
                     lok("Game", self.game_id, ": depth", 3)
                     score, best_move = yukoo.minimax(board, 3, board.turn)
