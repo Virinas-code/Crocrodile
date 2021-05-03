@@ -329,3 +329,7 @@ class NeuralNetwork:
     def normalisation(value):
         """Sigmoide modified."""
         return (1 / (1 + math.exp(-value))) * 2 - 1
+
+
+if __name__ == '__main__':
+    test = NeuralNetwork()
