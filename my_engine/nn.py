@@ -155,14 +155,16 @@ class NeuralNetwork:
             file.close()
         file_goodmoves = file_goodmoves.split("\n\n")
         file_badmoves = file_badmoves.split("\n\n")
-        length = len(file_goodmoves) + len(file_badmoves)
         errs = 0
         good = 0
+        correct_on_good_moves = 0
+        correct_on_bad_moves = 0
         for inputs in file_goodmoves:
             pos = inputs.split("\n")[0]
             mve = inputs.split("\n")[1]
             if self.check_move(pos, mve):
                 good += 1
+                correct_on_good_moves += 1
             else:
                 errs += 1
         for inputs in file_badmoves:
@@ -170,9 +172,10 @@ class NeuralNetwork:
             mve = inputs.split("\n")[1]
             if not self.check_move(pos, mve):
                 good += 1
+                correct_on_bad_moves += 1
             else:
                 errs += 1
-        return good / length * 100
+        return correct_on_good_moves, correct_on_bad_moves, len(file_goodmoves), len(file_badmoves)
 
     def train(self):
         """Train Neural Network."""
@@ -181,12 +184,15 @@ class NeuralNetwork:
         success_objective = float(input("Success objective (in percents) : "))
         max_diff = float(input("Maximal difference between training and test" +
                                " success rates : "))
-        success = self.check_train()
-        diff = self.check_train() - self.check_test()
-        precedent_difference = self.check_difference()
+        on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
+        old_on_good_moves, old_on_bad_moves, old_good_moves, old_bad_moves = on_good_moves, on_bad_moves, good_moves, bad_moves
+        success = (on_good_moves + on_bad_moves) / (good_moves + bad_moves) * 100
+        diff = success - self.check_test()
+        precedent_difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
         mutation_rate = float(input("Mutation rate (in percents) : "))
         mutation_change = float(input("Mutation change : "))
         inverse_rate = 100 / mutation_rate
+        print(f"Success : {success} / Diff : {diff} / Precedent difference : {precedent_difference}")
         while iters < max_iters and success_objective > success and diff < max_diff:
             iters += 1
             print("Training #" + str(iters))
