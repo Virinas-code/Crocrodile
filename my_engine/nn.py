@@ -20,10 +20,16 @@ class NeuralNetwork:
         self.weight2 = self.csv_to_array("w2.csv")
         self.weight3 = self.csv_to_array("w3.csv")
         self.weight4 = self.csv_to_array("w4.csv")
+        self.weight5 = self.csv_to_array("w5.csv")
+        self.weight6 = self.csv_to_array("w6.csv")
+        self.weight7 = self.csv_to_array("w7.csv")
         self.input_layer = numpy.zeros(74)
         self.hidden_layer_1 = numpy.zeros(74)
         self.hidden_layer_2 = numpy.zeros(74)
         self.hidden_layer_3 = numpy.zeros(74)
+        self.hidden_layer_4 = numpy.zeros(74)
+        self.hidden_layer_5 = numpy.zeros(74)
+        self.hidden_layer_6 = numpy.zeros(74)
         self.output_layer = numpy.zeros(1)
 
     def output(self):
@@ -95,7 +101,13 @@ class NeuralNetwork:
         self.hidden_layer_2 = normalizer(self.hidden_layer_2)
         self.hidden_layer_3 = self.hidden_layer_2 @ self.weight3
         self.hidden_layer_3 = normalizer(self.hidden_layer_3)
-        self.output_layer = self.hidden_layer_3 @ self.weight4
+        self.hidden_layer_4 = self.hidden_layer_3 @ self.weight4
+        self.hidden_layer_4 = normalizer(self.hidden_layer_4)
+        self.hidden_layer_5 = self.hidden_layer_4 @ self.weight5
+        self.hidden_layer_5 = normalizer(self.hidden_layer_5)
+        self.hidden_layer_6 = self.hidden_layer_5 @ self.weight6
+        self.hidden_layer_6 = normalizer(self.hidden_layer_6)
+        self.output_layer = self.hidden_layer_6 @ self.weight7
         self.output_layer = normalizer(self.output_layer)
 
     def check_move(self, board, move):
@@ -187,23 +199,37 @@ class NeuralNetwork:
             new_weight1 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
             new_weight2 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
             new_weight3 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight4 = numpy.heaviside(numpy.random.rand(74, 1) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight4 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight5 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight6 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight7 = numpy.heaviside(numpy.random.rand(74, 1) * inverse_rate + (1 - inverse_rate), 0)
             self.weight1 = self.weight1 + random_matrix1 * new_weight1
             self.weight2 = self.weight2 + random_matrix1 * new_weight2
             self.weight3 = self.weight3 + random_matrix1 * new_weight3
-            self.weight4 = self.weight4 + random_matrix4 * new_weight4
-            next_success = self.check_train()
-            print(f"{next_success}, {success}")
-            if next_success < success or self.check_difference() > precedent_difference:
+            self.weight4 = self.weight4 + random_matrix1 * new_weight4
+            self.weight5 = self.weight5 + random_matrix1 * new_weight5
+            self.weight6 = self.weight6 + random_matrix1 * new_weight6
+            self.weight7 = self.weight7 + random_matrix4 * new_weight7
+            on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
+            next_success = (on_good_moves + on_bad_moves) / (good_moves + bad_moves) * 100
+            print("Test success rate :", next_success, "(on good moves :", (on_good_moves / good_moves) * 100, "% / on bad moves :", (on_bad_moves / bad_moves) * 100, "% )")
+            difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
+            if next_success < success - 0.5 * (difference - precedent_difference) or difference > precedent_difference:
                 print("Reseting")
                 self.weight1 = self.weight1 - random_matrix1 * new_weight1
                 self.weight2 = self.weight2 - random_matrix1 * new_weight2
                 self.weight3 = self.weight3 - random_matrix1 * new_weight3
-                self.weight4 = self.weight4 - random_matrix4 * new_weight4
-            precedent_difference = self.check_difference()
-            success = self.check_train()
-            diff = success - self.check_test()
-            print("New success rate :", success)
+                self.weight4 = self.weight4 - random_matrix1 * new_weight4
+                self.weight5 = self.weight5 - random_matrix1 * new_weight5
+                self.weight6 = self.weight6 - random_matrix1 * new_weight6
+                self.weight7 = self.weight7 - random_matrix4 * new_weight7
+                on_good_moves, on_bad_moves, good_moves, bad_moves = old_on_good_moves, old_on_bad_moves, old_good_moves, old_bad_moves
+            else:
+                diff = success - self.check_test()  # Check test take some time, but it's essential not to overtrain
+            old_on_good_moves, old_on_bad_moves, old_good_moves, old_bad_moves = on_good_moves, on_bad_moves, good_moves, bad_moves
+            success = (on_good_moves + on_bad_moves) / (good_moves + bad_moves) * 100
+            precedent_difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
+            print("New success rate :", success, "(on good moves :", (on_good_moves / good_moves) * 100, "% / on bad moves :", (on_bad_moves / bad_moves) * 100, "% )")
         self.save()
         print("Saved.")
 
@@ -289,6 +315,9 @@ class NeuralNetwork:
         self.array_to_csv(self.weight2, "w2.csv")
         self.array_to_csv(self.weight3, "w3.csv")
         self.array_to_csv(self.weight4, "w4.csv")
+        self.array_to_csv(self.weight5, "w5.csv")
+        self.array_to_csv(self.weight6, "w6.csv")
+        self.array_to_csv(self.weight7, "w7.csv")
 
     @staticmethod
     def normalisation(value):
