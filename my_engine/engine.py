@@ -245,7 +245,7 @@ class EngineBase:
                         list_best_moves.append(move)
                     elif value < evaluation:
                         value = evaluation
-                        list_good_moves = [move]
+                        list_best_moves = [move]
                     nn_solved = True
             if not nn_solved:
                 print("\033[31mERROR\033[0m: Neural network bug - no good moves")
@@ -259,11 +259,11 @@ class EngineBase:
                     evaluation -= 11
                     # print('castle')
                 if value == evaluation:
-                    list_good_moves.append(move)
+                    list_best_moves.append(move)
                 elif value < evaluation:
                     value = evaluation
-                    list_good_moves = [move]
-            return value, random.choice(list_good_moves)
+                    list_best_moves = [move]
+            return value, random.choice(list_best_moves)
         # minimizing white
         value = float('inf')
         for move in board.legal_moves:
