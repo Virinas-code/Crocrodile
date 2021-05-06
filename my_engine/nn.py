@@ -23,13 +23,17 @@ class NeuralNetwork:
         self.weight5 = self.csv_to_array("w5.csv")
         self.weight6 = self.csv_to_array("w6.csv")
         self.weight7 = self.csv_to_array("w7.csv")
-        self.input_layer = numpy.zeros(74)
-        self.hidden_layer_1 = numpy.zeros(74)
-        self.hidden_layer_2 = numpy.zeros(74)
-        self.hidden_layer_3 = numpy.zeros(74)
-        self.hidden_layer_4 = numpy.zeros(74)
-        self.hidden_layer_5 = numpy.zeros(74)
-        self.hidden_layer_6 = numpy.zeros(74)
+        self.weight8 = self.csv_to_array("w8.csv")
+        self.weight9 = self.csv_to_array("w9.csv")
+        self.input_layer = numpy.zeros(813)
+        self.hidden_layer_1 = numpy.zeros(1024)
+        self.hidden_layer_2 = numpy.zeros(1024)
+        self.hidden_layer_3 = numpy.zeros(1024)
+        self.hidden_layer_4 = numpy.zeros(1024)
+        self.hidden_layer_5 = numpy.zeros(1024)
+        self.hidden_layer_6 = numpy.zeros(1024)
+        self.hidden_layer_7 = numpy.zeros(1024)
+        self.hidden_layer_8 = numpy.zeros(1024)
         self.output_layer = numpy.zeros(1)
 
     def output(self):
@@ -114,7 +118,11 @@ class NeuralNetwork:
         self.hidden_layer_5 = normalizer(self.hidden_layer_5)
         self.hidden_layer_6 = self.hidden_layer_5 @ self.weight6
         self.hidden_layer_6 = normalizer(self.hidden_layer_6)
-        self.output_layer = self.hidden_layer_6 @ self.weight7
+        self.hidden_layer_7 = self.hidden_layer_5 @ self.weight7
+        self.hidden_layer_7 = normalizer(self.hidden_layer_7)
+        self.hidden_layer_8 = self.hidden_layer_5 @ self.weight8
+        self.hidden_layer_8 = normalizer(self.hidden_layer_8)
+        self.output_layer = self.hidden_layer_8 @ self.weight9
         self.output_layer = normalizer(self.output_layer)
 
     def check_move(self, board, move):
@@ -206,16 +214,17 @@ class NeuralNetwork:
             # Code here
             # Ready
             # DECIDE
-            random_matrix1 = numpy.random.rand(74, 74) * (2 * mutation_change) - mutation_change
-            random_matrix4 = numpy.random.rand(74, 1) * (2 * mutation_change) - mutation_change
+            random_matrix1 = numpy.random.rand(813, 1024) * (2 * mutation_change) - mutation_change
+            random_matrix1 = numpy.random.rand(1024, 1024) * (2 * mutation_change) - mutation_change
+            random_matrix4 = numpy.random.rand(1024, 1) * (2 * mutation_change) - mutation_change
             # x2 is zero
-            new_weight1 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight2 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight3 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight4 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight5 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight6 = numpy.heaviside(numpy.random.rand(74, 74) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight7 = numpy.heaviside(numpy.random.rand(74, 1) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight1 = numpy.heaviside(numpy.random.rand(74, 1024) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight2 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight3 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight4 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight5 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight6 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight7 = numpy.heaviside(numpy.random.rand(1024, 1) * inverse_rate + (1 - inverse_rate), 0)
             self.weight1 = self.weight1 + random_matrix1 * new_weight1
             self.weight2 = self.weight2 + random_matrix1 * new_weight2
             self.weight3 = self.weight3 + random_matrix1 * new_weight3
