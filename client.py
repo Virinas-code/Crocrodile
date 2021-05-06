@@ -193,7 +193,7 @@ while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
         if event['type'] == 'challenge':
-            if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors:  #  and event['challenge']['color'] != 'random'
+            if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors and event['challenge']['challenger']['id'] != "crocrodile":  #  and event['challenge']['color'] != 'random'
                 client.bots.accept_challenge(event['challenge']['id'])
                 colors[event['challenge']['id']] = event['challenge']['color']
                 if event["challenge"]["variant"]["key"] == "fromPosition":
@@ -201,12 +201,21 @@ while continue_loop:
                 else:
                     fens[event["challenge"]["id"]]  = chess.STARTING_FEN
             else:
-                client.bots.decline_challenge(event['challenge']['id'])
-                lok("Don't accept challenge in", event['challenge']['speed'].capitalize(), ("because it's a rematch" if event['challenge']['id'] in colors else "because the bot don't play this speed"))
-                if event['challenge']['id'] in colors:
-                    client.bots.post_message(event['challenge']['id'], "I don't aceppt rematches (lot of bugs)")
+                if event["challenge"]["challenger"]["id"] != "crocrodile":
+                    client.bots.decline_challenge(event['challenge']['id'])
+                    lok("Don't accept challenge in", event['challenge']['speed'].capitalize(), ("because it's a rematch" if event['challenge']['id'] in colors else "because the bot don't play this speed"))
+                    if event['challenge']['id'] in colors:
+                        client.bots.post_message(event['challenge']['id'], "I don't aceppt rematches (lot of bugs)")
         elif event['type'] == 'gameStart':
             game = Game(client, event['game']['id'], colors[event['game']['id']], fens[event["game"]["id"]])
             game.start()
+        elif event['type'] == 'gameFinish':
+            if AUTO_CHALLENGE:
+                challenge = client.challenges.create(challenge_user, True, clock_limit=int(float(challenge_time)) * 60, clock_increment=int(challenge_increment), color=challenge_color)
+                if challenge["challenge"]["color"] == "white":
+                    colors[challenge["challenge"]["id"]] = "black"
+                else:
+                    colors[challenge["challenge"]["id"]] = "white"
+                fens[challenge["challenge"]["id"]] = chess.STARTING_FEN
         else:
             ldebug(event["type"], ":", event)
