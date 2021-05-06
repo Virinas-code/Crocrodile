@@ -15,6 +15,7 @@ import chess
 # from Crocrodile.main import yukoo
 import my_engine
 yukoo = my_engine.EngineBase("Yukoo", "Virinas-code")
+minimax = yukoo.minimax_std
 
 SPEEDS = ['classical', 'rapid', 'blitz', 'bullet']
 VARIANTS = ['standard', "fromPosition"]
@@ -64,8 +65,7 @@ if len(sys.argv) > 1:
                 ldebug = lnone
                 lerr = lnone
             if arg == "-h" or arg == "--help":
-                print("Usage : client.py [-v | -q] [-h] [-c \"user time increm\
-                      ent color\" | --challenge \"user time increment color\" | -a | --auto]")
+                print("Usage : client.py [-v | -q] [-h] [-c \"user time increment color\" | --challenge \"user time increment color\" | -a | --auto] [-n | --neural-network]")
                 print("Description : Crocrodile Lichess client")
                 print("Commands :")
                 print("\t-h, --help : Show this message and exit")
@@ -73,11 +73,14 @@ if len(sys.argv) > 1:
                 print("\t-q, --quiet : Don't show any logs")
                 print("\t-c, --challenge \"user time increment color\" : Challenge user in time+increment, BOT is playing with color ('white' or 'black')")
                 print("\t-a, --auto : Auto challenge BOTs")
+                print("\t-n, --neural-network : Enable Neural Network")
                 sys.exit(0)
             if arg == "-c" or arg == "--challenge":
                 argc = 1
             if arg in ("-a", "--auto"):
                 AUTO_CHALLENGE = True
+            if arg in ("-n", "--neural-network"):
+                minimax = yukoo.minimax_nn
         else:
             arg = arg.split(" ")
             if len(arg) > 3:
@@ -133,19 +136,19 @@ class Game(threading.Thread):
                     ": Calculating (time", str(time) + ")...")
                 if time > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0) and len(mvs) > 2:
                     lok("Game", self.game_id, ": depth", 3)
-                    score, best_move = yukoo.minimax(board, 3, board.turn)
+                    score, best_move = minimax(board, 3, board.turn)
                 elif time < 120:
                     lok("Game", self.game_id, ": depth", 2)
-                    score, best_move = yukoo.minimax(board, 2, board.turn)
+                    score, best_move = minimax(board, 2, board.turn)
                 elif time < 30:
                     lok("Game", self.game_id, ": depth", 1)
-                    score, best_move = yukoo.minimax(board, 1, board.turn)
+                    score, best_move = minimax(board, 1, board.turn)
                 elif len(mvs) <= 2:
                     lok("Game", self.game_id, ": depth", 2)
-                    score, best_move = yukoo.minimax(board, 2, board.turn)
+                    score, best_move = minimax(board, 2, board.turn)
                 else:
                     lok("Game", self.game_id, ": depth", 3)
-                    score, best_move = yukoo.minimax(board, 3, board.turn)
+                    score, best_move = minimax(board, 3, board.turn)
                 lok("Game", self.game_id, ": score", score, "(best move", \
                     str(best_move) + ")")
                 retry = 3
