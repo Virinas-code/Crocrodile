@@ -46,11 +46,18 @@ class NeuralNetwork:
         inputs_values = {'': 0, 'P': 0.1, 'N': 0.2, 'B': 0.3, 'R': 0.5,
                          'Q': 0.6, 'K': 0.7, 'p': -0.1, 'n': -0.2, 'b': -0.3,
                          'r': -0.5, 'q': -0.6, 'k': -0.7}
-        for square in range(64):
-            if pieces.get(square, None):
-                inputs.append(inputs_values.get(pieces[square].symbol(), 0))
-            else:
-                inputs.append(0)
+        if board.turn == chess.WHITE:
+            for square in range(64):
+                if pieces.get(square, None):
+                    inputs.append(inputs_values.get(pieces[square].symbol(), 0))
+                else:
+                    inputs.append(0)
+        else:
+            for square in range(63, -1, -1):
+                if pieces.get(square, None):
+                    inputs.append(-(inputs_values.get(pieces[square].symbol(), 0)))
+                else:
+                    inputs.append(0)
         if board.has_kingside_castling_rights(chess.WHITE):
             inputs.append(1)
         else:
