@@ -145,10 +145,7 @@ class EngineBase:
         """Evaluate position."""
         white_score = 0
         black_score = 0
-        if board.is_stalemate() or board.is_insufficient_material() or \
-            board.can_claim_threefold_repetition() or \
-                board.can_claim_fifty_moves() or \
-                board.can_claim_draw():
+        if board.is_stalemate():
             return 0
         if board.is_checkmate():
             if board.turn == chess.WHITE:
@@ -160,25 +157,30 @@ class EngineBase:
         for piece in piece_map:
             if piece_map[piece].symbol().isupper():
                 white_score += PIECES_VALUES[piece_map[piece].symbol().lower()]
-                if piece in CENTRAL_SQUARES:
+                if piece in CENTRAL_SQUARES and not piece_map[piece].symbol() == "Q":
                     white_score += 10
-                if piece in ELARGED_SQUARES:
+                if piece in ELARGED_SQUARES and not piece_map[piece].symbol() == "Q":
                     white_score += 5
-                if piece_map[piece].symbol().lower() == 'p' and piece in SEVENTH_ROW:
+                if piece_map[piece].symbol() == 'P' and piece in SEVENTH_ROW:
                     white_score += 20
-                if piece_map[piece].symbol().lower() == 'b':
+                if piece_map[piece].symbol() == 'P' and piece in SEVENTH_ROW:
+                    white_score += 20
+                if piece_map[piece].symbol() == 'B':
                     white_bishops += 1
-
+                if piece_map[piece].symbol() == 'Q' and len(piece_map) > 28:
+                    white_score -= 30
             else:
                 black_score += PIECES_VALUES[piece_map[piece].symbol()]
-                if piece in CENTRAL_SQUARES:
+                if piece in CENTRAL_SQUARES and not piece_map[piece].symbol() == "q":
                     black_score += 10
-                if piece in ELARGED_SQUARES:
+                if piece in ELARGED_SQUARES and not piece_map[piece].symbol() == "q":
                     black_score += 5
-                if piece_map[piece].symbol().lower() == 'p' and piece in SECOND_ROW:
+                if piece_map[piece].symbol() == 'p' and piece in SECOND_ROW:
                     black_score += 20
-                if piece_map[piece].symbol().lower() == 'b':
+                if piece_map[piece].symbol() == 'b':
                     black_bishops += 1
+                if piece_map[piece].symbol() == 'q' and len(piece_map) > 28:
+                    black_score -= 30
         if white_bishops >= 2:
             white_score += BISHOPS_PAIR
         if black_bishops >= 2:
