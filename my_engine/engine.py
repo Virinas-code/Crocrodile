@@ -282,3 +282,55 @@ class EngineBase:
                 value = evaluation
                 list_good_moves = [move]
         return value, random.choice(list_good_moves)
+
+    def minimax_std(self, board, depth, maximimize_white):
+        """Minimax algorithm from Wikipedia without NN."""
+        if depth == 0 or board.is_game_over():
+            evaluation = self.evaluate(board)
+            attackers = board.attackers(board.turn, board.peek().to_square)
+            if len(attackers) > 0:
+                # Quiescent
+                if board.turn == chess.WHITE:
+                    evaluation += PIECES_VALUES[board.piece_map()\
+                                                [board.peek().to_square].\
+                                                symbol().lower()]
+                else:
+                    evaluation -= PIECES_VALUES[board.piece_map()\
+                                                [board.peek().to_square].\
+                                                symbol().lower()]
+            return evaluation, chess.Move.from_uci("0000")
+        if maximimize_white:
+            value = -float('inf')
+            legal_moves = list(board.legal_moves)
+            list_best_moves = [legal_moves[0]]
+            for move in legal_moves:
+                test_board = chess.Board(fen=board.fen())
+                test_board.push(move)
+                evaluation = self.minimax_std(test_board, depth-1, False)[0]
+                if move.uci() in ['e1g1', 'e1c1']:
+                    evaluation += 11
+                    # print('castle')
+                if value == evaluation:
+                    list_best_moves.append(move)
+                elif value < evaluation:
+                    value = evaluation
+                    list_best_moves = [move]
+            return value, random.choice(list_best_moves)
+        else:
+            # minimizing white
+            value = float('inf')
+            legal_moves = list(board.legal_moves)
+            list_best_moves = [legal_moves[0]]
+            for move in legal_moves:
+                test_board = chess.Board(fen=board.fen())
+                test_board.push(move)
+                evaluation = self.minimax_std(test_board, depth-1, True)[0]
+                if move.uci() in ['e8g8', 'e8c8']:
+                    evaluation -= 11
+                    # print('castle')
+                if value == evaluation:
+                    list_best_moves.append(move)
+                elif value > evaluation:
+                    value = evaluation
+                    list_best_moves = [move]
+            return value, random.choice(list_best_moves)
