@@ -54,6 +54,12 @@ lerr = _lerr
 CHALLENGE = False
 AUTO_CHALLENGE = False
 
+with open("lichess.token") as file:
+    token = file.read()[:-1]
+
+session = berserk.TokenSession(token)
+client = berserk.Client(session)
+
 if len(sys.argv) > 1:
     argc = 0
     for arg in sys.argv:
@@ -65,7 +71,7 @@ if len(sys.argv) > 1:
                 ldebug = lnone
                 lerr = lnone
             if arg == "-h" or arg == "--help":
-                print("Usage : client.py [-v | -q] [-h] [-c \"user time increment color\" | --challenge \"user time increment color\" | -a | --auto] [-n | --neural-network]")
+                print("Usage : client.py [-v | -q] [-h] [-c \"user time increment color\" | --challenge \"user time increment color\" | -a | --auto] [-n | --neural-network] [-u | --upgrade] [-d | --dev]")
                 print("Description : Crocrodile Lichess client")
                 print("Commands :")
                 print("\t-h, --help : Show this message and exit")
@@ -74,6 +80,8 @@ if len(sys.argv) > 1:
                 print("\t-c, --challenge \"user time increment color\" : Challenge user in time+increment, BOT is playing with color ('white' or 'black')")
                 print("\t-a, --auto : Auto challenge BOTs")
                 print("\t-n, --neural-network : Enable Neural Network")
+                print("\t-u, --upgrade: Upgrade to bot account")
+                print("\t-d, --dev : Dev account")
                 sys.exit(0)
             if arg == "-c" or arg == "--challenge":
                 argc = 1
@@ -81,6 +89,11 @@ if len(sys.argv) > 1:
                 AUTO_CHALLENGE = True
             if arg in ("-n", "--neural-network"):
                 minimax = yukoo.minimax_nn
+            if arg in ("-u", "--upgrade"):
+                client.account.upgrade_to_bot()
+            if arg in ("-d", "--dev"):
+                session = berserk.TokenSession(open("dev.token").read())
+                client = berserk.Client(session)
         else:
             arg = arg.split(" ")
             if len(arg) > 3:
@@ -167,13 +180,9 @@ class Game(threading.Thread):
         lok("Game", self.game_id, ":", event['room'].capitalize(), event['username'], "says", event['text'])
 lok("Initialized.")
 
-with open("lichess.token") as file:
-    token = file.read()[:-1]
+
 
 lok("Token is", token)
-
-session = berserk.TokenSession(token)
-client = berserk.Client(session)
 
 lok("Connected to", client.account.get().get("title", "USER"), client.account.get().get("username", "Anonymous"))
 lok("Waiting for challenges")
