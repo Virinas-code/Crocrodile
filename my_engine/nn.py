@@ -45,23 +45,28 @@ class NeuralNetwork:
     def generate_inputs(self, board, move):
         """Generate inputs for move move in board."""
         board = chess.Board(board)
+        if board.turn == chess.BLACK:
+            board = board.mirror()
         pieces = board.piece_map()
         inputs = []
-        inputs_values = {'': 0, 'P': 0.1, 'N': 0.2, 'B': 0.3, 'R': 0.5,
-                         'Q': 0.6, 'K': 0.7, 'p': -0.1, 'n': -0.2, 'b': -0.3,
-                         'r': -0.5, 'q': -0.6, 'k': -0.7}
-        if board.turn == chess.WHITE:
-            for square in range(64):
-                if pieces.get(square, None):
-                    inputs.append(inputs_values.get(pieces[square].symbol(), 0))
-                else:
-                    inputs.append(0)
-        else:
-            for square in range(63, -1, -1):
-                if pieces.get(square, None):
-                    inputs.append(-(inputs_values.get(pieces[square].symbol(), 0)))
-                else:
-                    inputs.append(0)
+        inputs_values = {'': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         'P': [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         'N': [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         'B': [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                         'R': [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                         'Q': [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                         'K': [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                         'p': [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                         'n': [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+                         'b': [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+                         'r': [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+                         'q': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+                         'k': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]}
+        for square in range(64):
+            if pieces.get(square, None):
+                inputs.extend(inputs_values[pieces[square].symbol()])
+            else:
+                inputs.extend(inputs_values[""])
         if board.has_kingside_castling_rights(chess.WHITE):
             inputs.append(1)
         else:
@@ -78,17 +83,25 @@ class NeuralNetwork:
             inputs.append(1)
         else:
             inputs.append(0)
+        cols = [0, 0, 0, 0, 0, 0, 0, 0]
         if board.has_legal_en_passant():
-            inputs.append(chess.square_file(board.ep_square) / 10)
-        else:
-            inputs.append(-1)
+            cols[chess.square_file(board.ep_square)] = 1
+        inputs.extend(cols)
         move = chess.Move.from_uci(move)
         from_square = move.from_square
-        inputs.append(chess.square_file(from_square) / 10)
-        inputs.append(chess.square_rank(from_square) / 10)
+        cols = [0, 0, 0, 0, 0, 0, 0, 0]
+        cols[chess.square_file(from_square)] = 1
+        inputs.extend(cols)
+        cols = [0, 0, 0, 0, 0, 0, 0, 0]
+        cols[chess.square_rank(from_square)] = 1
+        inputs.extend(cols)
         to_square = move.to_square
-        inputs.append(chess.square_file(to_square) / 10)
-        inputs.append(chess.square_rank(to_square) / 10)
+        cols = [0, 0, 0, 0, 0, 0, 0, 0]
+        cols[chess.square_file(to_square)] = 1
+        inputs.extend(cols)
+        cols = [0, 0, 0, 0, 0, 0, 0, 0]
+        cols[chess.square_rank(to_square)] = 1
+        inputs.extend(cols)
         inputs.append(1)
         self.input_layer = numpy.array(inputs)
         self.input_layer = self.input_layer
@@ -343,8 +356,8 @@ class NeuralNetwork:
 
     @staticmethod
     def normalisation(value):
-        """Sigmoide modified."""
-        return (1 / (1 + math.exp(-value))) * 2 - 1
+        """Sigmoide."""
+        return 1 / (1 + math.exp(-value))
 
 
 if __name__ == '__main__':
