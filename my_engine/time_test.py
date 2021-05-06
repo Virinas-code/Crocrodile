@@ -3,14 +3,15 @@
 """
 Time Test.
 
-Test time for random number.
+Test time for evaluation function.
 """
-import random
 import time
+import chess
 
 start = time.time()
-list = list()
-for a in range(1000000):
-    list.append(random.random())
+test_list = list()
+board = chess.Board()
+for a in range(10000):
+    test_list.append(board.generate_legal_moves())
 end = time.time()
 print("Time :", end - start)
