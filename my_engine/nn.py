@@ -42,7 +42,7 @@ class NeuralNetwork:
 
     def output(self):
         """Return NN output."""
-        if self.output_layer[0] > 0:
+        if self.output_layer[0] > 0.5:
             return True
         return False
 
@@ -233,23 +233,27 @@ class NeuralNetwork:
             # Ready
             # DECIDE
             random_matrix1 = numpy.random.rand(813, 1024) * (2 * mutation_change) - mutation_change
-            random_matrix1 = numpy.random.rand(1024, 1024) * (2 * mutation_change) - mutation_change
+            random_matrix2 = numpy.random.rand(1024, 1024) * (2 * mutation_change) - mutation_change
             random_matrix4 = numpy.random.rand(1024, 1) * (2 * mutation_change) - mutation_change
             # x2 is zero
-            new_weight1 = numpy.heaviside(numpy.random.rand(74, 1024) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight1 = numpy.heaviside(numpy.random.rand(813, 1024) * inverse_rate + (1 - inverse_rate), 0)
             new_weight2 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
             new_weight3 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
             new_weight4 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
             new_weight5 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
             new_weight6 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight7 = numpy.heaviside(numpy.random.rand(1024, 1) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight7 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight8 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
+            new_weight9 = numpy.heaviside(numpy.random.rand(1024, 1) * inverse_rate + (1 - inverse_rate), 0)
             self.weight1 = self.weight1 + random_matrix1 * new_weight1
-            self.weight2 = self.weight2 + random_matrix1 * new_weight2
-            self.weight3 = self.weight3 + random_matrix1 * new_weight3
-            self.weight4 = self.weight4 + random_matrix1 * new_weight4
-            self.weight5 = self.weight5 + random_matrix1 * new_weight5
-            self.weight6 = self.weight6 + random_matrix1 * new_weight6
-            self.weight7 = self.weight7 + random_matrix4 * new_weight7
+            self.weight2 = self.weight2 + random_matrix2 * new_weight2
+            self.weight3 = self.weight3 + random_matrix2 * new_weight3
+            self.weight4 = self.weight4 + random_matrix2 * new_weight4
+            self.weight5 = self.weight5 + random_matrix2 * new_weight5
+            self.weight6 = self.weight6 + random_matrix2 * new_weight6
+            self.weight7 = self.weight7 + random_matrix2 * new_weight7
+            self.weight8 = self.weight8 + random_matrix2 * new_weight8
+            self.weight9 = self.weight9 + random_matrix4 * new_weight9
             on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
             next_success = (on_good_moves + on_bad_moves) / (good_moves + bad_moves) * 100
             print("Test success rate :", next_success, "(on good moves :", (on_good_moves / good_moves) * 100, "% / on bad moves :", (on_bad_moves / bad_moves) * 100, "% )")
@@ -257,12 +261,14 @@ class NeuralNetwork:
             if next_success < success - 0.5 * (difference - precedent_difference) or difference > precedent_difference:
                 print("Reseting")
                 self.weight1 = self.weight1 - random_matrix1 * new_weight1
-                self.weight2 = self.weight2 - random_matrix1 * new_weight2
-                self.weight3 = self.weight3 - random_matrix1 * new_weight3
-                self.weight4 = self.weight4 - random_matrix1 * new_weight4
-                self.weight5 = self.weight5 - random_matrix1 * new_weight5
-                self.weight6 = self.weight6 - random_matrix1 * new_weight6
-                self.weight7 = self.weight7 - random_matrix4 * new_weight7
+                self.weight2 = self.weight2 - random_matrix2 * new_weight2
+                self.weight3 = self.weight3 - random_matrix2 * new_weight3
+                self.weight4 = self.weight4 - random_matrix2 * new_weight4
+                self.weight5 = self.weight5 - random_matrix2 * new_weight5
+                self.weight6 = self.weight6 - random_matrix2 * new_weight6
+                self.weight7 = self.weight7 - random_matrix2 * new_weight7
+                self.weight8 = self.weight8 - random_matrix2 * new_weight8
+                self.weight9 = self.weight9 - random_matrix4 * new_weight9
                 on_good_moves, on_bad_moves, good_moves, bad_moves = old_on_good_moves, old_on_bad_moves, old_good_moves, old_bad_moves
             else:
                 diff = success - self.check_test()  # Check test take some time, but it's essential not to overtrain
