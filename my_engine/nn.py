@@ -35,6 +35,10 @@ class NeuralNetwork:
         self.hidden_layer_7 = numpy.zeros(1024)
         self.hidden_layer_8 = numpy.zeros(1024)
         self.output_layer = numpy.zeros(1)
+        self.test_good = "my_engine/test_data_goodmoves.txt"
+        self.test_bad = "my_engine/test_data_badmoves.txt"
+        self.train_good = "my_engine/train_data_goodmoves.txt"
+        self.train_bad = "my_engine/train_data_badmoves.txt"
 
     def output(self):
         """Return NN output."""
@@ -146,10 +150,10 @@ class NeuralNetwork:
 
     def check_test(self):
         """Check NN on test dataset."""
-        with open("my_engine/test_data_goodmoves.txt") as file:
+        with open(self.test_good) as file:
             file_goodmoves = file.read()
             file.close()
-        with open("my_engine/test_data_badmoves.txt") as file:
+        with open(self.test_bad) as file:
             file_badmoves = file.read()
             file.close()
         file_goodmoves = file_goodmoves.split("\n\n")
@@ -175,10 +179,10 @@ class NeuralNetwork:
 
     def check_train(self):
         """Check NN on train dataset."""
-        with open("my_engine/train_data_goodmoves.txt") as file:
+        with open(self.train_good) as file:
             file_goodmoves = file.read()
             file.close()
-        with open("my_engine/train_data_badmoves.txt") as file:
+        with open(self.train_bad) as file:
             file_badmoves = file.read()
             file.close()
         file_goodmoves = file_goodmoves.split("\n\n")
@@ -207,6 +211,7 @@ class NeuralNetwork:
 
     def train(self):
         """Train Neural Network."""
+        self.change_files()
         max_iters = int(input("Maximum iterations : "))
         iters = 0
         success_objective = float(input("Success objective (in percents) : "))
@@ -270,10 +275,10 @@ class NeuralNetwork:
 
     def check_always_same(self):
         """Check success rating on good moves and on bad moves."""
-        with open("my_engine/train_data_goodmoves.txt") as file:
+        with open(self.train_good) as file:
             file_goodmoves = file.read()
             file.close()
-        with open("my_engine/train_data_badmoves.txt") as file:
+        with open(self.train_bad) as file:
             file_badmoves = file.read()
             file.close()
         file_goodmoves = file_goodmoves.split("\n\n")
@@ -303,10 +308,10 @@ class NeuralNetwork:
 
     def check_difference(self):
         """Check success rating on good moves and on bad moves and return it."""
-        with open("my_engine/train_data_goodmoves.txt") as file:
+        with open(self.train_good) as file:
             file_goodmoves = file.read()
             file.close()
-        with open("my_engine/train_data_badmoves.txt") as file:
+        with open(self.train_bad) as file:
             file_badmoves = file.read()
             file.close()
         file_goodmoves = file_goodmoves.split("\n\n")
@@ -358,6 +363,13 @@ class NeuralNetwork:
     def normalisation(value):
         """Sigmoide."""
         return 1 / (1 + math.exp(-value))
+
+    def change_files(self):
+        """Change files locations."""
+        self.train_good = input("Good moves training file : ")
+        self.train_bad = input("Bad moves training file : ")
+        self.test_good = input("Good moves test file : ")
+        self.test_bad = input("Bad moves test file : ")
 
 
 if __name__ == '__main__':
