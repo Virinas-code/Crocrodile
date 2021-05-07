@@ -130,3 +130,6 @@ dmypy.json
 
 # Lichess token
 lichess.token
+
+# CTags
+tags
