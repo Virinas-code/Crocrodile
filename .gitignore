@@ -128,8 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Lichess token
-lichess.token
+# Lichess tokens
+*.token
 
 # CTags
 tags
