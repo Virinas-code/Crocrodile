@@ -110,10 +110,53 @@ class NeuralNetwork:
         self.input_layer = numpy.array(inputs)
         self.input_layer = self.input_layer
 
+    def pieces_type_inputs(self):
+        """Generate piece types inputs."""
+        white_pawns = list()
+        for index in range(0, 768, 12):
+            white_pawns.append(self.input_layer[index])
+        white_knights = list()
+        for index in range(1, 769, 12):
+            white_knights.append(self.input_layer[index])
+        white_bishops = list()
+        for index in range(2, 770, 12):
+            white_bishops.append(self.input_layer[index])
+        white_rooks = list()
+        for index in range(3, 771, 12):
+            white_rooks.append(self.input_layer[index])
+        white_queens = list()
+        for index in range(4, 772, 12):
+            white_queens.append(self.input_layer[index])
+        white_king = list()
+        for index in range(5, 773, 12):
+            white_king.append(self.input_layer[index])
+        black_pawns = list()
+        for index in range(6, 774, 12):
+            black_pawns.append(self.input_layer[index])
+        black_knights = list()
+        for index in range(7, 769, 12):
+            black_knights.append(self.input_layer[index])
+        black_bishops = list()
+        for index in range(8, 770, 12):
+            black_bishops.append(self.input_layer[index])
+        black_rooks = list()
+        for index in range(9, 771, 12):
+            black_rooks.append(self.input_layer[index])
+        black_queens = list()
+        for index in range(10, 772, 12):
+            black_queens.append(self.input_layer[index])
+        black_king = list()
+        for index in range(11, 773, 12):
+            black_king.append(self.input_layer[index])
+        result = (white_pawns, white_knights, white_bishops, white_rooks, white_queens, white_king, black_pawns, black_knights, black_bishops, black_rooks, black_queens, black_king)
+        for element in range(len(result)):
+            result[element].append(1)
+        return result
+
     @staticmethod
     def csv_to_array(csv_path):
         """Read CSV file and return array."""
-        result = []
+        result = list()
         with open(csv_path) as file:
             reader = csv.reader(file, quoting=csv.QUOTE_NONNUMERIC)
             for row in reader:
