@@ -27,24 +27,24 @@ debug_log = open("debug.log", 'w')
 colorama.init()
 
 
-def _lok(*args):
+def _lok(*args, **kwargs):
     main_log.write(" ".join(str(arg) for arg in args) + "\n")
     print(colorama.Style.RESET_ALL + colorama.Fore.GREEN + \
-          time.asctime(time.localtime()) + ":", *args)
+          time.asctime(time.localtime()) + ":", *args, **kwargs)
 
 
-def _ldebug(*args):
+def _ldebug(*args, **kwargs):
     debug_log.write(" ".join(str(arg) for arg in args) + "\n")
     print(colorama.Style.RESET_ALL + colorama.Fore.MAGENTA + \
-          time.asctime(time.localtime()) + ":", *args)
+          time.asctime(time.localtime()) + ":", *args, **kwargs)
 
 
-def _lerr(*args):
+def _lerr(*args, **kwargs):
     error_log.write(" ".join(str(arg) for arg in args) + "\n")
     print(colorama.Style.RESET_ALL + colorama.Fore.RED + \
-          time.asctime(time.localtime()) + ":", *args)
+          time.asctime(time.localtime()) + ":", *args, **kwargs)
 
-def lnone(*args):
+def lnone(*args, **kwargs):
     """Don't log anything."""
     pass
 
@@ -95,13 +95,13 @@ if len(sys.argv) > 1:
                 session = berserk.TokenSession(open("dev.token").read())
                 client = berserk.Client(session)
         else:
-            arg = arg.split(" ")
+            arg_list = arg.split(" ")
             if len(arg) > 3:
                 CHALLENGE = True
-                challenge_user = arg[0]
-                challenge_time = arg[1]
-                challenge_increment = arg[2]
-                challenge_color = arg[3]
+                challenge_user = arg_list[0]
+                challenge_time = arg_list[1]
+                challenge_increment = arg_list[2]
+                challenge_color = arg_list[3]
             argc = 0
 else:
     ldebug = lnone
@@ -136,7 +136,6 @@ class Game(threading.Thread):
     def game_state_change(self, event):
         ldebug("game state change", event)
         if event['status'] == "started":
-            lok("Game", self.game_id, ": moves", event['moves'])
             mvs = event['moves'].split(" ")
             board = chess.Board(self.initial_fen)
             for move in mvs:
@@ -146,23 +145,23 @@ class Game(threading.Thread):
                 t = event[self.time_control].time()
                 time = (t.hour * 60 + t.minute) * 60 + t.second
                 lok("Game", self.game_id, \
-                    ": Calculating (time", str(time) + ")...")
+                    ": Calculating (time", str(time) + ")...", end=" (")
                 if time > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0) and len(mvs) > 2:
-                    lok("Game", self.game_id, ": depth", 3)
+                    lok("depth " + str(3) + ")")
                     score, best_move = minimax(board, 3, board.turn)
                 elif time < 120:
-                    lok("Game", self.game_id, ": depth", 2)
+                    lok("depth " + str(2) + ")")
                     score, best_move = minimax(board, 2, board.turn)
                 elif time < 30:
-                    lok("Game", self.game_id, ": depth", 1)
+                    lok("depth " + str(1) + ")")
                     score, best_move = minimax(board, 1, board.turn)
                 elif len(mvs) <= 2:
-                    lok("Game", self.game_id, ": depth", 2)
+                    lok("depth " + str(2) + ")")
                     score, best_move = minimax(board, 2, board.turn)
                 else:
-                    lok("Game", self.game_id, ": depth", 3)
+                    lok("depth " + str(3) + ")")
                     score, best_move = minimax(board, 3, board.turn)
-                lok("Game", self.game_id, ": score", score, "(best move", \
+                lok("Game", self.game_id, ": score", score, "(best move",
                     str(best_move) + ")")
                 retry = 3
                 while retry > 0:
