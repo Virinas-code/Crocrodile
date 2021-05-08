@@ -26,7 +26,9 @@ PIECES_VALUES = {"p": PAWN_VALUE, "n": KNIGHT_VALUE, "b": BISHOP_VALUE,
 CENTRAL_SQUARES = [36, 35, 28, 27]
 ELARGED_SQUARES = [45, 44, 43, 42, 37, 34, 29, 26, 21, 20, 19, 18]
 SEVENTH_ROW = [55, 54, 53, 52, 51, 50, 49, 48]
+EIGHT_ROW = [56, 57, 58, 59, 60, 61, 62, 63]
 SECOND_ROW = [15, 14, 13, 12, 11, 10, 9, 8]
+FIRST_ROW = [0, 1, 2, 3, 4, 5, 6, 7]
 VARIANTS = ['standard', 'chess960']
 neural_network = nn.NeuralNetwork()
 
@@ -163,8 +165,8 @@ class EngineBase:
                     white_score += 5
                 if piece_map[piece].symbol() == 'P' and piece in SEVENTH_ROW:
                     white_score += 20
-                if piece_map[piece].symbol() == 'P' and piece in SEVENTH_ROW:
-                    white_score += 20
+                if piece_map[piece].symbol() == 'P' and piece in EIGHT_ROW:
+                    white_score += QUEEN_VALUE
                 if piece_map[piece].symbol() == 'B':
                     white_bishops += 1
                 if piece_map[piece].symbol() == 'Q' and len(piece_map) > 28:
@@ -177,6 +179,8 @@ class EngineBase:
                     black_score += 5
                 if piece_map[piece].symbol() == 'p' and piece in SECOND_ROW:
                     black_score += 20
+                if piece_map[piece].symbol() == 'p' and piece in FIRST_ROW:
+                    black_score += QUEEN_VALUE
                 if piece_map[piece].symbol() == 'b':
                     black_bishops += 1
                 if piece_map[piece].symbol() == 'q' and len(piece_map) > 28:
