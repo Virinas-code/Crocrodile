@@ -10,6 +10,7 @@
  -> Marche pas pour tout
 
 :warning: Ne pas oublier les dernières entrées !
+:warning: Promotion - en quoi ?
 
 ----------
 ## Taille et architecture du réseau
@@ -25,7 +26,7 @@
 - **Pétard :** Fous noirs
 - **Sapin moche :** Tours noires
 - **Beau sapin :** Dames noires
-- **Oeuf de Paques :** Roi noir
+- **Œuf de Pâques :** Roi noir
 
 On sépare la couche d'entrées en 12 vecteurs de 109 éléments :
 
@@ -42,7 +43,7 @@ Si pièce on met *1*, sinon *0*
 Structure :
 
  `32 (pièce ou pas) + 4 (roques) + 8 (en passant) + 32 (coup à jouer) + 1 (biais)`
- 
+
 ### 3/16 de l'échiqiuer
 - **District 1 :** Haut gauche
 - **District 2 :** Haut droite
