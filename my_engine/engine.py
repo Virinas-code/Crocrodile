@@ -20,7 +20,8 @@ BISHOP_VALUE = 310
 ROOK_VALUE = 500
 QUEEN_VALUE = 900
 KING_VALUE = 0  # Infinity is too complex
-BISHOPS_PAIR = 0.5
+BISHOPS_PAIR = 50
+PROTECTED_KING = 5
 PIECES_VALUES = {"p": PAWN_VALUE, "n": KNIGHT_VALUE, "b": BISHOP_VALUE,
                  "r": ROOK_VALUE, "q": QUEEN_VALUE, "k": KING_VALUE}
 CENTRAL_SQUARES = [36, 35, 28, 27]
@@ -169,8 +170,15 @@ class EngineBase:
                     white_score += QUEEN_VALUE
                 if piece_map[piece].symbol() == 'B':
                     white_bishops += 1
-                if piece_map[piece].symbol() == 'Q' and len(piece_map) > 28:
+                if piece_map[piece].symbol() == 'Q' and len(piece_map) > 20:
                     white_score -= 30
+                if piece_map[piece].symbol() == 'K':
+                    if piece + 7 in piece_map and piece_map[piece + 7].symbol() == 'P' and len(piece_map) > 16:
+                        white_score += PROTECTED_KING
+                    if piece + 8 in piece_map and piece_map[piece + 8].symbol() == 'P' and len(piece_map) > 16:
+                        white_score += PROTECTED_KING
+                    if piece + 9 in piece_map and piece_map[piece + 9].symbol() == 'P' and len(piece_map) > 16:
+                        white_score += PROTECTED_KING
             else:
                 black_score += PIECES_VALUES[piece_map[piece].symbol()]
                 if piece in CENTRAL_SQUARES and not piece_map[piece].symbol() == "q":
@@ -183,6 +191,13 @@ class EngineBase:
                     black_score += QUEEN_VALUE
                 if piece_map[piece].symbol() == 'b':
                     black_bishops += 1
+                if piece_map[piece].symbol() == 'k':
+                    if piece - 7 in piece_map and piece_map[piece - 7].symbol() == 'p' and len(piece_map) > 16:
+                        black_score += PROTECTED_KING
+                    if piece - 8 in piece_map and piece_map[piece - 8].symbol() == 'p' and len(piece_map) > 16:
+                        black_score += PROTECTED_KING
+                    if piece - 9 in piece_map and piece_map[piece - 9].symbol() == 'p' and len(piece_map) > 16:
+                        black_score += PROTECTED_KING
                 if piece_map[piece].symbol() == 'q' and len(piece_map) > 28:
                     black_score -= 30
         if white_bishops >= 2:
@@ -204,14 +219,14 @@ class EngineBase:
             # black_score += 101
             # print("black castle !")
         if board.turn == chess.WHITE:
-            white_score += len(list(board.legal_moves)) / 100
+            white_score += len(list(board.legal_moves))
             board.push(chess.Move.from_uci("0000"))
-            black_score += len(list(board.legal_moves)) / 100
+            black_score += len(list(board.legal_moves))
             board.pop()
         else:
-            black_score += len(list(board.legal_moves)) / 100
+            black_score += len(list(board.legal_moves))
             board.push(chess.Move.from_uci("0000"))
-            white_score += len(list(board.legal_moves)) / 100
+            white_score += len(list(board.legal_moves))
             board.pop()
         return white_score-black_score
 
@@ -244,9 +259,6 @@ class EngineBase:
                     test_board = chess.Board(fen=board.fen())
                     test_board.push(move)
                     evaluation = self.minimax_nn(test_board, depth-1, False)[0]
-                    if move.uci() in ['e1g1', 'e1c1']:
-                        evaluation += 11
-                        # print('castle')
                     if value == evaluation:
                         list_best_moves.append(move)
                     elif value < evaluation:
@@ -258,12 +270,6 @@ class EngineBase:
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
                 evaluation = self.minimax_nn(test_board, 1, False)[0]
-                if move.uci() in ['e1g1', 'e1c1']:
-                    evaluation += 11
-                    # print('castle')
-                elif move.uci() in ['e8g8', 'e8c8']:
-                    evaluation -= 11
-                    # print('castle')
                 if value == evaluation:
                     list_best_moves.append(move)
                 elif value < evaluation:
