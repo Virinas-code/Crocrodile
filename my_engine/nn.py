@@ -407,8 +407,12 @@ class NeuralNetwork:
 
     @staticmethod
     def normalisation(value):
-        """Sigmoide."""
-        return 1 / (1 + math.exp(-value))
+        """Normalisation."""
+        if value < 0:
+            return 0
+        elif value > 1:
+            return 1
+        return value
 
     def change_files(self):
         """Change files locations."""
