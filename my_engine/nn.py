@@ -21,19 +21,17 @@ class NeuralNetwork:
         self.weight3 = self.csv_to_array("w3.csv")
         self.weight4 = self.csv_to_array("w4.csv")
         self.weight5 = self.csv_to_array("w5.csv")
-        self.weight6 = self.csv_to_array("w6.csv")
-        self.weight7 = self.csv_to_array("w7.csv")
-        self.weight8 = self.csv_to_array("w8.csv")
-        self.weight9 = self.csv_to_array("w9.csv")
-        self.input_layer = numpy.zeros(813)
-        self.hidden_layer_1 = numpy.zeros(1024)
-        self.hidden_layer_2 = numpy.zeros(1024)
-        self.hidden_layer_3 = numpy.zeros(1024)
-        self.hidden_layer_4 = numpy.zeros(1024)
-        self.hidden_layer_5 = numpy.zeros(1024)
-        self.hidden_layer_6 = numpy.zeros(1024)
-        self.hidden_layer_7 = numpy.zeros(1024)
-        self.hidden_layer_8 = numpy.zeros(1024)
+        self.b1 = self.csv_to_array("b1.csv")
+        self.b2 = self.csv_to_array("b2.csv")
+        self.b3 = self.csv_to_array("b3.csv")
+        self.b4 = self.csv_to_array("b4.csv")
+        self.b5 = self.csv_to_array("b5.csv")
+        self.pre_input_layer = numpy.zeros(768)
+        self.input_layer = numpy.zeros(64)
+        self.hidden_layer_1 = numpy.zeros(64)
+        self.hidden_layer_2 = numpy.zeros(64)
+        self.hidden_layer_3 = numpy.zeros(64)
+        self.hidden_layer_4 = numpy.zeros(1)
         self.output_layer = numpy.zeros(1)
         self.test_good = "my_engine/test_data_goodmoves.txt"
         self.test_bad = "my_engine/test_data_badmoves.txt"
@@ -71,6 +69,52 @@ class NeuralNetwork:
                 inputs.extend(inputs_values[pieces[square].symbol()])
             else:
                 inputs.extend(inputs_values[""])
+        self.pre_input_layer = numpy.array(inputs)
+        # Generate piece types inputs.self.hidden_layer_9
+        white_pawns = list()
+        for index in range(0, 768, 12):
+            white_pawns.append(self.pre_input_layer[index])
+        white_knights = list()
+        for index in range(1, 769, 12):
+            white_knights.append(self.pre_input_layer[index])
+        white_bishops = list()
+        for index in range(2, 770, 12):
+            white_bishops.append(self.pre_input_layer[index])
+        white_rooks = list()
+        for index in range(3, 771, 12):
+            white_rooks.append(self.pre_input_layer[index])
+        white_queens = list()
+        for index in range(4, 772, 12):
+            white_queens.append(self.pre_input_layer[index])
+        white_king = list()
+        for index in range(5, 773, 12):
+            white_king.append(self.pre_input_layer[index])
+        black_pawns = list()
+        for index in range(6, 774, 12):
+            black_pawns.append(self.pre_input_layer[index])
+        black_knights = list()
+        for index in range(7, 769, 12):
+            black_knights.append(self.pre_input_layer[index])
+        black_bishops = list()
+        for index in range(8, 770, 12):
+            black_bishops.append(self.pre_input_layer[index])
+        black_rooks = list()
+        for index in range(9, 771, 12):
+            black_rooks.append(self.pre_input_layer[index])
+        black_queens = list()
+        for index in range(10, 772, 12):
+            black_queens.append(self.pre_input_layer[index])
+        black_king = list()
+        for index in range(11, 773, 12):
+            black_king.append(self.pre_input_layer[index])
+        result = (white_pawns, white_knights, white_bishops, white_rooks,
+                  white_queens, white_king, black_pawns, black_knights,
+                  black_bishops, black_rooks, black_queens, black_king)
+        future = list(result)
+        self.input_layer = []
+        self.input_layer.extend(future)
+        self.input_layer.append([0]*64)
+        inputs = []
         if board.has_kingside_castling_rights(chess.WHITE):
             inputs.append(1)
         else:
@@ -87,10 +131,14 @@ class NeuralNetwork:
             inputs.append(1)
         else:
             inputs.append(0)
+        self.input_layer.append(inputs + [0] * 60)
+        inputs = []
         cols = [0, 0, 0, 0, 0, 0, 0, 0]
         if board.has_legal_en_passant():
             cols[chess.square_file(board.ep_square)] = 1
         inputs.extend(cols)
+        self.input_layer.append(inputs + [0] * 56)
+        inputs = []
         move = chess.Move.from_uci(move)
         from_square = move.from_square
         cols = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -106,52 +154,9 @@ class NeuralNetwork:
         cols = [0, 0, 0, 0, 0, 0, 0, 0]
         cols[chess.square_rank(to_square)] = 1
         inputs.extend(cols)
-        inputs.append(1)
-        self.input_layer = numpy.array(inputs)
-        self.input_layer = self.input_layer
-
-    def pieces_type_inputs(self):
-        """Generate piece types inputs."""
-        white_pawns = list()
-        for index in range(0, 768, 12):
-            white_pawns.append(self.input_layer[index])
-        white_knights = list()
-        for index in range(1, 769, 12):
-            white_knights.append(self.input_layer[index])
-        white_bishops = list()
-        for index in range(2, 770, 12):
-            white_bishops.append(self.input_layer[index])
-        white_rooks = list()
-        for index in range(3, 771, 12):
-            white_rooks.append(self.input_layer[index])
-        white_queens = list()
-        for index in range(4, 772, 12):
-            white_queens.append(self.input_layer[index])
-        white_king = list()
-        for index in range(5, 773, 12):
-            white_king.append(self.input_layer[index])
-        black_pawns = list()
-        for index in range(6, 774, 12):
-            black_pawns.append(self.input_layer[index])
-        black_knights = list()
-        for index in range(7, 769, 12):
-            black_knights.append(self.input_layer[index])
-        black_bishops = list()
-        for index in range(8, 770, 12):
-            black_bishops.append(self.input_layer[index])
-        black_rooks = list()
-        for index in range(9, 771, 12):
-            black_rooks.append(self.input_layer[index])
-        black_queens = list()
-        for index in range(10, 772, 12):
-            black_queens.append(self.input_layer[index])
-        black_king = list()
-        for index in range(11, 773, 12):
-            black_king.append(self.input_layer[index])
-        result = (white_pawns, white_knights, white_bishops, white_rooks, white_queens, white_king, black_pawns, black_knights, black_bishops, black_rooks, black_queens, black_king)
-        for element in range(len(result)):
-            result[element].append(1)
-        return result
+        self.input_layer.append(inputs + [0] * 32)
+        self.input_layer.extend([[0] * 64] * 48)
+        self.input_layer = numpy.array(self.input_layer)
 
     @staticmethod
     def csv_to_array(csv_path):
@@ -166,23 +171,15 @@ class NeuralNetwork:
     def calculate(self):
         """Calculate NN result."""
         normalizer = numpy.vectorize(self.normalisation)
-        self.hidden_layer_1 = self.input_layer @ self.weight1
+        self.hidden_layer_1 = self.input_layer @ self.weight1 + self.b1
         self.hidden_layer_1 = normalizer(self.hidden_layer_1)
-        self.hidden_layer_2 = self.hidden_layer_1 @ self.weight2
+        self.hidden_layer_2 = self.hidden_layer_1 @ self.weight2 + self.b2
         self.hidden_layer_2 = normalizer(self.hidden_layer_2)
-        self.hidden_layer_3 = self.hidden_layer_2 @ self.weight3
+        self.hidden_layer_3 = self.hidden_layer_2 @ self.weight3 + self.b3
         self.hidden_layer_3 = normalizer(self.hidden_layer_3)
-        self.hidden_layer_4 = self.hidden_layer_3 @ self.weight4
+        self.hidden_layer_4 = self.weight4 @ self.hidden_layer_3 + self.b4
         self.hidden_layer_4 = normalizer(self.hidden_layer_4)
-        self.hidden_layer_5 = self.hidden_layer_4 @ self.weight5
-        self.hidden_layer_5 = normalizer(self.hidden_layer_5)
-        self.hidden_layer_6 = self.hidden_layer_5 @ self.weight6
-        self.hidden_layer_6 = normalizer(self.hidden_layer_6)
-        self.hidden_layer_7 = self.hidden_layer_5 @ self.weight7
-        self.hidden_layer_7 = normalizer(self.hidden_layer_7)
-        self.hidden_layer_8 = self.hidden_layer_5 @ self.weight8
-        self.hidden_layer_8 = normalizer(self.hidden_layer_8)
-        self.output_layer = self.hidden_layer_8 @ self.weight9
+        self.output_layer = self.hidden_layer_4 @ self.weight5 + self.b5
         self.output_layer = normalizer(self.output_layer)
 
     def check_move(self, board, move):
