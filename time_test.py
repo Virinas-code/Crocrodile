@@ -7,14 +7,14 @@ Test time for evaluation function.
 """
 import time
 import chess
-import my_engine
+import my_engine.nn
 
-crocrodile = my_engine.EngineBase("Crocrodile", "Virinas-code")
+nn = my_engine.nn.NeuralNetwork()
+
 
 start = time.time()
-test_list = list()
-board = chess.Board()
-for a in range(10000):
-    test_list.append(crocrodile.evaluate(board))
+fen = chess.STARTING_FEN
+for a in range(1000):
+    nn.check_move(fen, "e2e4")
 end = time.time()
 print("Time :", end - start)
