@@ -12,7 +12,7 @@
 :warning: Ne pas oublier les dernières entrées !
 :warning: Promotion - en quoi ?
 
-----------
+___
 ## Taille et architecture du réseau
 ### Types de pièces
 - **Carré :** Pions blancs
@@ -32,6 +32,8 @@ On sépare la couche d'entrées en 12 vecteurs de 109 éléments :
 
  `64 (pièces) + 4 (roques) + 8 (en passant) + 32 (coup à jouer) + 1 (biais)`
 
+___
+## OBSOLÈTE
 ### Cases noires / cases blanches
 - **Chocolat blanc :** Cases noires pièces blanches
 - **Chocolat noir :** Cases noires pièces noires
@@ -44,7 +46,7 @@ Structure :
 
  `32 (pièce ou pas) + 4 (roques) + 8 (en passant) + 32 (coup à jouer) + 1 (biais)`
 
-### 3/16 de l'échiqiuer
+### 3/16 de l’échiquier
 - **District 1 :** Haut gauche
 - **District 2 :** Haut droite
 - **District 3 :** Bas droite
