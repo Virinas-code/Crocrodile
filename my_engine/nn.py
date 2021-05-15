@@ -181,7 +181,7 @@ class NeuralNetwork:
     def calculate(self):
         """Calculate NN result."""
         normalizer = numpy.vectorize(self.normalisation)
-        self.hidden_layer_1 = self.input_layer @ self.weight1 + self.b1
+        self.hidden_layer_1 = self.weight1 @ self.input_layer + self.b1
         self.hidden_layer_1 = normalizer(self.hidden_layer_1)
         self.hidden_layer_2 = self.hidden_layer_1 @ self.weight2 + self.b2
         self.hidden_layer_2 = normalizer(self.hidden_layer_2)
@@ -267,15 +267,17 @@ class NeuralNetwork:
         success_objective = float(input("Success objective (in percents) : "))
         max_diff = float(input("Maximal difference between training and test" +
                                " success rates : "))
+        balance = float(input("Balance between good moves and bad moves (>1 to enhance good moves success rate) : "))
         on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
         old_on_good_moves, old_on_bad_moves, old_good_moves, old_bad_moves = on_good_moves, on_bad_moves, good_moves, bad_moves
-        success = (on_good_moves + on_bad_moves) / (good_moves + bad_moves) * 100
+        success = (balance*on_good_moves + on_bad_moves) / (balance*good_moves + bad_moves) * 100
         diff = success - self.check_test()
         precedent_difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
         mutation_rate = float(input("Mutation rate (in percents) : "))
         mutation_change = float(input("Mutation change : "))
         inverse_rate = 100 / mutation_rate
         print(f"Success : {success} / Diff : {diff} / Precedent difference : {precedent_difference}")
+        normalizer = numpy.vectorize(self.normalisation)
         while iters < max_iters and success_objective > success and diff < max_diff:
             iters += 1
             print("Training #" + str(iters))
@@ -317,10 +319,10 @@ class NeuralNetwork:
             self.b4 = self.b4 + random_matrix4 * new_b4
             self.b5 = self.b5 + random_matrixb5 * new_b5
             on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
-            next_success = (on_good_moves + on_bad_moves) / (good_moves + bad_moves) * 100
+            next_success = (balance*on_good_moves + on_bad_moves) / (balance*good_moves + bad_moves) * 100
             print("Test success rate :", next_success, "(on good moves :", (on_good_moves / good_moves) * 100, "% / on bad moves :", (on_bad_moves / bad_moves) * 100, "% )")
-            difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
-            if next_success < success - 0.5 * (difference - precedent_difference) or difference > precedent_difference:
+            #difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
+            if next_success < success: # - 0.5 * (difference - precedent_difference): # or difference > precedent_difference:
                 print("Reseting")
                 self.weight1 = self.weight1 - random_matrix1 * new_weight1
                 self.weight2 = self.weight2 - random_matrix1 * new_weight2
@@ -358,7 +360,7 @@ class NeuralNetwork:
                 self.cb4 = normalizer(self.cb4 + 0.05 * numpy.heaviside(randb4, 0) * self.cb4)
                 self.cb5 = normalizer(self.cb5 + 0.05 * numpy.heaviside(randb5, 0) * self.cb5)
             old_on_good_moves, old_on_bad_moves, old_good_moves, old_bad_moves = on_good_moves, on_bad_moves, good_moves, bad_moves
-            success = (on_good_moves + on_bad_moves) / (good_moves + bad_moves) * 100
+            success = (balance*on_good_moves + on_bad_moves) / (balance*good_moves + bad_moves) * 100
             precedent_difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
             print("New success rate :", success, "(on good moves :", (on_good_moves / good_moves) * 100, "% / on bad moves :", (on_bad_moves / bad_moves) * 100, "% )")
         self.save()
