@@ -26,6 +26,16 @@ class NeuralNetwork:
         self.b3 = self.csv_to_array("b3.csv")
         self.b4 = self.csv_to_array("b4.csv")
         self.b5 = self.csv_to_array("b5.csv")
+        self.cweight1 = self.csv_to_array("cw1.csv")
+        self.cweight2 = self.csv_to_array("cw2.csv")
+        self.cweight3 = self.csv_to_array("cw3.csv")
+        self.cweight4 = self.csv_to_array("cw4.csv")
+        self.cweight5 = self.csv_to_array("cw5.csv")
+        self.cb1 = self.csv_to_array("cb1.csv")
+        self.cb2 = self.csv_to_array("cb2.csv")
+        self.cb3 = self.csv_to_array("cb3.csv")
+        self.cb4 = self.csv_to_array("cb4.csv")
+        self.cb5 = self.csv_to_array("cb5.csv")
         self.pre_input_layer = numpy.zeros(768)
         self.input_layer = numpy.zeros(64)
         self.hidden_layer_1 = numpy.zeros(64)
@@ -272,28 +282,40 @@ class NeuralNetwork:
             # Code here
             # Ready
             # DECIDE
-            random_matrix1 = numpy.random.rand(813, 1024) * (2 * mutation_change) - mutation_change
-            random_matrix2 = numpy.random.rand(1024, 1024) * (2 * mutation_change) - mutation_change
-            random_matrix4 = numpy.random.rand(1024, 1) * (2 * mutation_change) - mutation_change
-            # x2 is zero
-            new_weight1 = numpy.heaviside(numpy.random.rand(813, 1024) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight2 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight3 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight4 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight5 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight6 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight7 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight8 = numpy.heaviside(numpy.random.rand(1024, 1024) * inverse_rate + (1 - inverse_rate), 0)
-            new_weight9 = numpy.heaviside(numpy.random.rand(1024, 1) * inverse_rate + (1 - inverse_rate), 0)
+            random_matrix1 = numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change
+            random_matrix4 = numpy.random.rand(1, 64) * (2 * mutation_change) - mutation_change
+            random_matrix5 = numpy.random.rand(64, 1) * (2 * mutation_change) - mutation_change
+            random_matrixb5 = numpy.random.rand(1, 1) * (2 * mutation_change) - mutation_change
+            rand1 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
+            rand2 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
+            rand3 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
+            rand4 = numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate)
+            rand5 = numpy.random.rand(64, 1) * inverse_rate + (1 - inverse_rate)
+            randb1 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
+            randb2 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
+            randb3 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
+            randb4 = numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate)
+            randb5 = numpy.random.rand(1, 1) * inverse_rate + (1 - inverse_rate)
+            new_weight1 = numpy.heaviside(rand1, 0) * self.cweight1
+            new_weight2 = numpy.heaviside(rand2, 0) * self.cweight2
+            new_weight3 = numpy.heaviside(rand3, 0) * self.cweight3
+            new_weight4 = numpy.heaviside(rand4, 0) * self.cweight4
+            new_weight5 = numpy.heaviside(rand5, 0) * self.cweight5
+            new_b1 = numpy.heaviside(randb1, 0) * self.cb1
+            new_b2 = numpy.heaviside(randb2, 0) * self.cb2
+            new_b3 = numpy.heaviside(randb3, 0) * self.cb3
+            new_b4 = numpy.heaviside(randb4, 0) * self.cb4
+            new_b5 = numpy.heaviside(randb5, 0) * self.cb5
             self.weight1 = self.weight1 + random_matrix1 * new_weight1
-            self.weight2 = self.weight2 + random_matrix2 * new_weight2
-            self.weight3 = self.weight3 + random_matrix2 * new_weight3
-            self.weight4 = self.weight4 + random_matrix2 * new_weight4
-            self.weight5 = self.weight5 + random_matrix2 * new_weight5
-            self.weight6 = self.weight6 + random_matrix2 * new_weight6
-            self.weight7 = self.weight7 + random_matrix2 * new_weight7
-            self.weight8 = self.weight8 + random_matrix2 * new_weight8
-            self.weight9 = self.weight9 + random_matrix4 * new_weight9
+            self.weight2 = self.weight2 + random_matrix1 * new_weight2
+            self.weight3 = self.weight3 + random_matrix1 * new_weight3
+            self.weight4 = self.weight4 + random_matrix4 * new_weight4
+            self.weight5 = self.weight5 + random_matrix5 * new_weight5
+            self.b1 = self.b1 + random_matrix1 * new_b1
+            self.b2 = self.b2 + random_matrix1 * new_b2
+            self.b3 = self.b3 + random_matrix1 * new_b3
+            self.b4 = self.b4 + random_matrix4 * new_b4
+            self.b5 = self.b5 + random_matrixb5 * new_b5
             on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
             next_success = (on_good_moves + on_bad_moves) / (good_moves + bad_moves) * 100
             print("Test success rate :", next_success, "(on good moves :", (on_good_moves / good_moves) * 100, "% / on bad moves :", (on_bad_moves / bad_moves) * 100, "% )")
@@ -301,17 +323,40 @@ class NeuralNetwork:
             if next_success < success - 0.5 * (difference - precedent_difference) or difference > precedent_difference:
                 print("Reseting")
                 self.weight1 = self.weight1 - random_matrix1 * new_weight1
-                self.weight2 = self.weight2 - random_matrix2 * new_weight2
-                self.weight3 = self.weight3 - random_matrix2 * new_weight3
-                self.weight4 = self.weight4 - random_matrix2 * new_weight4
-                self.weight5 = self.weight5 - random_matrix2 * new_weight5
-                self.weight6 = self.weight6 - random_matrix2 * new_weight6
-                self.weight7 = self.weight7 - random_matrix2 * new_weight7
-                self.weight8 = self.weight8 - random_matrix2 * new_weight8
-                self.weight9 = self.weight9 - random_matrix4 * new_weight9
+                self.weight2 = self.weight2 - random_matrix1 * new_weight2
+                self.weight3 = self.weight3 - random_matrix1 * new_weight3
+                self.weight4 = self.weight4 - random_matrix4 * new_weight4
+                self.weight5 = self.weight5 - random_matrix5 * new_weight5
+                self.b1 = self.b1 - random_matrix1 * new_b1
+                self.b2 = self.b2 - random_matrix1 * new_b2
+                self.b3 = self.b3 - random_matrix1 * new_b3
+                self.b4 = self.b4 - random_matrix4 * new_b4
+                self.b5 = self.b5 - random_matrixb5 * new_b5
+                # Nouvelle matrice consolidation = Ancienne - 0.05 * heaviside(matrice aléatorie, 0) * ancienne
+                self.cweight1 = self.cweight1 - 0.05 * numpy.heaviside(rand1, 0) * self.cweight1
+                self.cweight2 = self.cweight2 - 0.05 * numpy.heaviside(rand2, 0) * self.cweight2
+                self.cweight3 = self.cweight3 - 0.05 * numpy.heaviside(rand3, 0) * self.cweight3
+                self.cweight4 = self.cweight4 - 0.05 * numpy.heaviside(rand4, 0) * self.cweight4
+                self.cweight5 = self.cweight5 - 0.05 * numpy.heaviside(rand5, 0) * self.cweight5
+                self.cb1 = self.cb1 - 0.05 * numpy.heaviside(randb1, 0) * self.cb1
+                self.cb2 = self.cb2 - 0.05 * numpy.heaviside(randb2, 0) * self.cb2
+                self.cb3 = self.cb3 - 0.05 * numpy.heaviside(randb3, 0) * self.cb3
+                self.cb4 = self.cb4 - 0.05 * numpy.heaviside(randb4, 0) * self.cb4
+                self.cb5 = self.cb5 - 0.05 * numpy.heaviside(randb5, 0) * self.cb5
                 on_good_moves, on_bad_moves, good_moves, bad_moves = old_on_good_moves, old_on_bad_moves, old_good_moves, old_bad_moves
             else:
                 diff = success - self.check_test()  # Check test take some time, but it's essential not to overtrain
+                # Nouvelle matrice consolidation = Normalisation(Ancienne + 0.05 * heaviside(matrice aléatorie, 0) * ancienne)
+                self.cweight1 = normalizer(self.cweight1 + 0.05 * numpy.heaviside(rand1, 0) * self.cweight1)
+                self.cweight2 = normalizer(self.cweight2 + 0.05 * numpy.heaviside(rand2, 0) * self.cweight2)
+                self.cweight3 = normalizer(self.cweight3 + 0.05 * numpy.heaviside(rand3, 0) * self.cweight3)
+                self.cweight4 = normalizer(self.cweight4 + 0.05 * numpy.heaviside(rand4, 0) * self.cweight4)
+                self.cweight5 = normalizer(self.cweight5 + 0.05 * numpy.heaviside(rand5, 0) * self.cweight5)
+                self.cb1 = normalizer(self.cb1 + 0.05 * numpy.heaviside(randb1, 0) * self.cb1)
+                self.cb2 = normalizer(self.cb2 + 0.05 * numpy.heaviside(randb2, 0) * self.cb2)
+                self.cb3 = normalizer(self.cb3 + 0.05 * numpy.heaviside(randb3, 0) * self.cb3)
+                self.cb4 = normalizer(self.cb4 + 0.05 * numpy.heaviside(randb4, 0) * self.cb4)
+                self.cb5 = normalizer(self.cb5 + 0.05 * numpy.heaviside(randb5, 0) * self.cb5)
             old_on_good_moves, old_on_bad_moves, old_good_moves, old_bad_moves = on_good_moves, on_bad_moves, good_moves, bad_moves
             success = (on_good_moves + on_bad_moves) / (good_moves + bad_moves) * 100
             precedent_difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
@@ -402,8 +447,21 @@ class NeuralNetwork:
         self.array_to_csv(self.weight3, "w3.csv")
         self.array_to_csv(self.weight4, "w4.csv")
         self.array_to_csv(self.weight5, "w5.csv")
-        self.array_to_csv(self.weight6, "w6.csv")
-        self.array_to_csv(self.weight7, "w7.csv")
+        self.array_to_csv(self.b1, "b1.csv")
+        self.array_to_csv(self.b2, "b2.csv")
+        self.array_to_csv(self.b3, "b3.csv")
+        self.array_to_csv(self.b4, "b4.csv")
+        self.array_to_csv(self.b5, "b5.csv")
+        self.array_to_csv(self.cweight1, "cw1.csv")
+        self.array_to_csv(self.cweight2, "cw2.csv")
+        self.array_to_csv(self.cweight3, "cw3.csv")
+        self.array_to_csv(self.cweight4, "cw4.csv")
+        self.array_to_csv(self.cweight5, "cw5.csv")
+        self.array_to_csv(self.cb1, "cb1.csv")
+        self.array_to_csv(self.cb2, "cb2.csv")
+        self.array_to_csv(self.cb3, "cb3.csv")
+        self.array_to_csv(self.cb4, "cb4.csv")
+        self.array_to_csv(self.cb5, "cb5.csv")
 
     @staticmethod
     def normalisation(value):
