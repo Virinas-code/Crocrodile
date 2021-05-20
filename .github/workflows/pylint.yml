@@ -20,6 +20,6 @@ jobs:
         pip install --upgrade pylint
     - name: Analysing the code with pylint
       run: |
-        exit_code = $(pylint `ls -R|grep .py$|xargs`)
+        local exit_code = $(pylint `ls -R|grep .py$|xargs`)
         echo "Exit code: $exit_code"
         exit 0
