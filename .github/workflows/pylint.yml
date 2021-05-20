@@ -19,6 +19,7 @@ jobs:
         pip install -r requirements.txt
         pip install --upgrade pylint
     - name: Analysing the code with pylint
+      continue-on-error: true
       run: |
         exit_code=$(pylint `ls -R|grep .py$|xargs`)
         echo "Exit code: $exit_code"
