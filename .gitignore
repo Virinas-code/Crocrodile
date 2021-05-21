@@ -134,3 +134,6 @@ dev.token
 
 # CTags
 tags
+
+# Dolphin directory settings
+.directory
