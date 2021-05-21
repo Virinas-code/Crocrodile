@@ -16,13 +16,13 @@ def calculate(calc_board, clock_time, increment):
     """Run Crocrodile on board."""
     clock_time = clock_time + increment
     if clock_time > 1200:
-        best_move = crocrodile.minimax(calc_board, 4, board.turn)[1]
+        best_move = crocrodile.minimax_std(calc_board, 4, board.turn)[1]
     elif clock_time < 120:
-        best_move = crocrodile.minimax(calc_board, 2, board.turn)[1]
+        best_move = crocrodile.minimax_std(calc_board, 2, board.turn)[1]
     elif clock_time < 30:
-        best_move = crocrodile.minimax(calc_board, 1, board.turn)[1]
+        best_move = crocrodile.minimax_std(calc_board, 1, board.turn)[1]
     else:
-        best_move = crocrodile.minimax(calc_board, 3, board.turn)[1]
+        best_move = crocrodile.minimax_std(calc_board, 3, board.turn)[1]
     return best_move
 
 
