@@ -173,7 +173,12 @@ class NeuralNetwork:
         cols = [0, 0, 0, 0, 0, 0, 0, 0]
         cols[chess.square_rank(to_square)] = 1
         inputs.extend(cols)
-        self.input_layer.append(inputs + [0] * 32)
+        # Promotion
+        cols = [0, 0, 0, 0]
+        if move.promotion:
+            cols[move.promotion - 2] = 1
+        inputs.extend(cols)
+        self.input_layer.append(inputs + [0] * 28)
         self.input_layer.extend([[0] * 64] * 48)
         self.input_layer = numpy.array(self.input_layer)
 
