@@ -214,14 +214,8 @@ class NeuralNetwork:
 
     def check_test(self):
         """Check NN on test dataset."""
-        with open(self.test_good) as file:
-            file_goodmoves = file.read()
-            file.close()
-        with open(self.test_bad) as file:
-            file_badmoves = file.read()
-            file.close()
-        file_goodmoves = file_goodmoves.split("\n\n")
-        file_badmoves = file_badmoves.split("\n\n")
+        file_goodmoves = self.test_good
+        file_badmoves = self.test_bad
         length = len(file_goodmoves) + len(file_badmoves)
         errs = 0
         good = 0
@@ -243,14 +237,8 @@ class NeuralNetwork:
 
     def check_train(self):
         """Check NN on train dataset."""
-        with open(self.train_good) as file:
-            file_goodmoves = file.read()
-            file.close()
-        with open(self.train_bad) as file:
-            file_badmoves = file.read()
-            file.close()
-        file_goodmoves = file_goodmoves.split("\n\n")
-        file_badmoves = file_badmoves.split("\n\n")
+        file_goodmoves = self.train_good
+        file_badmoves = self.train_bad
         errs = 0
         good = 0
         correct_on_good_moves = 0
@@ -417,12 +405,8 @@ class NeuralNetwork:
 
     def check_difference(self):
         """Check success rating on good moves and on bad moves and return it."""
-        with open(self.train_good) as file:
-            file_goodmoves = file.read()
-            file.close()
-        with open(self.train_bad) as file:
-            file_badmoves = file.read()
-            file.close()
+        file_goodmoves = self.train_good
+        file_badmoves = self.train_bad
         file_goodmoves = file_goodmoves.split("\n\n")
         file_badmoves = file_badmoves.split("\n\n")
         errs = 0
@@ -492,10 +476,10 @@ class NeuralNetwork:
 
     def change_files(self):
         """Change files locations."""
-        self.train_good = input("Good moves training file : ")
-        self.train_bad = input("Bad moves training file : ")
-        self.test_good = input("Good moves test file : ")
-        self.test_bad = input("Bad moves test file : ")
+        self.train_good = open(input("Good moves training file : ")).read().split("\n\n")
+        self.train_bad = open(input("Bad moves training file : ")).read().split("\n\n")
+        self.test_good = open(input("Good moves test file : ")).read().split("\n\n")
+        self.test_bad = open(input("Bad moves test file : ")).read().split("\n\n")
 
 
 if __name__ == '__main__':
