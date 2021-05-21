@@ -10,6 +10,12 @@ import math
 import numpy
 import chess
 import sys
+"""
+# ====== IDLE ======
+import os
+os.chdir("../")
+# ==== END IDLE ====
+"""
 
 sys.path.append("/home/alexei/Documents/Code/Python/Crocrodile/lichess-bot/engines/")
 print(sys.path, file=sys.stderr)
