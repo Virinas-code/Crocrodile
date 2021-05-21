@@ -114,7 +114,6 @@ class Game(threading.Thread):
         self.initial_fen = fen
         self.client = client
         self.stream = client.bots.stream_game_state(game_id)
-        self.current_state = next(self.stream)
         if color == 'white':
             self.my_turn = chess.WHITE
         else:
@@ -143,16 +142,16 @@ class Game(threading.Thread):
             ldebug("\n" + str(board))
             if board.turn != self.my_turn:
                 t = event[self.time_control].time()
-                time = (t.hour * 60 + t.minute) * 60 + t.second
+                time_s = (t.hour * 60 + t.minute) * 60 + t.second
                 lok("Game", self.game_id, \
-                    ": Calculating (time", str(time) + ")...", end=" (")
-                if time > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0) and len(mvs) > 2:
+                    ": Calculating (time", str(time_s) + ")...", end=" (")
+                if time_s > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0) and len(mvs) > 2:
                     lok("depth " + str(3) + ")")
                     score, best_move = minimax(board, 3, board.turn)
-                elif time < 100:
+                elif time_s < 100:
                     lok("depth " + str(2) + ")")
                     score, best_move = minimax(board, 2, board.turn)
-                elif time < 30:
+                elif time_s < 30:
                     lok("depth " + str(1) + ")")
                     score, best_move = minimax(board, 1, board.turn)
                 elif len(mvs) <= 2:
@@ -170,7 +169,7 @@ class Game(threading.Thread):
                         retry = 0
                     except Exception as e:
                         lerr(type(e), e)
-                        time.sleep(2)
+                        time.sleep(3)
                         pass
                     retry = retry - 1
         else:
@@ -202,7 +201,7 @@ while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
         if event['type'] == 'challenge':
-            if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors and event['challenge']['challenger']['id'] != "crocrodile":  #  and event['challenge']['color'] != 'random'
+            if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors and event['challenge']['challenger']['id'] != "crocrodile" and event['challenge']['color'] != 'random':
                 client.bots.accept_challenge(event['challenge']['id'])
                 colors[event['challenge']['id']] = event['challenge']['color']
                 if event["challenge"]["variant"]["key"] == "fromPosition":
