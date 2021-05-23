@@ -54,6 +54,8 @@ class UCI:
             self.new_game()
         elif command == "go" and len(args) > 1:
             self.go(args[1:])
+        elif command == "position" and len(args) > 1:
+            self.position(args[1:])
         elif command == "setoption" and len(args) > 1:
             self.set_option(args[1:])
         elif command == "crocrodile.display" and self.debug_mode == True:
@@ -107,6 +109,20 @@ class UCI:
         Start calculating.
         """
         print("In developpement.")
+
+    def position(self, args: list) -> None:
+        """
+        Position UCI command.
+
+        Change current position.
+        """
+        if args[0] == "startpos":
+            self.board = chess.Board()
+        elif args[0] == "fen" and len(args) > 6:
+            self.board = chess.Board(" ".join(args[1:7]))
+        else:
+            print("Unknow syntax: position", " ".join(args))
+            
     
     def new_game(self):
         self.board = chess.Board()
