@@ -1,0 +1,2 @@
+cmdline: /usr/lib/x86_64-linux-gnu/wireshark/extcap/udpdump --capture --extcap-interface udpdump --fifo /tmp/wireshark_extcap_udpdump_20210521185149_NIkoja --port 5555 --payload data --debug false --debug-file   
+Listener running on port 5555
