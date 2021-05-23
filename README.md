@@ -12,4 +12,4 @@ Please report all bugs at [Issues](https://github.com/Virinas-code/Crocrodile/is
 ## License
 [GPLv3](https://github.com/Virinas-code/Crocrodile/blob/master/LICENSE)
 
-###### Sepcial thanks to @xqzmoi for trying the bot.
+###### Special thanks to @xqzmoi for trying the bot.
