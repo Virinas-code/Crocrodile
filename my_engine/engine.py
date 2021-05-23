@@ -313,6 +313,7 @@ class EngineBase:
                 if len(self.tb) > self.tb_limit:
                     del self.tb[list(self.tb.keys())[0]]
             evaluation = self.tb[zobrist_hash]
+            # evaluation = self.evaluate(board)
             attackers = board.attackers(board.turn, board.peek().to_square)
             if len(attackers) > 0:
                 # Quiescent
