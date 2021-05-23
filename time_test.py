@@ -14,7 +14,8 @@ engine = my_engine.engine.EngineBase("Crocrodile v1 - test edition", "Virinas-co
 
 start = time.time()
 board = chess.Board()
-for a in range(160000):
-    engine.evaluate(board)
+for a in range(1):
+    engine.minimax_std(board, 4, True)
+    board.push(list(board.legal_moves)[0])
 end = time.time()
 print("Time :", end - start)
