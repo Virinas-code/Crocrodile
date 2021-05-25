@@ -137,3 +137,9 @@ tags
 
 # Dolphin directory settings
 .directory
+
+# Random NNS
+nns/
+!nns/0-*.csv
+!nns/1-*.csv
+!nns/2-*.csv
