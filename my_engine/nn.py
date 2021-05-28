@@ -5,17 +5,16 @@ Crocrodile Neural Network.
 
 Base class for Crocrodile NN.
 """
+import sys
 import csv
-import math
+import random
+import heapq
 import numpy
 import chess
-import sys
-"""
 # ====== IDLE ======
-import os
-os.chdir("../")
+# import os
+# os.chdir("../")
 # ==== END IDLE ====
-"""
 
 sys.path.append("/home/alexei/Documents/Code/Python/Crocrodile/lichess-bot/engines/")
 print(sys.path, file=sys.stderr)
@@ -370,6 +369,168 @@ class NeuralNetwork:
         self.save()
         print("Saved.")
 
+    def genetic_train(self):
+        """
+        Genetic training algorithm.
+
+        New training algorithm using a real genetic algorithm.
+        """
+        def sprint(value):
+            centered = value.center(18)
+            print("********** {0} **********".format(centered))
+        sprint("Select files")
+        self.change_files()
+        sprint("Configure training")
+        tests_weight1 = list()
+        tests_weight2 = list()
+        tests_weight3 = list()
+        tests_weight4 = list()
+        tests_weight5 = list()
+        tests_bias1 = list()
+        tests_bias2 = list()
+        tests_bias3 = list()
+        tests_bias4 = list()
+        tests_bias5 = list()
+        max_iters = int(input("Maximum iterations : "))
+        max_success = float(input("Maximum success rate : "))
+        balance = float(input("Balance between good moves and bad moves (>1 to enhance good moves success rate) : "))
+        sprint("Initialize")
+        iters = 0
+        print("Calculating first success...", end=" ", flush=True)
+        on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
+        success = (balance*on_good_moves + on_bad_moves) / (balance*good_moves + bad_moves) * 100
+        print("Done.")
+        for loop in range(128):
+            print(f"Loading networks... ({loop}/128)", end="\r", flush=True)
+            tests_weight1.append(self.csv_to_array(f"nns/{loop}-w1.csv"))
+            tests_weight2.append(self.csv_to_array(f"nns/{loop}-w2.csv"))
+            tests_weight3.append(self.csv_to_array(f"nns/{loop}-w3.csv"))
+            tests_weight4.append(self.csv_to_array(f"nns/{loop}-w4.csv"))
+            tests_weight5.append(self.csv_to_array(f"nns/{loop}-w5.csv"))
+            tests_bias1.append(self.csv_to_array(f"nns/{loop}-b1.csv"))
+            tests_bias2.append(self.csv_to_array(f"nns/{loop}-b2.csv"))
+            tests_bias3.append(self.csv_to_array(f"nns/{loop}-b3.csv"))
+            tests_bias4.append(self.csv_to_array(f"nns/{loop}-b4.csv"))
+            tests_bias5.append(self.csv_to_array(f"nns/{loop}-b5.csv"))
+        print("Loading networks... Done.          ")
+        print("Loading tests results...", end=" ", flush=True)
+        tests_results = self.csv_to_array("nns/results.csv")
+        print("Done.")
+        # https://stackoverflow.com/questions/16225677/get-the-second-largest-number-in-a-list-in-linear-time
+        while iters < max_iters and success < max_success:
+            iters += 1
+            sprint("Training #{0}".format(iters))
+            print("Selecting best networks...", end=" ", flush=True)
+            maxis_brut = heapq.nlargest(3, tests_results)
+            maxis = list()
+            for element in maxis_brut:
+                maxis.append(element[0])
+            print("Done.")
+            for network_indice in range(3):
+                print(f"Coupling network #{network_indice + 1}... (selecting second network)", end="\r", flush=True)
+                rand = random.randint(0, 127)
+                while rand == network_indice:
+                    rand = random.randint(0, 127)
+                second_network = rand
+                print(f"Coupling network #{network_indice + 1}... (generating coupling matrixes)", end="\r", flush=True)
+                choose_w1 = numpy.zeros((64, 64))
+                choose_w2 = numpy.zeros((64, 64))
+                choose_w3 = numpy.zeros((64, 64))
+                choose_w4 = numpy.zeros((64, 64))
+                choose_b1 = numpy.zeros((64, 64))
+                choose_b2 = numpy.zeros((64, 64))
+                choose_b3 = numpy.zeros((64, 64))
+                choose_matrixes = [choose_w1, choose_w2, choose_w3, choose_w4, choose_b1, choose_b2, choose_b3]
+                for choose_matrix in choose_matrixes:
+                    direction = bool(random.getrandbits(1))  # True : column else line
+                    choose = bool(random.getrandbits(1))
+                    for line in range(len(choose_matrix)):
+                        for column in range(len(choose_matrix[0])):
+                            if random.random() < 0.001:
+                                choose = not choose
+                            fill = int(choose)
+                            if direction:
+                                choose_matrix[line][column] = fill
+                            else:
+                                choose_matrix[column][line] = fill
+
+
+    def genetic_random(self):
+        """Random NN for genetic algorithm."""
+        tests_weight1 = list()
+        tests_weight2 = list()
+        tests_weight3 = list()
+        tests_weight4 = list()
+        tests_weight5 = list()
+        tests_bias1 = list()
+        tests_bias2 = list()
+        tests_bias3 = list()
+        tests_bias4 = list()
+        tests_bias5 = list()
+        for loop in range(128):
+            print(f"Generating random networks... ({loop}/128)", end="\r", flush=True)
+            tests_weight1.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_weight2.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_weight3.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_weight4.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_weight5.append(numpy.random.rand(64, 1) * 2 - 1)
+            tests_bias1.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_bias2.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_bias3.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_bias4.append(numpy.random.rand(1, 64) * 2 - 1)
+            tests_bias5.append(numpy.random.rand(1, 1) * 2 - 1)
+        print("Generating random networks... Done.          ")
+        for loop in range(128):
+            print(f"Saving random networks... ({loop}/128)", end="\r", flush=True)
+            self.array_to_csv(tests_weight1[loop], f"nns/{loop}-w1.csv")
+            self.array_to_csv(tests_weight2[loop], f"nns/{loop}-w2.csv")
+            self.array_to_csv(tests_weight3[loop], f"nns/{loop}-w3.csv")
+            self.array_to_csv(tests_weight4[loop], f"nns/{loop}-w4.csv")
+            self.array_to_csv(tests_weight5[loop], f"nns/{loop}-w5.csv")
+            self.array_to_csv(tests_bias1[loop], f"nns/{loop}-b1.csv")
+            self.array_to_csv(tests_bias2[loop], f"nns/{loop}-b2.csv")
+            self.array_to_csv(tests_bias3[loop], f"nns/{loop}-b3.csv")
+            self.array_to_csv(tests_bias4[loop], f"nns/{loop}-b4.csv")
+            self.array_to_csv(tests_bias5[loop], f"nns/{loop}-b5.csv")
+        print("Saving random networks... Done.          ")
+        print("Configure testing...")
+        self.change_files()
+        balance = float(input("Balance between good moves and bad moves (>1 to enhance good moves success rate) : "))
+        print("Done.")
+        tests_results = list()
+        for loop in range(128):
+            print(f"Testing networks... ({loop}/128)", end="\r", flush=True)
+            self.weight1 = tests_weight1[loop]
+            self.weight2 = tests_weight2[loop]
+            self.weight3 = tests_weight3[loop]
+            self.weight4 = tests_weight4[loop]
+            self.weight5 = tests_weight5[loop]
+            self.b1 = tests_bias1[loop]
+            self.b2 = tests_bias2[loop]
+            self.b3 = tests_bias3[loop]
+            self.b4 = tests_bias4[loop]
+            self.b5 = tests_bias5[loop]
+            on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
+            difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
+            success = (balance*on_good_moves + on_bad_moves) / (balance*good_moves + bad_moves) * 100
+            tests_results.append([success - difference])
+        print("Testing networks... Done.          ")
+        print("Saving tests result...", end=" ", flush=True)
+        self.array_to_csv(tests_results, "nns/results.csv")
+        print("Done.")
+        print("Reseting neural network...", end=" ", flush=True)
+        self.weight1 = self.csv_to_array("w1.csv")
+        self.weight2 = self.csv_to_array("w2.csv")
+        self.weight3 = self.csv_to_array("w3.csv")
+        self.weight4 = self.csv_to_array("w4.csv")
+        self.weight5 = self.csv_to_array("w5.csv")
+        self.b1 = self.csv_to_array("b1.csv")
+        self.b2 = self.csv_to_array("b2.csv")
+        self.b3 = self.csv_to_array("b3.csv")
+        self.b4 = self.csv_to_array("b4.csv")
+        self.b5 = self.csv_to_array("b5.csv")
+        print("Done.")
+
     def check_always_same(self):
         """Check success rating on good moves and on bad moves."""
         with open(self.train_good) as file:
@@ -404,7 +565,7 @@ class NeuralNetwork:
         print("Success rate on bad moves : {0}%".format(good_on_bad_moves / len(file_badmoves) * 100))
 
     def check_difference(self):
-        """Check success rating on good moves and on bad moves and return it."""
+        """Check success rate on good moves and on bad moves and return it."""
         file_goodmoves = self.train_good
         file_badmoves = self.train_bad
         file_goodmoves = file_goodmoves.split("\n\n")
@@ -437,8 +598,7 @@ class NeuralNetwork:
         array = list(array)
         with open(csv_path, 'w', newline='') as file:
             writer = csv.writer(file)
-            for row in array:
-                writer.writerow(row)
+            writer.writerows(array)
             file.close()
         return 0
 
