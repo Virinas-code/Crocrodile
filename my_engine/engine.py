@@ -14,11 +14,11 @@ import chess
 import chess.polyglot
 import my_engine.nn as nn
 
-PAWN_VALUE = 100
+PAWN_VALUE = 130
 KNIGHT_VALUE = 290
 BISHOP_VALUE = 310
 ROOK_VALUE = 500
-QUEEN_VALUE = 900
+QUEEN_VALUE = 901
 KING_VALUE = 0  # Infinity is too complex
 BISHOPS_PAIR = 50
 PROTECTED_KING = 5
