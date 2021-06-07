@@ -8,6 +8,7 @@ Base class for Crocrodile NN.
 import sys
 import csv
 import random
+import math
 import heapq
 import numpy
 import chess
@@ -191,8 +192,8 @@ class NeuralNetwork:
                 result.append(row)
         return numpy.array(result)
 
-    def calculate(self):
-        """Calculate NN result."""
+    def full_calculate(self):
+        """Calculate NN result with all hidden layers."""
         normalizer = numpy.vectorize(self.normalisation)
         self.hidden_layer_1 = self.weight1 @ self.input_layer + self.b1
         self.hidden_layer_1 = normalizer(self.hidden_layer_1)
@@ -204,6 +205,12 @@ class NeuralNetwork:
         self.hidden_layer_4 = normalizer(self.hidden_layer_4)
         self.output_layer = self.hidden_layer_4 @ self.weight5 + self.b5
         self.output_layer = normalizer(self.output_layer)
+
+    def calculate(self):
+        """Calculate NN result."""
+        normalizer = self.normalisation
+        self.output_layer = normalizer(normalizer(self.weight4 @ normalizer(normalizer(normalizer(self.weight1 @ self.input_layer + self.b1) @ self.weight2 + self.b2) @ self.weight3 + self.b3) + self.b4) @ self.weight5 + self.b5)
+        # self.output_layer = ((self.weight4 @ normalizer(((self.weight1 @ self.input_layer + self.b1) @ self.weight2 + self.b2) @ self.weight3 + self.b3) + self.b4) @ self.weight5 + self.b5)
 
     def check_move(self, board, move):
         """Generate inputs, calculate and return output."""
@@ -626,13 +633,9 @@ class NeuralNetwork:
         self.array_to_csv(self.cb5, "cb5.csv")
 
     @staticmethod
-    def normalisation(value):
+    def normalisation(array):
         """Normalisation."""
-        if value < 0:
-            return 0
-        elif value > 1:
-            return 1
-        return value
+        return numpy.clip(array, 0, 1)
 
     def change_files(self):
         """Change files locations."""
