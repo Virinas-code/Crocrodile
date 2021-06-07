@@ -10,6 +10,7 @@ import csv
 import random
 import math
 import heapq
+import json
 import numpy
 import chess
 # ====== IDLE ======
@@ -56,6 +57,7 @@ class NeuralNetwork:
         self.test_bad = "my_engine/test_data_badmoves.txt"
         self.train_good = "my_engine/train_data_goodmoves.txt"
         self.train_bad = "my_engine/train_data_badmoves.txt"
+        self.genetic_train_settings = json.load(open("nns/settings.json"))
 
     def output(self):
         """Return NN output."""
@@ -385,9 +387,6 @@ class NeuralNetwork:
         def sprint(value):
             centered = value.center(18)
             print("********** {0} **********".format(centered))
-        sprint("Select files")
-        self.change_files()
-        sprint("Configure training")
         tests_weight1 = list()
         tests_weight2 = list()
         tests_weight3 = list()
@@ -398,9 +397,10 @@ class NeuralNetwork:
         tests_bias3 = list()
         tests_bias4 = list()
         tests_bias5 = list()
-        max_iters = int(input("Maximum iterations : "))
-        max_success = float(input("Maximum success rate : "))
-        balance = float(input("Balance between good moves and bad moves (>1 to enhance good moves success rate) : "))
+        self.genetic_configure()
+        max_iters = self.genetic_train_settings["max_iters"]
+        max_success = self.genetic_train_settings["max_success"]
+        balance = self.genetic_train_settings["balance"]
         sprint("Initialize")
         iters = 0
         print("Calculating first success...", end=" ", flush=True)
@@ -537,6 +537,25 @@ class NeuralNetwork:
         self.b4 = self.csv_to_array("b4.csv")
         self.b5 = self.csv_to_array("b5.csv")
         print("Done.")
+
+    def genetic_configure(self):
+        """Configure genetic training algorithm."""
+        def sprint(value):
+            centered = value.center(18)
+            print("********** {0} **********".format(centered))
+        sprint("Configuration")
+        confirm = input("Do you want to configure training ? [y/N] ")
+        if confirm.lower() in ("y", "yes"):
+            sprint("Select files")
+            self.change_files()
+            sprint("Configure training")
+            self.genetic_train_settings["max_iters"] = int(input("Maximum iterations : "))
+            self.genetic_train_settings["max_success"] = float(input("Maximum success rate : "))
+            self.genetic_train_settings["balance"] = float(input("Balance between good moves and bad moves (>1 to enhance good moves success rate) : "))
+            confirm = input("Save configuration ? [y/N] ")
+            if confirm.lower() in ("y", "yes"):
+                with open("nns/settings.json", "w") as file:
+                    file.write(json.dumps(self.genetic_train_settings))
 
     def check_always_same(self):
         """Check success rating on good moves and on bad moves."""
