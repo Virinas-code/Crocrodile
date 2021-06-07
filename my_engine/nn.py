@@ -444,11 +444,12 @@ class NeuralNetwork:
                 choose_w2 = numpy.zeros((64, 64))
                 choose_w3 = numpy.zeros((64, 64))
                 choose_w4 = numpy.zeros((64, 64))
+                choose_w5 = numpy.zeros((64, 1))
                 choose_b1 = numpy.zeros((64, 64))
                 choose_b2 = numpy.zeros((64, 64))
                 choose_b3 = numpy.zeros((64, 64))
-                choose_matrixes = [choose_w1, choose_w2, choose_w3, choose_w4, choose_b1, choose_b2, choose_b3]
-                for choose_matrix in choose_matrixes:
+                choose_matrixes1 = [choose_w1, choose_w2, choose_w3, choose_w4, choose_b1, choose_b2, choose_b3]
+                for choose_matrix in choose_matrixes1:
                     direction = bool(random.getrandbits(1))  # True : column else line
                     choose = bool(random.getrandbits(1))
                     for line in range(len(choose_matrix)):
@@ -460,6 +461,14 @@ class NeuralNetwork:
                                 choose_matrix[line][column] = fill
                             else:
                                 choose_matrix[column][line] = fill
+                choose_b4 = numpy.zeros((1, 64))
+                choose = bool(random.getrandbits(1))
+                for column in range(64):
+                    if random.random() < 0.0625:
+                        choose = not choose
+                    choose_b4[0][column] = int(choose)
+                choose_b5 = int(bool(random.getrandbits(1)))
+            print(f"Coupling networks... Done.")
 
 
     def genetic_random(self):
