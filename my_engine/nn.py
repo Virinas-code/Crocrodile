@@ -401,6 +401,8 @@ class NeuralNetwork:
         max_iters = self.genetic_train_settings["max_iters"]
         max_success = self.genetic_train_settings["max_success"]
         balance = self.genetic_train_settings["balance"]
+        inverse_rate = 100 / self.genetic_train_settings["mutation_rate"]
+        mutation_change = self.genetic_train_settings["mutation_change"]
         sprint("Initialize")
         iters = 0
         print("Calculating first success...", end=" ", flush=True)
@@ -410,7 +412,7 @@ class NeuralNetwork:
         print("Loading networks... (counting networks)", end="\r", flush=True)
         population = self.genetic_train_settings["population"]
         for loop in range(population):
-            print(f"Loading networks... ({loop}/{population})", end="\r", flush=True)
+            print(f"Loading networks... ({loop}/{population})       ", end="\r", flush=True)
             tests_weight1.append(self.csv_to_array(f"nns/{loop}-w1.csv"))
             tests_weight2.append(self.csv_to_array(f"nns/{loop}-w2.csv"))
             tests_weight3.append(self.csv_to_array(f"nns/{loop}-w3.csv"))
@@ -421,7 +423,7 @@ class NeuralNetwork:
             tests_bias3.append(self.csv_to_array(f"nns/{loop}-b3.csv"))
             tests_bias4.append(self.csv_to_array(f"nns/{loop}-b4.csv"))
             tests_bias5.append(self.csv_to_array(f"nns/{loop}-b5.csv"))
-        print("Loading networks... Done.          ")
+        print("Loading networks... Done.               ")
         print("Loading tests results...", end=" ", flush=True)
         tests_results = self.csv_to_array("nns/results.csv")
         tests_results = list(tests_results)
@@ -457,8 +459,8 @@ class NeuralNetwork:
                 cont = True
                 while cont:
                     cont = False
-                    rand = random.randint(0, 127)
-                    if tests_results[rand] in minis_indices or tests_results[rand] in maxis_indices or rand == network_indice:
+                    rand = random.randint(0, population - 1)
+                    if rand in minis_indices or rand in maxis_indices:
                         cont = True
                 second_network = rand
                 print(f"Coupling network #{network_indice + 1}... (generating coupling matrixes)", end="\r", flush=True)
@@ -467,10 +469,7 @@ class NeuralNetwork:
                 choose_w3 = numpy.zeros((64, 64))
                 choose_w4 = numpy.zeros((64, 64))
                 choose_w5 = numpy.zeros((64, 1))
-                choose_b1 = numpy.zeros((64, 64))
-                choose_b2 = numpy.zeros((64, 64))
-                choose_b3 = numpy.zeros((64, 64))
-                choose_matrixes1 = [choose_w1, choose_w2, choose_w3, choose_w4, choose_b1, choose_b2, choose_b3]
+                choose_matrixes1 = [choose_w1, choose_w2, choose_w3, choose_w4]
                 for choose_matrix in choose_matrixes1:
                     direction = bool(random.getrandbits(1))  # True : column else line
                     choose = bool(random.getrandbits(1))
@@ -483,14 +482,45 @@ class NeuralNetwork:
                                 choose_matrix[line][column] = fill
                             else:
                                 choose_matrix[column][line] = fill
+                choose = bool(random.getrandbits(1))
+                choose_w5 = numpy.zeros((64, 1))
+                for line in range(64):
+                    if random.random() < 0.0625:
+                        choose = not choose
+                    choose_w5[line][0] = int(choose)
+                choose_b1 = choose_w1
+                choose_b2 = choose_w2
+                choose_b3 = choose_w3
                 choose_b4 = numpy.zeros((1, 64))
                 choose = bool(random.getrandbits(1))
                 for column in range(64):
                     if random.random() < 0.0625:
                         choose = not choose
                     choose_b4[0][column] = int(choose)
-                choose_b5 = int(bool(random.getrandbits(1)))
-            print(f"Coupling networks... Done.")
+                choose_b5 = numpy.array([[int(bool(random.getrandbits(1)))]])
+                print(f"Coupling network #{network_indice + 1}... (coupling)                    ", end="\r", flush=True)
+                tests_weight1[minis_indices[network_indice]] = tests_weight1[maxis_indices[network_indice]] * choose_w1 + tests_weight1[second_network] * (1 - choose_w1)
+                tests_weight2[minis_indices[network_indice]] = tests_weight2[maxis_indices[network_indice]] * choose_w2 + tests_weight2[second_network] * (1 - choose_w2)
+                tests_weight3[minis_indices[network_indice]] = tests_weight3[maxis_indices[network_indice]] * choose_w3 + tests_weight3[second_network] * (1 - choose_w3)
+                tests_weight4[minis_indices[network_indice]] = tests_weight4[maxis_indices[network_indice]] * choose_w4 + tests_weight4[second_network] * (1 - choose_w4)
+                tests_weight5[minis_indices[network_indice]] = tests_weight5[maxis_indices[network_indice]] * choose_w5 + tests_weight5[second_network] * (1 - choose_w5)
+                tests_bias1[minis_indices[network_indice]] = tests_bias1[maxis_indices[network_indice]] * choose_b1 + tests_bias1[second_network] * (1 - choose_b1)
+                tests_bias2[minis_indices[network_indice]] = tests_bias2[maxis_indices[network_indice]] * choose_b2 + tests_bias2[second_network] * (1 - choose_b2)
+                tests_bias3[minis_indices[network_indice]] = tests_bias3[maxis_indices[network_indice]] * choose_b3 + tests_bias3[second_network] * (1 - choose_b3)
+                tests_bias4[minis_indices[network_indice]] = tests_bias4[maxis_indices[network_indice]] * choose_b4 + tests_bias4[second_network] * (1 - choose_b4)
+                tests_bias5[minis_indices[network_indice]] = tests_bias5[maxis_indices[network_indice]] * choose_b5 + tests_bias5[second_network] * (1 - choose_b5)
+                tests_weight1[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_weight2[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_weight3[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_weight4[minis_indices[network_indice]] += ((numpy.random.rand(1, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_weight5[minis_indices[network_indice]] += ((numpy.random.rand(64, 1) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 1) * inverse_rate + (1 - inverse_rate), 0)
+                """
+                random_matrix1 = numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change
+                rand1 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
+                new_weight1 = numpy.heaviside(rand1, 0) * self.cweight1
+                self.weight1 = self.weight1 + random_matrix1 * new_weight1
+                """
+            print("Coupling networks... Done.                           ")
 
 
     def genetic_random(self):
@@ -588,6 +618,8 @@ class NeuralNetwork:
             self.genetic_train_settings["max_iters"] = int(input("Maximum iterations : "))
             self.genetic_train_settings["max_success"] = float(input("Maximum success rate : "))
             self.genetic_train_settings["balance"] = float(input("Balance between good moves and bad moves (>1 to enhance good moves success rate) : "))
+            self.genetic_train_settings["mutation_rate"] = float(input("Mutation rate (in percents) : "))
+            self.genetic_train_settings["mutation_change"] = float(input("Mutation change : "))
             self.genetic_save()
 
     def genetic_save(self, confirmation=True):
