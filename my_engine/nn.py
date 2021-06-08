@@ -407,8 +407,10 @@ class NeuralNetwork:
         on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
         success = (balance*on_good_moves + on_bad_moves) / (balance*good_moves + bad_moves) * 100
         print("Done.")
-        for loop in range(128):
-            print(f"Loading networks... ({loop}/128)", end="\r", flush=True)
+        print("Loading networks... (counting networks)", end="\r", flush=True)
+        population = self.genetic_train_settings["population"]
+        for loop in range(population):
+            print(f"Loading networks... ({loop}/{population})", end="\r", flush=True)
             tests_weight1.append(self.csv_to_array(f"nns/{loop}-w1.csv"))
             tests_weight2.append(self.csv_to_array(f"nns/{loop}-w2.csv"))
             tests_weight3.append(self.csv_to_array(f"nns/{loop}-w3.csv"))
@@ -483,8 +485,9 @@ class NeuralNetwork:
         tests_bias3 = list()
         tests_bias4 = list()
         tests_bias5 = list()
-        for loop in range(128):
-            print(f"Generating random networks... ({loop}/128)", end="\r", flush=True)
+        number = int(input("Population : "))
+        for loop in range(number):
+            print(f"Generating random networks... ({loop}/{number})", end="\r", flush=True)
             tests_weight1.append(numpy.random.rand(64, 64) * 2 - 1)
             tests_weight2.append(numpy.random.rand(64, 64) * 2 - 1)
             tests_weight3.append(numpy.random.rand(64, 64) * 2 - 1)
@@ -496,8 +499,8 @@ class NeuralNetwork:
             tests_bias4.append(numpy.random.rand(1, 64) * 2 - 1)
             tests_bias5.append(numpy.random.rand(1, 1) * 2 - 1)
         print("Generating random networks... Done.          ")
-        for loop in range(128):
-            print(f"Saving random networks... ({loop}/128)", end="\r", flush=True)
+        for loop in range(number):
+            print(f"Saving random networks... ({loop}/{number})", end="\r", flush=True)
             self.array_to_csv(tests_weight1[loop], f"nns/{loop}-w1.csv")
             self.array_to_csv(tests_weight2[loop], f"nns/{loop}-w2.csv")
             self.array_to_csv(tests_weight3[loop], f"nns/{loop}-w3.csv")
@@ -514,8 +517,8 @@ class NeuralNetwork:
         balance = float(input("Balance between good moves and bad moves (>1 to enhance good moves success rate) : "))
         print("Done.")
         tests_results = list()
-        for loop in range(128):
-            print(f"Testing networks... ({loop}/128)", end="\r", flush=True)
+        for loop in range(number):
+            print(f"Testing networks... ({loop}/{number})", end="\r", flush=True)
             self.weight1 = tests_weight1[loop]
             self.weight2 = tests_weight2[loop]
             self.weight3 = tests_weight3[loop]
@@ -546,6 +549,10 @@ class NeuralNetwork:
         self.b4 = self.csv_to_array("b4.csv")
         self.b5 = self.csv_to_array("b5.csv")
         print("Done.")
+        print("Configuring network...", end=" ", flush=True)
+        self.genetic_train_settings["population"] = number
+        self.genetic_save(confirmation=False)
+        print("Done.")
 
     def genetic_configure(self):
         """Configure genetic training algorithm."""
@@ -561,10 +568,18 @@ class NeuralNetwork:
             self.genetic_train_settings["max_iters"] = int(input("Maximum iterations : "))
             self.genetic_train_settings["max_success"] = float(input("Maximum success rate : "))
             self.genetic_train_settings["balance"] = float(input("Balance between good moves and bad moves (>1 to enhance good moves success rate) : "))
+            self.genetic_save()
+
+    def genetic_save(self, confirmation=True):
+        """Save genetic algorithm configuration."""
+        if confirmation:
             confirm = input("Save configuration ? [y/N] ")
             if confirm.lower() in ("y", "yes"):
                 with open("nns/settings.json", "w") as file:
                     file.write(json.dumps(self.genetic_train_settings))
+        else:
+            with open("nns/settings.json", "w") as file:
+                file.write(json.dumps(self.genetic_train_settings))
 
     def check_always_same(self):
         """Check success rating on good moves and on bad moves."""
