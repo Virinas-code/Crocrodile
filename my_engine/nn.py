@@ -474,7 +474,7 @@ class NeuralNetwork:
 
 
     def genetic_random(self):
-        """Random NN for genetic algorithm."""
+        """Random NNs for genetic algorithm."""
         tests_weight1 = list()
         tests_weight2 = list()
         tests_weight3 = list()
