@@ -53,11 +53,11 @@ class NeuralNetwork:
         self.hidden_layer_3 = numpy.zeros(64)
         self.hidden_layer_4 = numpy.zeros(1)
         self.output_layer = numpy.zeros(1)
-        self.test_good = "my_engine/test_data_goodmoves.txt"
-        self.test_bad = "my_engine/test_data_badmoves.txt"
-        self.train_good = "my_engine/train_data_goodmoves.txt"
-        self.train_bad = "my_engine/train_data_badmoves.txt"
         self.genetic_train_settings = json.load(open("nns/settings.json"))
+        self.train_good = open(self.genetic_train_settings["train_good"]).read().split("\n\n")
+        self.train_bad = open(self.genetic_train_settings["train_bad"]).read().split("\n\n")
+        self.test_good = open(self.genetic_train_settings["test_good"]).read().split("\n\n")
+        self.test_bad = open(self.genetic_train_settings["test_bad"]).read().split("\n\n")
 
     def output(self):
         """Return NN output."""
@@ -667,10 +667,18 @@ class NeuralNetwork:
 
     def change_files(self):
         """Change files locations."""
-        self.train_good = open(input("Good moves training file : ")).read().split("\n\n")
-        self.train_bad = open(input("Bad moves training file : ")).read().split("\n\n")
-        self.test_good = open(input("Good moves test file : ")).read().split("\n\n")
-        self.test_bad = open(input("Bad moves test file : ")).read().split("\n\n")
+        self.train_good = input("Good moves training file : ")
+        self.train_bad = input("Bad moves training file : ")
+        self.test_good = input("Good moves test file : ")
+        self.test_bad = input("Bad moves test file : ")
+        self.genetic_train_settings["train_good"] = self.train_good
+        self.genetic_train_settings["test_good"] = self.test_good
+        self.genetic_train_settings["train_bad"] = self.train_bad
+        self.genetic_train_settings["test_bad"] = self.test_bad
+        self.train_good = open(self.train_good).read().split("\n\n")
+        self.train_bad = open(self.train_bad).read().split("\n\n")
+        self.test_good = open(self.test_good).read().split("\n\n")
+        self.test_bad = open(self.test_bad).read().split("\n\n")
 
 
 if __name__ == '__main__':
