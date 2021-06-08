@@ -8,7 +8,6 @@ Base class for Crocrodile NN.
 import sys
 import csv
 import random
-import math
 import heapq
 import json
 import numpy
@@ -514,6 +513,26 @@ class NeuralNetwork:
                 tests_weight3[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
                 tests_weight4[minis_indices[network_indice]] += ((numpy.random.rand(1, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate), 0)
                 tests_weight5[minis_indices[network_indice]] += ((numpy.random.rand(64, 1) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 1) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias1[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias2[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias3[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias4[minis_indices[network_indice]] += ((numpy.random.rand(1, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias5[minis_indices[network_indice]] += ((numpy.random.rand(1, 1) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 1) * inverse_rate + (1 - inverse_rate), 0)
+                print(f"Coupling network #{network_indice + 1}... (testing)                    ", end="\r", flush=True)
+                self.weight1 = tests_weight1[minis_indices[network_indice]]
+                self.weight2 = tests_weight1[minis_indices[network_indice]]
+                self.weight3 = tests_weight1[minis_indices[network_indice]]
+                self.weight4 = tests_weight1[minis_indices[network_indice]]
+                self.weight5 = tests_weight1[minis_indices[network_indice]]
+                self.b1 = tests_bias1[minis_indices[network_indice]]
+                self.b2 = tests_bias2[minis_indices[network_indice]]
+                self.b3 = tests_bias3[minis_indices[network_indice]]
+                self.b4 = tests_bias4[minis_indices[network_indice]]
+                self.b5 = tests_bias5[minis_indices[network_indice]]
+                on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
+                difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
+                success = (balance*on_good_moves + on_bad_moves) / (balance*good_moves + bad_moves) * 100
+                tests_results[minis_indices[network_indice]] = [success - difference]
                 """
                 random_matrix1 = numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change
                 rand1 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
