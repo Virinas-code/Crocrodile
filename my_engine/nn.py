@@ -424,6 +424,9 @@ class NeuralNetwork:
         print("Loading networks... Done.          ")
         print("Loading tests results...", end=" ", flush=True)
         tests_results = self.csv_to_array("nns/results.csv")
+        tests_results = list(tests_results)
+        for indice, element in enumerate(tests_results):
+            tests_results[indice] = element[0]
         print("Done.")
         # https://stackoverflow.com/questions/16225677/get-the-second-largest-number-in-a-list-in-linear-time
         while iters < max_iters and success < max_success:
@@ -433,13 +436,30 @@ class NeuralNetwork:
             maxis_brut = heapq.nlargest(3, tests_results)
             maxis = list()
             for element in maxis_brut:
-                maxis.append(element[0])
+                maxis.append(element)
+            maxis_indices = []
+            for element in range(3):
+                maxis_indices.append(tests_results.index(maxis[element]))
+            minis_brut = heapq.nsmallest(3, tests_results)
+            minis = list()
+            for element in minis_brut:
+                minis.append(element)
+            minis_indices = []
+            for element in range(3):
+                if element == 0:
+                    pos = 0
+                else:
+                    pos = minis_indices[element - 1] + 1
+                minis_indices.append(tests_results.index(minis[element], pos))
             print("Done.")
             for network_indice in range(3):
                 print(f"Coupling network #{network_indice + 1}... (selecting second network)", end="\r", flush=True)
-                rand = random.randint(0, 127)
-                while rand == network_indice:
+                cont = True
+                while cont:
+                    cont = False
                     rand = random.randint(0, 127)
+                    if tests_results[rand] in minis_indices or tests_results[rand] in maxis_indices or rand == network_indice:
+                        cont = True
                 second_network = rand
                 print(f"Coupling network #{network_indice + 1}... (generating coupling matrixes)", end="\r", flush=True)
                 choose_w1 = numpy.zeros((64, 64))
