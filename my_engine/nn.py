@@ -443,22 +443,22 @@ class NeuralNetwork:
             for element in range(3):
                 maxis_indices.append(tests_results.index(maxis[element]))
             minis_brut = heapq.nsmallest(3, tests_results)
-            print(minis_brut)
             minis = list()
             for element in minis_brut:
                 if type(element) == list:
                     minis.append(element[0])
                 else:
                     minis.append(element)
-            minis_indices = []
-            for element in range(3):
-                if element == 0:
-                    pos = 0
-                else:
-                    pos = minis_indices[element - 1] + 1
-                print(minis)
-                minis_indices.append(tests_results.index(minis[element], pos))
+            minis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub])[:3]
             print("Done.")
+            liste = []
+            for count in range(3):
+                liste.append("#" + str(minis_indices[count]) + " (" + str(minis[count]) + ")")
+            print(f"Worst networks : {', '.join(liste)}")
+            liste = []
+            for count in range(3):
+                liste.append("#" + str(maxis_indices[count]) + " (" + str(maxis[count]) + ")")
+            print(f"Best networks : {', '.join(liste)}")
             for network_indice in range(3):
                 print(f"Coupling network #{network_indice + 1}... (selecting second network)", end="\r", flush=True)
                 cont = True
@@ -542,7 +542,7 @@ class NeuralNetwork:
                 on_good_moves, on_bad_moves, good_moves, bad_moves = self.check_train()
                 difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
                 success = (balance*on_good_moves + on_bad_moves) / (balance*good_moves + bad_moves) * 100
-                tests_results[minis_indices[network_indice]] = [success - difference]
+                tests_results[minis_indices[network_indice]] = success - difference
                 print(f"Coupling network #{network_indice + 1}... Done.   ", end="\r", flush=True)
                 """
                 random_matrix1 = numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change
@@ -551,7 +551,21 @@ class NeuralNetwork:
                 self.weight1 = self.weight1 + random_matrix1 * new_weight1
                 """
             print("Coupling networks... Done.                           ")
-            print(f"Mean performance : {sum(tests_results) / len(tests_results)}")
+            print(f"Mean performance : {(sum(tests_results) / len(tests_results))}")
+            if iters % 100 == 0 and iters:
+                for loop in range(population):
+                    print(f"Saving networks... ({loop}/{population})", end="\r", flush=True)
+                    self.array_to_csv(tests_weight1[loop], f"nns/{loop}-w1.csv")
+                    self.array_to_csv(tests_weight2[loop], f"nns/{loop}-w2.csv")
+                    self.array_to_csv(tests_weight3[loop], f"nns/{loop}-w3.csv")
+                    self.array_to_csv(tests_weight4[loop], f"nns/{loop}-w4.csv")
+                    self.array_to_csv(tests_weight5[loop], f"nns/{loop}-w5.csv")
+                    self.array_to_csv(tests_bias1[loop], f"nns/{loop}-b1.csv")
+                    self.array_to_csv(tests_bias2[loop], f"nns/{loop}-b2.csv")
+                    self.array_to_csv(tests_bias3[loop], f"nns/{loop}-b3.csv")
+                    self.array_to_csv(tests_bias4[loop], f"nns/{loop}-b4.csv")
+                    self.array_to_csv(tests_bias5[loop], f"nns/{loop}-b5.csv")
+                print("Saving networks... Done.          ")
 
 
     def genetic_random(self):
