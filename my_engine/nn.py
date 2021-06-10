@@ -195,7 +195,7 @@ class NeuralNetwork:
 
     def full_calculate(self):
         """Calculate NN result with all hidden layers."""
-        normalizer = numpy.vectorize(self.normalisation)
+        normalizer = self.normalisation
         self.hidden_layer_1 = self.weight1 @ self.input_layer + self.b1
         self.hidden_layer_1 = normalizer(self.hidden_layer_1)
         self.hidden_layer_2 = self.hidden_layer_1 @ self.weight2 + self.b2
@@ -206,6 +206,7 @@ class NeuralNetwork:
         self.hidden_layer_4 = normalizer(self.hidden_layer_4)
         self.output_layer = self.hidden_layer_4 @ self.weight5 + self.b5
         self.output_layer = normalizer(self.output_layer)
+        print(f"hl1 : {self.hidden_layer_1.shape} / hl2 : {self.hidden_layer_2.shape} / hl3 : {self.hidden_layer_3.shape} / hl4 : {self.hidden_layer_4.shape} / output : {self.output_layer.shape}")
 
     def calculate(self):
         """Calculate NN result."""
@@ -442,15 +443,20 @@ class NeuralNetwork:
             for element in range(3):
                 maxis_indices.append(tests_results.index(maxis[element]))
             minis_brut = heapq.nsmallest(3, tests_results)
+            print(minis_brut)
             minis = list()
             for element in minis_brut:
-                minis.append(element)
+                if type(element) == list:
+                    minis.append(element[0])
+                else:
+                    minis.append(element)
             minis_indices = []
             for element in range(3):
                 if element == 0:
                     pos = 0
                 else:
                     pos = minis_indices[element - 1] + 1
+                print(minis)
                 minis_indices.append(tests_results.index(minis[element], pos))
             print("Done.")
             for network_indice in range(3):
@@ -466,9 +472,7 @@ class NeuralNetwork:
                 choose_w1 = numpy.zeros((64, 64))
                 choose_w2 = numpy.zeros((64, 64))
                 choose_w3 = numpy.zeros((64, 64))
-                choose_w4 = numpy.zeros((64, 64))
-                choose_w5 = numpy.zeros((64, 1))
-                choose_matrixes1 = [choose_w1, choose_w2, choose_w3, choose_w4]
+                choose_matrixes1 = [choose_w1, choose_w2, choose_w3]
                 for choose_matrix in choose_matrixes1:
                     direction = bool(random.getrandbits(1))  # True : column else line
                     choose = bool(random.getrandbits(1))
@@ -487,6 +491,12 @@ class NeuralNetwork:
                     if random.random() < 0.0625:
                         choose = not choose
                     choose_w5[line][0] = int(choose)
+                choose = bool(random.getrandbits(1))
+                choose_w4 = numpy.zeros((1, 64))
+                for column in range(64):
+                    if random.random() < 0.0625:
+                        choose = not choose
+                    choose_w4[0][column] = int(choose)
                 choose_b1 = choose_w1
                 choose_b2 = choose_w2
                 choose_b3 = choose_w3
@@ -520,10 +530,10 @@ class NeuralNetwork:
                 tests_bias5[minis_indices[network_indice]] += ((numpy.random.rand(1, 1) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 1) * inverse_rate + (1 - inverse_rate), 0)
                 print(f"Coupling network #{network_indice + 1}... (testing)                    ", end="\r", flush=True)
                 self.weight1 = tests_weight1[minis_indices[network_indice]]
-                self.weight2 = tests_weight1[minis_indices[network_indice]]
-                self.weight3 = tests_weight1[minis_indices[network_indice]]
-                self.weight4 = tests_weight1[minis_indices[network_indice]]
-                self.weight5 = tests_weight1[minis_indices[network_indice]]
+                self.weight2 = tests_weight2[minis_indices[network_indice]]
+                self.weight3 = tests_weight3[minis_indices[network_indice]]
+                self.weight4 = tests_weight4[minis_indices[network_indice]]
+                self.weight5 = tests_weight5[minis_indices[network_indice]]
                 self.b1 = tests_bias1[minis_indices[network_indice]]
                 self.b2 = tests_bias2[minis_indices[network_indice]]
                 self.b3 = tests_bias3[minis_indices[network_indice]]
@@ -533,6 +543,7 @@ class NeuralNetwork:
                 difference = abs(((on_good_moves / good_moves) - (on_bad_moves / bad_moves)) * 100)
                 success = (balance*on_good_moves + on_bad_moves) / (balance*good_moves + bad_moves) * 100
                 tests_results[minis_indices[network_indice]] = [success - difference]
+                print(f"Coupling network #{network_indice + 1}... Done.   ", end="\r", flush=True)
                 """
                 random_matrix1 = numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change
                 rand1 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
@@ -540,6 +551,7 @@ class NeuralNetwork:
                 self.weight1 = self.weight1 + random_matrix1 * new_weight1
                 """
             print("Coupling networks... Done.                           ")
+            print(f"Mean performance : {sum(tests_results) / len(tests_results)}")
 
 
     def genetic_random(self):
@@ -560,7 +572,7 @@ class NeuralNetwork:
             tests_weight1.append(numpy.random.rand(64, 64) * 2 - 1)
             tests_weight2.append(numpy.random.rand(64, 64) * 2 - 1)
             tests_weight3.append(numpy.random.rand(64, 64) * 2 - 1)
-            tests_weight4.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_weight4.append(numpy.random.rand(1, 64) * 2 - 1)
             tests_weight5.append(numpy.random.rand(64, 1) * 2 - 1)
             tests_bias1.append(numpy.random.rand(64, 64) * 2 - 1)
             tests_bias2.append(numpy.random.rand(64, 64) * 2 - 1)
