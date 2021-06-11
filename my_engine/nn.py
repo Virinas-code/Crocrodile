@@ -566,6 +566,12 @@ class NeuralNetwork:
                     self.array_to_csv(tests_bias4[loop], f"nns/{loop}-b4.csv")
                     self.array_to_csv(tests_bias5[loop], f"nns/{loop}-b5.csv")
                 print("Saving networks... Done.          ")
+                print("Saving tests result...", end=" ", flush=True)
+                saved_results = list()
+                for element in tests_results:
+                    saved_results.append([float(element)])
+                self.array_to_csv(saved_results, "nns/results.csv")
+                print("Done.")
 
 
     def genetic_random(self):
