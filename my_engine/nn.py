@@ -552,7 +552,7 @@ class NeuralNetwork:
                 """
             print("Coupling networks... Done.                           ")
             print(f"Mean performance : {(sum(tests_results) / len(tests_results))}")
-            if iters % 100 == 0 and iters:
+            if iters % 500 == 0 and iters:
                 for loop in range(population):
                     print(f"Saving networks... ({loop}/{population})", end="\r", flush=True)
                     self.array_to_csv(tests_weight1[loop], f"nns/{loop}-w1.csv")
