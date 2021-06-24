@@ -3,7 +3,7 @@
 """
 Time Test.
 
-Test time for evaluation function.
+Test time for minimax.
 """
 import time
 import chess
