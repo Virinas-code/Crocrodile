@@ -435,31 +435,31 @@ class NeuralNetwork:
             iters += 1
             sprint("Training #{0}".format(iters))
             print("Selecting best networks...", end=" ", flush=True)
-            maxis_brut = heapq.nlargest(3, tests_results)
+            maxis_brut = heapq.nlargest(32, tests_results)
             maxis = list()
             for element in maxis_brut:
                 maxis.append(element)
             maxis_indices = []
-            for element in range(3):
+            for element in range(32):
                 maxis_indices.append(tests_results.index(maxis[element]))
-            minis_brut = heapq.nsmallest(3, tests_results)
+            minis_brut = heapq.nsmallest(32, tests_results)
             minis = list()
             for element in minis_brut:
                 if type(element) == list:
                     minis.append(element[0])
                 else:
                     minis.append(element)
-            minis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub])[:3]
+            minis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub])[:32]
             print("Done.")
             liste = []
-            for count in range(3):
+            for count in range(8):
                 liste.append("#" + str(minis_indices[count]) + " (" + str(minis[count]) + ")")
             print(f"Worst networks : {', '.join(liste)}")
             liste = []
-            for count in range(3):
+            for count in range(8):
                 liste.append("#" + str(maxis_indices[count]) + " (" + str(maxis[count]) + ")")
             print(f"Best networks : {', '.join(liste)}")
-            for network_indice in range(3):
+            for network_indice in range(32):
                 print(f"Coupling network #{network_indice + 1}... (selecting second network)", end="\r", flush=True)
                 cont = True
                 while cont:
@@ -552,7 +552,7 @@ class NeuralNetwork:
                 """
             print("Coupling networks... Done.                           ")
             print(f"Mean performance : {(sum(tests_results) / len(tests_results))}")
-            if iters % 500 == 0 and iters:
+            if iters % 3 == 0 and iters:
                 for loop in range(population):
                     print(f"Saving networks... ({loop}/{population})", end="\r", flush=True)
                     self.array_to_csv(tests_weight1[loop], f"nns/{loop}-w1.csv")
