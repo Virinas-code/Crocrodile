@@ -5,11 +5,11 @@ Crocrodile UCI.
 
 Created by @Virinas-code.
 """
-import my_engine
 import chess
+import my_engine
 # ====== IDLE ======
-import os
-os.chdir("../")
+# import os
+# os.chdir("../")
 # ==== END IDLE ====
 
 
@@ -24,6 +24,7 @@ class UCI:
         self.options = {"Hash": "77", "NeuralNetwork": "false"}  # default true when NN complete
         self.debug_mode = False
         self.board = chess.Board()
+        self.positionned = False
         print(self.name, self.author.lower())
 
     def run(self):
@@ -35,6 +36,7 @@ class UCI:
 
     def uci_parse(self, string):
         """Parse UCI command."""
+        self.info("Received " + string)
         args = [value for value in string.split(" ") if value != ""]
         if string != "":
             command = args[0]
@@ -69,6 +71,11 @@ class UCI:
             print("Unknown command: {0} with no arguments".format(string))
         else:
             print("Unknown command: {0}".format(string))
+
+    def info(self, msg: str) -> None:
+        """Print debug information."""
+        if self.debug_mode:
+            print("info string", msg)
 
     def uci(self):
         """Uci UCI command."""
@@ -116,16 +123,29 @@ class UCI:
 
         Change current position.
         """
+        next_arg = 0
         if args[0] == "startpos":
             self.board = chess.Board()
+            self.positionned = True
+            next_arg = 1
         elif args[0] == "fen" and len(args) > 6:
             self.board = chess.Board(" ".join(args[1:7]))
+            self.positionned = True
+            next_arg = 7
         else:
             print("Unknow syntax: position", " ".join(args))
-            
-    
+        if next_arg and len(args) > next_arg + 1:
+            self.info(args[next_arg])
+            self.info(args[next_arg + 1:])
+            for uci_move in args[next_arg + 1:]:
+                try:
+                    self.board.push(chess.Move.from_uci(uci_move))
+                except ValueError:
+                    print("Unknow UCI move:", uci_move)
+
     def new_game(self):
         self.board = chess.Board()
+        self.positionned = False
 
 
 if __name__ == '__main__':
