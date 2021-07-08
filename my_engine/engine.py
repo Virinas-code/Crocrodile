@@ -44,9 +44,6 @@ def csv_to_array(csv_path):
     return results
 
 
-wa = csv_to_array("wa.csv")
-wb = csv_to_array("wb.csv")
-wc = csv_to_array("wc.csv")
 
 
 def normalisation(val):
@@ -144,6 +141,7 @@ class EngineBase:
         self.board = board
         self.tb = dict()
         self.tb_limit = 10000000
+        self.nn_tb = dict()
 
     @staticmethod
     def evaluate(board):
@@ -235,75 +233,6 @@ class EngineBase:
     def search(self, depth, board):
         """Search best move (Minimax from wikipedia)."""
 
-    def minimax_nn(self, board, depth, maximimize_white):
-        """Minimax algorithm from Wikipedia with NN enabled."""
-        if depth == 0 or board.is_game_over():
-            zobrist_hash = chess.polyglot.zobrist_hash(board)
-            if zobrist_hash not in self.tb:
-                self.tb[zobrist_hash] = self.evaluate(board)
-                if len(self.tb) > self.tb_limit:
-                    del self.tb[list(self.tb.keys())[0]]
-            else:
-                print("transpos")
-            evaluation = self.tb[zobrist_hash]
-            attackers = board.attackers(board.turn, board.peek().to_square)
-            if len(attackers) > 0:
-                # Quiescent
-                if board.turn == chess.WHITE:
-                    evaluation += PIECES_VALUES[board.piece_map()\
-                                                [board.peek().to_square].\
-                                                symbol().lower()]
-                else:
-                    evaluation -= PIECES_VALUES[board.piece_map()\
-                                                [board.peek().to_square].\
-                                                symbol().lower()]
-            return evaluation, chess.Move.from_uci("0000")
-        if maximimize_white:
-            value = -float('inf')
-            legal_moves = list(board.legal_moves)
-            list_best_moves = [legal_moves[0]]
-            nn_solved = False
-            for move in legal_moves:
-                if neural_network.check_move(board.fen(), move.uci()):
-                    test_board = chess.Board(fen=board.fen())
-                    test_board.push(move)
-                    evaluation = self.minimax_nn(test_board, depth-1, False)[0]
-                    if value == evaluation:
-                        list_best_moves.append(move)
-                    elif value < evaluation:
-                        value = evaluation
-                        list_best_moves = [move]
-                    nn_solved = True
-            if not nn_solved:
-                print("\033[31mERROR\033[0m: Neural network bug - no good moves")
-                test_board = chess.Board(fen=board.fen())
-                test_board.push(move)
-                evaluation = self.minimax_nn(test_board, 1, False)[0]
-                if value == evaluation:
-                    list_best_moves.append(move)
-                elif value < evaluation:
-                    value = evaluation
-                    list_best_moves = [move]
-            return value, random.choice(list_best_moves)
-        # minimizing white
-        value = float('inf')
-        for move in board.legal_moves:
-            list_good_moves = [move]
-            break
-        for move in board.legal_moves:
-            test_boars = chess.Board(fen=board.fen())
-            test_boars.push(move)
-            evaluation = self.minimax_nn(test_boars, depth-1, True)[0]
-            if move.uci() in ['e8g8', 'e8c8']:
-                evaluation -= 11
-                # print('castle')
-            if value == evaluation:
-                list_good_moves.append(move)
-            if value > evaluation:
-                value = evaluation
-                list_good_moves = [move]
-        return value, random.choice(list_good_moves)
-
     def minimax_std(self, board, depth, maximimize_white):
         """Minimax algorithm from Wikipedia without NN."""
         if depth == 0 or board.is_game_over():
@@ -349,6 +278,77 @@ class EngineBase:
             legal_moves = list(board.legal_moves)
             list_best_moves = [legal_moves[0]]
             for move in legal_moves:
+                test_board = chess.Board(fen=board.fen())
+                test_board.push(move)
+                evaluation = self.minimax_std(test_board, depth-1, True)[0]
+                if move.uci() in ['e8g8', 'e8c8']:
+                    evaluation -= 11
+                    # print('castle')
+                if value == evaluation:
+                    list_best_moves.append(move)
+                elif value > evaluation:
+                    value = evaluation
+                    list_best_moves = [move]
+            return value, random.choice(list_best_moves)
+
+    def nn_select_best_moves(self, board):
+        """Select best moves in board."""
+        hash = chess.polyglot.zobrist_hash(board)
+        if hash not in self.nn_tb:
+            good_moves = list()
+            for move in board.legal_moves:
+                if neural_network.check_move(board.fen(), move.uci()):
+                    good_moves.append(move)
+            self.nn_tb[hash] = good_moves
+        good_moves = self.nn_tb[hash]
+        if not good_moves:
+            good_moves = list(board.legal_moves)
+
+    def minimax_nn(self, board, depth, maximimize_white):
+        """Minimax algorithm from Wikipedia with NN."""
+        if depth == 0 or board.is_game_over():
+            zobrist_hash = chess.polyglot.zobrist_hash(board)
+            if zobrist_hash not in self.tb:
+                self.tb[zobrist_hash] = self.evaluate(board)
+                if len(self.tb) > self.tb_limit:
+                    del self.tb[list(self.tb.keys())[0]]
+            evaluation = self.tb[zobrist_hash]
+            # evaluation = self.evaluate(board)
+            attackers = board.attackers(board.turn, board.peek().to_square)
+            if len(attackers) > 0:
+                # Quiescent
+                if board.turn == chess.WHITE:
+                    evaluation += PIECES_VALUES[board.piece_map()\
+                                                [board.peek().to_square].\
+                                                symbol().lower()]
+                else:
+                    evaluation -= PIECES_VALUES[board.piece_map()\
+                                                [board.peek().to_square].\
+                                                symbol().lower()]
+            return evaluation, chess.Move.from_uci("0000")
+        if maximimize_white:
+            value = -float('inf')
+            legal_moves = list(board.legal_moves)
+            list_best_moves = [legal_moves[0]]
+            for move in self.nn_select_best_moves(board):
+                test_board = chess.Board(fen=board.fen())
+                test_board.push(move)
+                evaluation = self.minimax_std(test_board, depth-1, False)[0]
+                if move.uci() in ['e1g1', 'e1c1']:
+                    evaluation += 11
+                    # print('castle')
+                if value == evaluation:
+                    list_best_moves.append(move)
+                elif value < evaluation:
+                    value = evaluation
+                    list_best_moves = [move]
+            return value, random.choice(list_best_moves)
+        else:
+            # minimizing white
+            value = float('inf')
+            legal_moves = list(board.legal_moves)
+            list_best_moves = [legal_moves[0]]
+            for move in self.nn_select_best_moves(board):
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
                 evaluation = self.minimax_std(test_board, depth-1, True)[0]
