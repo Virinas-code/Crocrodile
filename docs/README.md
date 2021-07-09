@@ -2,5 +2,5 @@
 ## Documentation
 Welcome in [Crocrodile](https://github.com/Virinas-code/Crocrodile/) documentation !
 ### Summary
-- [Home](.)
-- [Contributing](contributing.html)
+- [Home](Crocrodile/)
+- [Contributing](Crocrodile/contribute.html)
