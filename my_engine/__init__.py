@@ -10,5 +10,5 @@ from my_engine.engine import EngineBase
 
 if __name__ == '__main__':
     print("MyEngine v0.1")
-    e = UCI("MyEngine")
+    u = UCI("MyEngine")
     e = EngineBase("MyEngine", "Virinas-code")
