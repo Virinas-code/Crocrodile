@@ -57,6 +57,31 @@ class NeuralNetwork:
         self.train_bad = open(self.genetic_train_settings["train_bad"]).read().split("\n\n")
         self.test_good = open(self.genetic_train_settings["test_good"]).read().split("\n\n")
         self.test_bad = open(self.genetic_train_settings["test_bad"]).read().split("\n\n")
+        print("Loading networks... (counting networks)", end="\r", flush=True)
+        self.tests_weight1 = list()
+        self.tests_weight2 = list()
+        self.tests_weight3 = list()
+        self.tests_weight4 = list()
+        self.tests_weight5 = list()
+        self.tests_bias1 = list()
+        self.tests_bias2 = list()
+        self.tests_bias3 = list()
+        self.tests_bias4 = list()
+        self.tests_bias5 = list()
+        population = self.genetic_train_settings["population"]
+        for loop in range(population):
+            print(f"Loading networks... ({loop}/{population})       ", end="\r", flush=True)
+            self.tests_weight1.append(self.csv_to_array(f"nns/{loop}-w1.csv"))
+            self.tests_weight2.append(self.csv_to_array(f"nns/{loop}-w2.csv"))
+            self.tests_weight3.append(self.csv_to_array(f"nns/{loop}-w3.csv"))
+            self.tests_weight4.append(self.csv_to_array(f"nns/{loop}-w4.csv"))
+            self.tests_weight5.append(self.csv_to_array(f"nns/{loop}-w5.csv"))
+            self.tests_bias1.append(self.csv_to_array(f"nns/{loop}-b1.csv"))
+            self.tests_bias2.append(self.csv_to_array(f"nns/{loop}-b2.csv"))
+            self.tests_bias3.append(self.csv_to_array(f"nns/{loop}-b3.csv"))
+            self.tests_bias4.append(self.csv_to_array(f"nns/{loop}-b4.csv"))
+            self.tests_bias5.append(self.csv_to_array(f"nns/{loop}-b5.csv"))
+        print("Loading networks... Done.               ")
 
     def output(self):
         """Return NN output."""
@@ -833,16 +858,16 @@ class NeuralNetwork:
         def sprint(value):
             centered = value.center(18)
             print("********** {0} **********".format(centered))
-        tests_weight1 = list()
-        tests_weight2 = list()
-        tests_weight3 = list()
-        tests_weight4 = list()
-        tests_weight5 = list()
-        tests_bias1 = list()
-        tests_bias2 = list()
-        tests_bias3 = list()
-        tests_bias4 = list()
-        tests_bias5 = list()
+        tests_weight1 = self.tests_weight1
+        tests_weight2 = self.tests_weight2
+        tests_weight3 = self.tests_weight3
+        tests_weight4 = self.tests_weight4
+        tests_weight5 = self.tests_weight5
+        tests_bias1 = self.tests_bias1
+        tests_bias2 = self.tests_bias2
+        tests_bias3 = self.tests_bias3
+        tests_bias4 = self.tests_bias4
+        tests_bias5 = self.tests_bias5
         self.masters_train_good = masters_good_moves.split("\n\n")
         self.masters_train_bad = masters_bad_moves.split("\n\n")
         max_iters = 100
@@ -851,22 +876,8 @@ class NeuralNetwork:
         mutation_change = config["mutation_change"]
         sprint("Initialize")
         iters = 0
-        print("Loading networks... (counting networks)", end="\r", flush=True)
-        population = self.genetic_train_settings["population"]
-        for loop in range(population):
-            print(f"Loading networks... ({loop}/{population})       ", end="\r", flush=True)
-            tests_weight1.append(self.csv_to_array(f"nns/{loop}-w1.csv"))
-            tests_weight2.append(self.csv_to_array(f"nns/{loop}-w2.csv"))
-            tests_weight3.append(self.csv_to_array(f"nns/{loop}-w3.csv"))
-            tests_weight4.append(self.csv_to_array(f"nns/{loop}-w4.csv"))
-            tests_weight5.append(self.csv_to_array(f"nns/{loop}-w5.csv"))
-            tests_bias1.append(self.csv_to_array(f"nns/{loop}-b1.csv"))
-            tests_bias2.append(self.csv_to_array(f"nns/{loop}-b2.csv"))
-            tests_bias3.append(self.csv_to_array(f"nns/{loop}-b3.csv"))
-            tests_bias4.append(self.csv_to_array(f"nns/{loop}-b4.csv"))
-            tests_bias5.append(self.csv_to_array(f"nns/{loop}-b5.csv"))
-        print("Loading networks... Done.               ")
         tests_results = list()
+        population = self.genetic_train_settings["population"]
         for loop in range(population):
             print(f"Testing networks... ({loop}/{population})", end="\r", flush=True)
             self.weight1 = tests_weight1[loop]
