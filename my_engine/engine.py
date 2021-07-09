@@ -303,6 +303,7 @@ class EngineBase:
         good_moves = self.nn_tb[hash]
         if not good_moves:
             good_moves = list(board.legal_moves)
+        return good_moves
 
     def minimax_nn(self, board, depth, maximimize_white):
         """Minimax algorithm from Wikipedia with NN."""
