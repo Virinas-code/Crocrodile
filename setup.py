@@ -1,17 +1,7 @@
-from cx_Freeze import setup, Executable
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Crocrodile Setup.
 
-# Dependencies are automatically detected, but it might need
-# fine tuning.
-build_options = {'packages': [], 'excludes': []}
-
-base = 'Console'
-
-executables = [
-    Executable('main.py', base=base, target_name = 'crocrodile')
-]
-
-setup(name='Crocrodile',
-      version = '0.4',
-      description = 'Simple chess engine',
-      options = {'build_exe': build_options},
-      executables = executables)
+Setup Crocrodile chess engine.
+"""
