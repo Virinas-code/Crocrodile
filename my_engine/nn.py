@@ -798,6 +798,253 @@ class NeuralNetwork:
         self.test_good = open(self.test_good).read().split("\n\n")
         self.test_bad = open(self.test_bad).read().split("\n\n")
 
+    def masters_check_train(self):
+        """Check NN on train dataset."""
+        file_goodmoves = self.masters_train_good
+        file_badmoves = self.masters_train_bad
+        errs = 0
+        good = 0
+        correct_on_good_moves = 0
+        correct_on_bad_moves = 0
+        for inputs in file_goodmoves:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            if self.check_move(pos, mve):
+                good += 1
+                correct_on_good_moves += 1
+            else:
+                errs += 1
+        for inputs in file_badmoves:
+            pos = inputs.split("\n")[0]
+            mve = inputs.split("\n")[1]
+            if not self.check_move(pos, mve):
+                good += 1
+                correct_on_bad_moves += 1
+            else:
+                errs += 1
+        return correct_on_good_moves, correct_on_bad_moves, len(file_goodmoves), len(file_badmoves)
+
+    def masters_genetic_train(self, masters_good_moves, masters_bad_moves, config):
+        """
+        Genetic training algorithm.
+
+        New training algorithm using a real genetic algorithm.
+        """
+        def sprint(value):
+            centered = value.center(18)
+            print("********** {0} **********".format(centered))
+        tests_weight1 = list()
+        tests_weight2 = list()
+        tests_weight3 = list()
+        tests_weight4 = list()
+        tests_weight5 = list()
+        tests_bias1 = list()
+        tests_bias2 = list()
+        tests_bias3 = list()
+        tests_bias4 = list()
+        tests_bias5 = list()
+        self.masters_train_good = masters_good_moves.split("\n\n")
+        self.masters_train_bad = masters_bad_moves.split("\n\n")
+        max_iters = 100
+        max_success = 100
+        inverse_rate = 100 / config["mutation_rate"]
+        mutation_change = config["mutation_change"]
+        sprint("Initialize")
+        iters = 0
+        print("Loading networks... (counting networks)", end="\r", flush=True)
+        population = self.genetic_train_settings["population"]
+        for loop in range(population):
+            print(f"Loading networks... ({loop}/{population})       ", end="\r", flush=True)
+            tests_weight1.append(self.csv_to_array(f"nns/{loop}-w1.csv"))
+            tests_weight2.append(self.csv_to_array(f"nns/{loop}-w2.csv"))
+            tests_weight3.append(self.csv_to_array(f"nns/{loop}-w3.csv"))
+            tests_weight4.append(self.csv_to_array(f"nns/{loop}-w4.csv"))
+            tests_weight5.append(self.csv_to_array(f"nns/{loop}-w5.csv"))
+            tests_bias1.append(self.csv_to_array(f"nns/{loop}-b1.csv"))
+            tests_bias2.append(self.csv_to_array(f"nns/{loop}-b2.csv"))
+            tests_bias3.append(self.csv_to_array(f"nns/{loop}-b3.csv"))
+            tests_bias4.append(self.csv_to_array(f"nns/{loop}-b4.csv"))
+            tests_bias5.append(self.csv_to_array(f"nns/{loop}-b5.csv"))
+        print("Loading networks... Done.               ")
+        tests_results = list()
+        for loop in range(population):
+            print(f"Testing networks... ({loop}/{population})", end="\r", flush=True)
+            self.weight1 = tests_weight1[loop]
+            self.weight2 = tests_weight2[loop]
+            self.weight3 = tests_weight3[loop]
+            self.weight4 = tests_weight4[loop]
+            self.weight5 = tests_weight5[loop]
+            self.b1 = tests_bias1[loop]
+            self.b2 = tests_bias2[loop]
+            self.b3 = tests_bias3[loop]
+            self.b4 = tests_bias4[loop]
+            self.b5 = tests_bias5[loop]
+            on_good_moves, on_bad_moves, good_moves, bad_moves = self.masters_check_train()
+            success = ((on_good_moves / good_moves)**2 * (on_bad_moves / bad_moves)) * 100
+            tests_results.append([success])
+        print("Testing networks... Done.          ")
+        print("Saving tests result...", end=" ", flush=True)
+        self.array_to_csv(tests_results, "nns/results.csv")
+        print("Done.")
+        print("Reseting neural network...", end=" ", flush=True)
+        self.weight1 = self.csv_to_array("w1.csv")
+        self.weight2 = self.csv_to_array("w2.csv")
+        self.weight3 = self.csv_to_array("w3.csv")
+        self.weight4 = self.csv_to_array("w4.csv")
+        self.weight5 = self.csv_to_array("w5.csv")
+        self.b1 = self.csv_to_array("b1.csv")
+        self.b2 = self.csv_to_array("b2.csv")
+        self.b3 = self.csv_to_array("b3.csv")
+        self.b4 = self.csv_to_array("b4.csv")
+        self.b5 = self.csv_to_array("b5.csv")
+        print("Done.")
+        print("Loading tests results...", end=" ", flush=True)
+        tests_results = self.csv_to_array("nns/results.csv")
+        tests_results = list(tests_results)
+        for indice, element in enumerate(tests_results):
+            tests_results[indice] = element[0]
+        print("Done.")
+        # https://stackoverflow.com/questions/16225677/get-the-second-largest-number-in-a-list-in-linear-time
+        while iters < max_iters and success < max_success:
+            iters += 1
+            sprint("Training #{0}".format(iters))
+            print("Selecting best networks...", end=" ", flush=True)
+            maxis_brut = heapq.nlargest(32, tests_results)
+            maxis = list()
+            for element in maxis_brut:
+                maxis.append(element)
+            maxis_indices = []
+            for element in range(32):
+                maxis_indices.append(tests_results.index(maxis[element]))
+            minis_brut = heapq.nsmallest(32, tests_results)
+            minis = list()
+            for element in minis_brut:
+                if type(element) == list:
+                    minis.append(element[0])
+                else:
+                    minis.append(element)
+            minis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub])[:32]
+            print("Done.")
+            liste = []
+            for count in range(8):
+                liste.append("#" + str(minis_indices[count]) + " (" + str(minis[count]) + ")")
+            print(f"Worst networks : {', '.join(liste)}")
+            liste = []
+            for count in range(8):
+                liste.append("#" + str(maxis_indices[count]) + " (" + str(maxis[count]) + ")")
+            print(f"Best networks : {', '.join(liste)}")
+            for network_indice in range(32):
+                print(f"Coupling network #{network_indice + 1}... (selecting second network)", end="\r", flush=True)
+                cont = True
+                while cont:
+                    cont = False
+                    rand = random.randint(0, population - 1)
+                    if rand in minis_indices or rand in maxis_indices:
+                        cont = True
+                second_network = rand
+                print(f"Coupling network #{network_indice + 1}... (generating coupling matrixes)", end="\r", flush=True)
+                choose_w1 = numpy.zeros((64, 64))
+                choose_w2 = numpy.zeros((64, 64))
+                choose_w3 = numpy.zeros((64, 64))
+                choose_matrixes1 = [choose_w1, choose_w2, choose_w3]
+                for choose_matrix in choose_matrixes1:
+                    direction = bool(random.getrandbits(1))  # True : column else line
+                    choose = bool(random.getrandbits(1))
+                    for line in range(len(choose_matrix)):
+                        for column in range(len(choose_matrix[0])):
+                            if random.random() < 0.001:
+                                choose = not choose
+                            fill = int(choose)
+                            if direction:
+                                choose_matrix[line][column] = fill
+                            else:
+                                choose_matrix[column][line] = fill
+                choose = bool(random.getrandbits(1))
+                choose_w5 = numpy.zeros((64, 1))
+                for line in range(64):
+                    if random.random() < 0.0625:
+                        choose = not choose
+                    choose_w5[line][0] = int(choose)
+                choose = bool(random.getrandbits(1))
+                choose_w4 = numpy.zeros((1, 64))
+                for column in range(64):
+                    if random.random() < 0.0625:
+                        choose = not choose
+                    choose_w4[0][column] = int(choose)
+                choose_b1 = choose_w1
+                choose_b2 = choose_w2
+                choose_b3 = choose_w3
+                choose_b4 = numpy.zeros((1, 64))
+                choose = bool(random.getrandbits(1))
+                for column in range(64):
+                    if random.random() < 0.0625:
+                        choose = not choose
+                    choose_b4[0][column] = int(choose)
+                choose_b5 = numpy.array([[int(bool(random.getrandbits(1)))]])
+                print(f"Coupling network #{network_indice + 1}... (coupling)                    ", end="\r", flush=True)
+                tests_weight1[minis_indices[network_indice]] = tests_weight1[maxis_indices[network_indice]] * choose_w1 + tests_weight1[second_network] * (1 - choose_w1)
+                tests_weight2[minis_indices[network_indice]] = tests_weight2[maxis_indices[network_indice]] * choose_w2 + tests_weight2[second_network] * (1 - choose_w2)
+                tests_weight3[minis_indices[network_indice]] = tests_weight3[maxis_indices[network_indice]] * choose_w3 + tests_weight3[second_network] * (1 - choose_w3)
+                tests_weight4[minis_indices[network_indice]] = tests_weight4[maxis_indices[network_indice]] * choose_w4 + tests_weight4[second_network] * (1 - choose_w4)
+                tests_weight5[minis_indices[network_indice]] = tests_weight5[maxis_indices[network_indice]] * choose_w5 + tests_weight5[second_network] * (1 - choose_w5)
+                tests_bias1[minis_indices[network_indice]] = tests_bias1[maxis_indices[network_indice]] * choose_b1 + tests_bias1[second_network] * (1 - choose_b1)
+                tests_bias2[minis_indices[network_indice]] = tests_bias2[maxis_indices[network_indice]] * choose_b2 + tests_bias2[second_network] * (1 - choose_b2)
+                tests_bias3[minis_indices[network_indice]] = tests_bias3[maxis_indices[network_indice]] * choose_b3 + tests_bias3[second_network] * (1 - choose_b3)
+                tests_bias4[minis_indices[network_indice]] = tests_bias4[maxis_indices[network_indice]] * choose_b4 + tests_bias4[second_network] * (1 - choose_b4)
+                tests_bias5[minis_indices[network_indice]] = tests_bias5[maxis_indices[network_indice]] * choose_b5 + tests_bias5[second_network] * (1 - choose_b5)
+                tests_weight1[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_weight2[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_weight3[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_weight4[minis_indices[network_indice]] += ((numpy.random.rand(1, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_weight5[minis_indices[network_indice]] += ((numpy.random.rand(64, 1) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 1) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias1[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias2[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias3[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias4[minis_indices[network_indice]] += ((numpy.random.rand(1, 64) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate), 0)
+                tests_bias5[minis_indices[network_indice]] += ((numpy.random.rand(1, 1) * (2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 1) * inverse_rate + (1 - inverse_rate), 0)
+                print(f"Coupling network #{network_indice + 1}... (testing)                    ", end="\r", flush=True)
+                self.weight1 = tests_weight1[minis_indices[network_indice]]
+                self.weight2 = tests_weight2[minis_indices[network_indice]]
+                self.weight3 = tests_weight3[minis_indices[network_indice]]
+                self.weight4 = tests_weight4[minis_indices[network_indice]]
+                self.weight5 = tests_weight5[minis_indices[network_indice]]
+                self.b1 = tests_bias1[minis_indices[network_indice]]
+                self.b2 = tests_bias2[minis_indices[network_indice]]
+                self.b3 = tests_bias3[minis_indices[network_indice]]
+                self.b4 = tests_bias4[minis_indices[network_indice]]
+                self.b5 = tests_bias5[minis_indices[network_indice]]
+                on_good_moves, on_bad_moves, good_moves, bad_moves = self.masters_check_train()
+                success = ((on_good_moves / good_moves)**2 * (on_bad_moves / bad_moves)) * 100
+                tests_results[minis_indices[network_indice]] = success
+                print(f"Coupling network #{network_indice + 1}... Done.   ", end="\r", flush=True)
+                """
+                random_matrix1 = numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change
+                rand1 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
+                new_weight1 = numpy.heaviside(rand1, 0) * self.cweight1
+                self.weight1 = self.weight1 + random_matrix1 * new_weight1
+                """
+            print("Coupling networks... Done.                           ")
+            print(f"Mean performance : {(sum(tests_results) / len(tests_results))}")
+        for loop in range(population):
+            print(f"Saving networks... ({loop}/{population})", end="\r", flush=True)
+            self.array_to_csv(tests_weight1[loop], f"nns/{loop}-w1.csv")
+            self.array_to_csv(tests_weight2[loop], f"nns/{loop}-w2.csv")
+            self.array_to_csv(tests_weight3[loop], f"nns/{loop}-w3.csv")
+            self.array_to_csv(tests_weight4[loop], f"nns/{loop}-w4.csv")
+            self.array_to_csv(tests_weight5[loop], f"nns/{loop}-w5.csv")
+            self.array_to_csv(tests_bias1[loop], f"nns/{loop}-b1.csv")
+            self.array_to_csv(tests_bias2[loop], f"nns/{loop}-b2.csv")
+            self.array_to_csv(tests_bias3[loop], f"nns/{loop}-b3.csv")
+            self.array_to_csv(tests_bias4[loop], f"nns/{loop}-b4.csv")
+            self.array_to_csv(tests_bias5[loop], f"nns/{loop}-b5.csv")
+        print("Saving networks... Done.          ")
+        print("Saving tests result...", end=" ", flush=True)
+        saved_results = list()
+        for element in tests_results:
+            saved_results.append([float(element)])
+        self.array_to_csv(saved_results, "nns/results.csv")
+        print("Done.")
+
 
 if __name__ == '__main__':
     test = NeuralNetwork()
