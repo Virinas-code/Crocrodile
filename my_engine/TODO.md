@@ -7,3 +7,10 @@
 - [ ] Use transposition tables for NN
 ### Minimax
 - [ ] Loop :question:
+### Neural Network
+#### New test
+- [ ] Load new "bad" moves
+- [ ] New evaluation formula
+- [ ] New network evaluation
+#### Main loop
+- [ ] Separate function
