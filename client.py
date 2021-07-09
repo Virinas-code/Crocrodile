@@ -145,25 +145,28 @@ class Game(threading.Thread):
                 time_s = (t.hour * 60 + t.minute) * 60 + t.second
                 lok("Game", self.game_id, \
                     ": Calculating (time", str(time_s) + ")...", end=" (")
+                """
                 lok("depth " + str(5) + ")")
                 score, best_move = minimax(board, 5, board.turn)
-                """if time_s > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0) and len(mvs) > 2:
+                """
+                if time_s > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0) and len(mvs) > 2:
                     lok("depth " + str(3) + ")")
                     score, best_move = minimax(board, 3, board.turn)
                 elif time_s < 100:
-                    lok("depth " + str(2) + ")")
+                    lok("depth " + str(3) + ")")
                     score, best_move = minimax(board, 2, board.turn)
                 elif time_s < 30:
-                    lok("depth " + str(1) + ")")
+                    lok("depth " + str(2) + ")")
                     score, best_move = minimax(board, 1, board.turn)
                 elif len(mvs) <= 2:
                     lok("depth " + str(2) + ")")
                     score, best_move = minimax(board, 2, board.turn)
                 else:
-                    lok("depth " + str(3) + ")")
+                    lok("depth " + str(4) + ")")
                     score, best_move = minimax(board, 3, board.turn)
                 lok("Game", self.game_id, ": score", score, "(best move",
-                    str(best_move) + ")")"""
+                    str(best_move) + ")")
+
                 retry = 3
                 while retry > 0:
                     try:
