@@ -7,5 +7,6 @@ To contribute, follow these steps :
 3. Add your Crocrodile version info
 4. Commit to your fork
 5. Wait for a review from a Moderator
+
 ### Issues
 To report a bug, follow steps in Issues models.
