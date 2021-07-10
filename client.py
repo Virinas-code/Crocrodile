@@ -151,7 +151,8 @@ class Game(threading.Thread):
                 """
                 if time_s > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0) and len(mvs) > 2:
                     lok("depth " + str(3) + ")")
-                    score, best_move = minimax(board, 3, board.turn)
+                    # Boucle for
+                    score, best_move = minimax(board, 3, board.turn) # + param time (temps pour jouer)
                 elif time_s < 100:
                     lok("depth " + str(3) + ")")
                     score, best_move = minimax(board, 2, board.turn)

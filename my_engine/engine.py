@@ -305,14 +305,17 @@ class EngineBase:
             good_moves = list(board.legal_moves)
         return good_moves
 
-    def minimax_nn(self, board, depth, maximimize_white):
+    def minimax_nn(self, board, depth, maximimize_white):  # + param time + param best move depth-1 + param evaluation
         """Minimax algorithm from Wikipedia with NN."""
         if depth == 0 or board.is_game_over():
             zobrist_hash = chess.polyglot.zobrist_hash(board)
             if zobrist_hash not in self.tb:
+                # if j'ai du temps
                 self.tb[zobrist_hash] = self.evaluate(board)
                 if len(self.tb) > self.tb_limit:
                     del self.tb[list(self.tb.keys())[0]]
+                # else
+                #
             evaluation = self.tb[zobrist_hash]
             # evaluation = self.evaluate(board)
             attackers = board.attackers(board.turn, board.peek().to_square)
