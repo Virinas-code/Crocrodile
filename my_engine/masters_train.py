@@ -51,9 +51,6 @@ def main():
             for bad_move in bad_moves_for_pos:
                 bad_moves += f"{board.fen()}\n{bad_move.uci()}\n\n"
             good_moves_string += f"{board.fen()}\n{move[0].uci()}\n\n"
-        print(bad_moves)
-        print("==========")
-        print(good_moves_string)
         neural_network.masters_genetic_train(good_moves_string[:-2], bad_moves[:-2], config)
 
 
