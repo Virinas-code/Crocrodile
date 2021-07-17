@@ -1051,6 +1051,46 @@ class NeuralNetwork:
         self.array_to_csv(saved_results, "nns/results.csv")
         print("Done.")
 
+    def masters_random(self):
+        """Random NNs for genetic masters training algorithm."""
+        tests_weight1 = list()
+        tests_weight2 = list()
+        tests_weight3 = list()
+        tests_weight4 = list()
+        tests_weight5 = list()
+        tests_bias1 = list()
+        tests_bias2 = list()
+        tests_bias3 = list()
+        tests_bias4 = list()
+        tests_bias5 = list()
+        number = int(input("Population : "))
+        for loop in range(number):
+            print(f"Generating random networks... ({loop}/{number})", end="\r", flush=True)
+            tests_weight1.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_weight2.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_weight3.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_weight4.append(numpy.random.rand(1, 64) * 2 - 1)
+            tests_weight5.append(numpy.random.rand(64, 1) * 2 - 1)
+            tests_bias1.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_bias2.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_bias3.append(numpy.random.rand(64, 64) * 2 - 1)
+            tests_bias4.append(numpy.random.rand(1, 64) * 2 - 1)
+            tests_bias5.append(numpy.random.rand(1, 1) * 2 - 1)
+        print("Generating random networks... Done.          ")
+        for loop in range(number):
+            print(f"Saving random networks... ({loop}/{number})", end="\r", flush=True)
+            self.array_to_csv(tests_weight1[loop], f"nns/{loop}-w1.csv")
+            self.array_to_csv(tests_weight2[loop], f"nns/{loop}-w2.csv")
+            self.array_to_csv(tests_weight3[loop], f"nns/{loop}-w3.csv")
+            self.array_to_csv(tests_weight4[loop], f"nns/{loop}-w4.csv")
+            self.array_to_csv(tests_weight5[loop], f"nns/{loop}-w5.csv")
+            self.array_to_csv(tests_bias1[loop], f"nns/{loop}-b1.csv")
+            self.array_to_csv(tests_bias2[loop], f"nns/{loop}-b2.csv")
+            self.array_to_csv(tests_bias3[loop], f"nns/{loop}-b3.csv")
+            self.array_to_csv(tests_bias4[loop], f"nns/{loop}-b4.csv")
+            self.array_to_csv(tests_bias5[loop], f"nns/{loop}-b5.csv")
+        print("Saving random networks... Done.          ")
+
 
 if __name__ == '__main__':
     test = NeuralNetwork()
