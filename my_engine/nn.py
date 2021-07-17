@@ -920,20 +920,15 @@ class NeuralNetwork:
             iters += 1
             sprint("Training #{0}".format(iters))
             print("Selecting best networks...", end=" ", flush=True)
-            maxis_brut = heapq.nlargest(32, tests_results)
+            maxis_brut = sorted(tests_results, reverse=True)[:32]
             maxis = list()
             for element in maxis_brut:
                 maxis.append(element)
-            maxis_indices = []
-            for element in range(32):
-                maxis_indices.append(tests_results.index(maxis[element]))
-            minis_brut = heapq.nsmallest(32, tests_results)
+            maxis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub], reverse=True)[:32]
+            minis_brut = sorted(tests_results)[:32]
             minis = list()
             for element in minis_brut:
-                if type(element) == list:
-                    minis.append(element[0])
-                else:
-                    minis.append(element)
+                minis.append(element)
             minis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub])[:32]
             print("Done.")
             liste = []
