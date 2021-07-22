@@ -137,3 +137,7 @@ tags
 
 # Dolphin directory settings
 .directory
+
+# NNs saves
+!save/
+!nns/Population */
