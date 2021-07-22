@@ -139,5 +139,5 @@ tags
 .directory
 
 # NNs saves
-!save/
-!nns/Population */
+save/
+nns/Population */
