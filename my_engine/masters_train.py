@@ -37,7 +37,7 @@ def main():
     config = {"mutation_rate": mutation_rate, "mutation_change": mutation_change}
     for iter in range(iters):
         good_moves = list()
-        for i in range(100):
+        for i in range(30):
             test = random.choice(all_good_moves)
             while test in good_moves:
                 test = random.choice(all_good_moves)
