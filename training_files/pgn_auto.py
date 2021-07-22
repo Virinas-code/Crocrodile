@@ -64,10 +64,11 @@ while PGN_FILE != "":
     game = chess.pgn.read_game(PGN_FILE)
     print("Done.")
     head = game.headers
-    head_game = f"{head['White']} vs. {head['Black']}"
-    head_event = f"{head['Event']} ({head['Site']})"
+    head_game = f"{head.get('White', 'Anonymous')} vs. {head.get('Black', 'Anonymous')}"
+    head_event = f"{head.get('Event', 'unknown event')} ({head.get('Site', 'unknown site')})"
+    head_termination = f"{head.get('Termination', 'Unknown')} - {head.get('Result', '?-?')}"
     print(f"Game : {head_game} during {head_event}")
-    print(f"Termination : {head['Termination']} - {head['Result']}")
+    print(f"Termination : {head_termination}")
     board = game.board()
     output = str()
     for move in game.mainline_moves():
