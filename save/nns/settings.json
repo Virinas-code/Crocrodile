@@ -1,1 +1,0 @@
-{"max_iters": 100000, "max_success": 100.0, "balance": 50.0, "train_good": "my_engine/fichier_entrainement_bonscoups.txt", "test_good": "nt.txt", "train_bad": "my_engine/fichier_entrainement_mauvaiscoups.txt", "test_bad": "nt.txt", "population": 1024, "mutation_rate": 0.5, "mutation_change": 0.2}
