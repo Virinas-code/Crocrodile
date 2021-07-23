@@ -7,101 +7,120 @@ Setup Crocrodile chess engine.
 """
 import sys
 import os
-import colorama
-import tempfile
-
-file = tempfile.mkstemp(prefix="setup-")[1]
-colorama.init()
+import pkgutil
+import requests
 
 
-def error(msg):
-    print(colorama.Style.BRIGHT + colorama.Fore.RED + "ERROR:", colorama.Style.RESET_ALL + msg, "You can find complete logs at", file)
-    sys.exit(-1)
+def load_requirements(requirements):
+    """Load requirements."""
+    to_install = requirements
+    installed = list()
+    for module in pkgutil.iter_modules():
+        if module.name in to_install:
+            to_install.remove(module.name)
+            installed.append(module.name)
+    return to_install, installed
 
 
-def install():
-    print("Installing dependencies... (checking for python3)", end="\r", flush=True)
-    test = os.system(f"python3 --version >> {file}")
+def download(url, destination):
+    request = requests.get(url, stream=True)
+    request.raw.decode_content = True
+    with open(destination, 'wb') as destination:
+        destination.write(request.raw.read())
+
+
+def detect_python():
+    """Detect Python installation."""
+    print("Detecting Python installation...", end=" ", flush=True)
+    test = os.system("python3 --version > " + os.devnull)
+    if test == 0:
+        print("Done.")
+        return "python3"
+    test = os.system("py -3 --version > " + os.devnull)
+    if test == 0:
+        print("Done.")
+        return "py -3"
+    print("Done.")
+    print("/!\\ Python installation not found !")
+    print("    Please verify that Python is installed and launchable with 'python3' command")
+    stop()
+
+
+def detect_pip(python):
+    """Detect pip installation."""
+    print("Detecting pip installation...", end=" ", flush=True)
+    test = os.system(python + " -m pip --version > " + os.devnull)
+    print("Done.")
+    if test == 0:
+        return
+    print("Downloading: https://bootstrap.pypa.io/get-pip.py...", end=" ", flush=True)
+    download("https://bootstrap.pypa.io/get-pip.py", "get-pip.py")
+    print("Done.")
+    print("Installing: pip...", end=" ", flush=True)
+    test = os.system(python + " get-pip.py > " + os.devnull)
+    print("Done.")
     if test != 0:
-        error("Python 3 not found. Please verify that Python 3 is installed on 'python3' command.")
-    print("Installing dependencies... (checking for pip3)", end="\r", flush=True)
-    test = os.system(f"python3 -m pip --version >> {file}")
-    if test != 0:
-        print("Installing dependencies... (installing pip3)", end="\r", flush=True)
-        test = os.system(f"curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py >> {file}")
-        if test != 0:
-            error("Failed to download pip3.")
-        test = os.system(f"python3 get-pip.py >> {file}")
-        if test != 0:
-            error("Failed to install pip3.")
-    print("Installing dependencies... (installing requirements)", end="\r", flush=True)
-    test = os.system(f"python3 -m pip install -r requirements.txt >> {file}")
-    if test != 0:
-        error("Failed to install dependencies.")
+        print("/!\\ Failed to install pip.")
+        stop()
 
 
-def client(sub_args):
-    os.system("python3 client.py " + sub_args)
-
-
-def help():
-    print("Crocrodile setup program")
-    print("========================")
-    print()
-    print("Usage: setup.py COMMAND [SUBCOMMAND] [OPTIONS]")
-    print()
-    print("Commands:")
-    print("    install   : Install Crocrodile")
-    print("    launch    : Launch Crocrodile")
-    print()
-    print("Launch :")
-    print("    client    : Launch Lichess client")
-    print()
-    print("Client :")
-    print("    -h, --help           : Show this message and exit")
-    print("    -v, --verbose        : Show debug logs")
-    print("    -q, --quiet          : Don't show any logs")
-    print("    -c, --challenge \"user time increment color\" : Challenge user in time+increment, BOT is playing with color ('white' or 'black')")
-    print("    -a, --auto           : Auto challenge BOTs")
-    print("    -n, --neural-network : Enable Neural Network")
-    print("    -u, --upgrade        : Upgrade to bot account")
-    print("    -d, --dev            : Dev account")
-    print()
-    print("Options :")
-    print("    -h, --help: Show this message and exit")
-
-
-def parse_args():
-    args = sys.argv
-    if len(args) > 1:
-        command = args[1]
-        if command == "install":
-            install()
-        elif command == "launch":
-            if len(args) > 2:
-                command = args[2]
-                if command == "client":
-                    if len(args) > 3:
-                        client(" ".join(args[3:]))
-                    else:
-                        client()
-                else:
-                    help()
-                    print()
-                    error(f"Unknow target: {command}.")
-            else:
-                help()
+def install_requirements(requirements, python):
+    """Install missing requirements."""
+    for requirement in requirements:
+        print("Downloading: https://pypi.org/simple/{0}/...".format(requirement), end=" ", flush=True)
+        for retry in range(3):
+            test = os.system(python + " -m pip download --only-binary=:all: " + requirement + " > " + os.devnull)
+            if test == 0:
+                break
+            if retry == 0:
                 print()
-                error("No subcommand for launch.")
-        elif command in ("-h", "--help"):
-            help()
-        else:
-            help()
-            print()
-            error(f"Unknown command: {command}.")
-    else:
-        help()
+            print("Failed to download, retrying (" + str(retry + 1) + "/3)")
+        if retry == 2:
+            print("\n/!\\ Failed to download", requirement)
+            stop()
+        print("Done.")
+    --no-dependencies
+    for wheel in glob.glob("*.whl"):
+        print("Installing:", wheel + "...", end=" ", flush=True)
+        test = os.system(python + " -m pip install --no-dependencies " + wheel + " > " + os.devnull)
+        if test != 0:
+            print("\n/!\\ Failed to install", wheel)
+        print("Done.")
 
 
-if __name__ == '__main__':
-    parse_args()
+def install(requirements):
+    """Install Crocrodile."""
+    python = detect_python()
+    detect_pip(python)
+    install_requirements(requirements, python)
+
+
+def stop():
+    """Stop installation."""
+    print("Installation canceled.")
+    sys.exit(1)
+
+
+requirements = ["berserk", "python-chess", "colorama", "pip"]
+
+
+print("Welcome in Crocrodile setup program !")
+
+print("Loading requirements...", end=" ", flush=True)
+to_install, installed = load_requirements(requirements)
+print("Done.")
+
+print()
+print("Installed packages:")
+print("   ", "\t".join(installed))
+print("Packages to install:")
+print("   ", "\t".join(to_install))
+continuation = input("Continue ? [Y/n] ").lower()
+if continuation in ("y", "yes", ""):
+    install(to_install)
+elif continuation in ("n", "no"):
+    print("Canceling...")
+    stop()
+else:
+    print("Bad answer. Canceling...")
+    stop()
