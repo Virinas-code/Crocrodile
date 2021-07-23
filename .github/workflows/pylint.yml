@@ -5,7 +5,7 @@ on: [push]
 jobs:
   lint:
 
-    runs-on: ubuntu-latest
+    runs-on: debian-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -21,5 +21,4 @@ jobs:
     - name: Analysing the code with pylint
       continue-on-error: true
       run: |
-        pylint `ls -R|grep .py$|xargs` || exit 0
-        exit 0
+        pylint *.py */*.py || exit 0
