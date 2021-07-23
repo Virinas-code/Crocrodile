@@ -14,6 +14,8 @@ import colorama
 import chess
 # from Crocrodile.main import yukoo
 import my_engine
+from nns.load_network import load_network
+import copy
 yukoo = my_engine.EngineBase("Yukoo", "Virinas-code")
 minimax = yukoo.minimax_std
 
@@ -25,6 +27,9 @@ error_log = open("error.log", 'w')
 debug_log = open("debug.log", 'w')
 
 colorama.init()
+
+# Load best network
+load_network()
 
 
 def _lok(*args, **kwargs):
@@ -106,30 +111,48 @@ if len(sys.argv) > 1:
 else:
     ldebug = lnone
 
+
+def limit_time(total_time: float, increment: int) -> float:
+    """Calculate minimum time to calculate best move."""
+    limit_time: float = increment + (total_time / 40)
+    return limit_time
+
+
+def start_depth(total_time: float) -> int:
+    if total_time > 600:
+        return 4
+    elif total_time > 300:
+        return 3
+    else:
+        return 2
+
+
 class Game(threading.Thread):
     def __init__(self, client, game_id, color, fen, **kwargs):
         super().__init__(**kwargs)
-        lok("Game", game_id, ": initial FEN", fen)
+        lok("Game", game_id, "| Starting... (FEN", fen + ")")
         self.game_id = game_id
         self.initial_fen = fen
         self.client = client
         self.stream = client.bots.stream_game_state(game_id)
         if color == 'white':
-            self.my_turn = chess.WHITE
-        else:
             self.my_turn = chess.BLACK
-        if self.my_turn != chess.WHITE:
+        else:
+            self.my_turn = chess.WHITE
+        if self.my_turn == chess.WHITE:
             self.time_control = "wtime"
-            self.game_state_change({'status':'started', 'moves':'0000 0000', 'btime':datetime.datetime(1970, 1, 1, 12), 'wtime': datetime.datetime(1970, 1, 1, 12)})
+            self.game_state_change({'status':'started', 'moves':'', 'btime':datetime.datetime(1970, 1, 1, 12), 'wtime': datetime.datetime(1970, 1, 1, 12)})
         else:
             self.time_control = "btime"
-        lok("Game", self.game_id, "start")
+        lok("Game", self.game_id, "| Started")
     def run(self):
         for event in self.stream:
             if event['type'] == 'gameState':
                 self.game_state_change(event)
             elif event['type'] == 'chatLine':
                 self.chat(event)
+            elif event["type"] == "gameFull":
+                self.game_full(event)
             else:
                 ldebug(event["type"], ":", event)
     def game_state_change(self, event):
@@ -137,36 +160,46 @@ class Game(threading.Thread):
         if event['status'] == "started":
             mvs = event['moves'].split(" ")
             board = chess.Board(self.initial_fen)
-            for move in mvs:
-                board.push(chess.Move.from_uci(move))
+            first_pos = True
+            if mvs != ['']:
+                first_pos = False
+                for move in mvs:
+                    board.push(chess.Move.from_uci(move))
             ldebug("\n" + str(board))
             if board.turn != self.my_turn:
                 t = event[self.time_control].time()
                 time_s = (t.hour * 60 + t.minute) * 60 + t.second
-                lok("Game", self.game_id, \
-                    ": Calculating (time", str(time_s) + ")...", end=" (")
+                t = event.get("winc", datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc))
+                increment = (t.hour * 60 + t.minute) * 60 + t.second
                 """
                 lok("depth " + str(5) + ")")
                 score, best_move = minimax(board, 5, board.turn)
                 """
-                if time_s > 1200 and len(mvs) > 2 and len(mvs) % 12 in (1, 0) and len(mvs) > 2:
-                    lok("depth " + str(3) + ")")
-                    # Boucle for
-                    score, best_move = minimax(board, 3, board.turn) # + param time (temps pour jouer)
-                elif time_s < 100:
-                    lok("depth " + str(3) + ")")
-                    score, best_move = minimax(board, 2, board.turn)
-                elif time_s < 30:
-                    lok("depth " + str(2) + ")")
-                    score, best_move = minimax(board, 1, board.turn)
-                elif len(mvs) <= 2:
-                    lok("depth " + str(2) + ")")
-                    score, best_move = minimax(board, 2, board.turn)
+                if first_pos:
+                    depth = 2
+                    limit = 10
                 else:
-                    lok("depth " + str(4) + ")")
-                    score, best_move = minimax(board, 3, board.turn)
-                lok("Game", self.game_id, ": score", score, "(best move",
-                    str(best_move) + ")")
+                    depth = start_depth(time_s)
+                    limit = limit_time(time_s, increment)
+                score = float('-inf')
+                best_move = chess.Move.null()
+                lok("Game", self.game_id, "| Maximum " + str(int(limit)) + "s to calculate")
+                limit += time.time()
+                lok("Game", self.game_id, "| Depth " + str(depth) + ": Calculating...", end="\r")
+                last_score, last_best_move = minimax(board, depth, board.turn, float('inf'))
+                lok("Game", self.game_id, "| Depth " + str(depth) + ": Score " + str(last_score) + " (best move " + last_best_move.uci() + ")")
+                while True:
+                    depth += 1
+                    lok("Game", self.game_id, "| Depth " + str(depth) + ": Calculating...", end="\r")
+                    score, best_move = minimax(board, depth, board.turn, limit)
+                    if score == float('inf'):
+                        score = last_score
+                        best_move = last_best_move
+                        lok("Game", self.game_id, "| Depth " + str(depth) + ": Not enough time")
+                        break
+                    else:
+                        lok("Game", self.game_id, "| Depth " + str(depth) + ": Score " + str(score) + " (best move " + best_move.uci() + ")")
+                        last_score, last_best_move = copy.deepcopy(score), copy.deepcopy(best_move)
 
                 retry = 3
                 while retry > 0:
@@ -174,16 +207,22 @@ class Game(threading.Thread):
                         self.client.bots.make_move(self.game_id, best_move)
                         retry = 0
                     except Exception as e:
-                        lerr(type(e), e)
+                        lerr("Game", self.game_id, "| Error:", e)
                         time.sleep(3)
                         pass
                     retry = retry - 1
+        elif event["status"] == "draw":
+            lok("Game", self.game_id, "| Draw")
+        elif event["status"] == "resign":
+            if event["winner"] == "white":
+                lok("Game", self.game_id, "| White wins - Black resign")
+            else:
+                lok("Game", self.game_id, "| White resigns - Black wins")
         else:
-            lok("Game", self.game_id, ":", event['status'])
+            lok("Game", self.game_id, "|", event['status'].capitalize())
             sys.exit(0)
     def chat(self, event):
-        lok("Game", self.game_id, ":", event['room'].capitalize(), event['username'], "says", event['text'])
-lok("Initialized.")
+        lok("Game", self.game_id, "|", event['room'].capitalize(), "@" + event['username'], "says", event['text'])
 
 
 
@@ -209,6 +248,7 @@ while continue_loop:
         if event['type'] == 'challenge':
             if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors and event['challenge']['challenger']['id'] != "crocrodile" and event['challenge']['color'] != 'random':
                 client.bots.accept_challenge(event['challenge']['id'])
+                lok("Challenge", event["challenge"]["id"], "| Accepted")
                 colors[event['challenge']['id']] = event['challenge']['color']
                 if event["challenge"]["variant"]["key"] == "fromPosition":
                     fens[event["challenge"]["id"]] = event["challenge"]["initialFen"]
@@ -216,10 +256,21 @@ while continue_loop:
                     fens[event["challenge"]["id"]]  = chess.STARTING_FEN
             else:
                 if event["challenge"]["challenger"]["id"] != "crocrodile":
+                    if event["challenge"]["color"] == "random":
+                        lok("Challenge", event["challenge"]["id"], "| Declining because this is a random color challenge")
+                    elif event['challenge']['id'] in colors:
+                        lok("Challenge", event["challenge"]["id"], "| Declining because this is a rematch")
+                    elif event['challenge']['speed'] not in SPEEDS:
+                        lok("Challenge", event["challenge"]["id"], "| Declining because the bot doesn't play this speed (" + event["challenge"]["speed"].capitalize() + ")")
+                    elif event['challenge']['variant']['key'] not in VARIANTS:
+                        lok("Challenge", event["challenge"]["id"], "| Declining because the bot doesn't play this variant (" + event["challenge"]["variant"]["name"] + ")")
+                    else:
+                        lok("Challenge", event["challenge"]["id"], "| Declining")
                     client.bots.decline_challenge(event['challenge']['id'])
-                    lok("Don't accept challenge in", event['challenge']['speed'].capitalize(), ("because it's a rematch" if event['challenge']['id'] in colors else "because the bot don't play this speed"))
                     if event['challenge']['id'] in colors:
-                        client.bots.post_message(event['challenge']['id'], "I don't aceppt rematches (lot of bugs)")
+                        client.bots.post_message(event['challenge']['id'], "I don't accept rematches (lot of bugs)")
+                else:
+                    lok("Challenge", event["challenge"]["id"], "| Challenging @" + event["challenge"]["destUser"]["name"])
         elif event['type'] == 'gameStart':
             game = Game(client, event['game']['id'], colors[event['game']['id']], fens[event["game"]["id"]])
             game.start()
@@ -231,5 +282,11 @@ while continue_loop:
                 else:
                     colors[challenge["challenge"]["id"]] = "white"
                 fens[challenge["challenge"]["id"]] = chess.STARTING_FEN
+            lok("Game", event["game"]["id"], "| Finished")
+        elif event["type"] == "challengeDeclined":
+            if event["challenge"]["challenger"]["id"] == "crocrodile":
+                lok("Challenge", event["challenge"]["id"], "| Declined by @" + event["challenge"]["destUser"]["name"])
+            else:
+                lok("Challenge", event["challenge"]["id"], "| Declined")
         else:
             ldebug(event["type"], ":", event)
