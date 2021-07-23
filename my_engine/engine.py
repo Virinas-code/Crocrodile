@@ -10,6 +10,7 @@ import random
 # import requests
 # import copy
 import csv
+import time
 import chess
 import chess.polyglot
 import my_engine.nn as nn
@@ -305,7 +306,7 @@ class EngineBase:
             good_moves = list(board.legal_moves)
         return good_moves
 
-    def minimax_nn(self, board, depth, maximimize_white):  # + param time + param best move depth-1 + param evaluation
+    def minimax_nn(self, board, depth, maximimize_white, limit_time):  # + param time + param best move depth-1 + param evaluation
         """Minimax algorithm from Wikipedia with NN."""
         if depth == 0 or board.is_game_over():
             zobrist_hash = chess.polyglot.zobrist_hash(board)
@@ -335,9 +336,11 @@ class EngineBase:
             legal_moves = list(board.legal_moves)
             list_best_moves = [legal_moves[0]]
             for move in self.nn_select_best_moves(board):
+                if time.time() > limit_time:
+                    return float('inf'), chess.Move.from_uci("0000")
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
-                evaluation = self.minimax_nn(test_board, depth-1, False)[0]
+                evaluation = self.minimax_nn(test_board, depth-1, False, limit_time)[0]
                 if move.uci() in ['e1g1', 'e1c1']:
                     evaluation += 11
                     # print('castle')
@@ -353,9 +356,11 @@ class EngineBase:
             legal_moves = list(board.legal_moves)
             list_best_moves = [legal_moves[0]]
             for move in self.nn_select_best_moves(board):
+                if time.time() > limit_time:
+                    return float('inf'), chess.Move.from_uci("0000")
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
-                evaluation = self.minimax_nn(test_board, depth-1, True)[0]
+                evaluation = self.minimax_nn(test_board, depth-1, True, limit_time)[0]
                 if move.uci() in ['e8g8', 'e8c8']:
                     evaluation -= 11
                     # print('castle')
