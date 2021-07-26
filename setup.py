@@ -7,8 +7,13 @@ Setup Crocrodile chess engine.
 """
 import sys
 import os
+import stat
 import pkgutil
+import glob
 import requests
+import zipfile
+import tarfile
+import platform
 
 
 def load_requirements(requirements):
@@ -69,7 +74,7 @@ def install_requirements(requirements, python):
     for requirement in requirements:
         print("Downloading: https://pypi.org/simple/{0}/...".format(requirement), end=" ", flush=True)
         for retry in range(3):
-            test = os.system(python + " -m pip download --only-binary=:all: " + requirement + " > " + os.devnull)
+            test = os.system(python + " -m pip download --prefer-binary " + requirement + " > " + os.devnull)
             if test == 0:
                 break
             if retry == 0:
@@ -79,13 +84,53 @@ def install_requirements(requirements, python):
             print("\n/!\\ Failed to download", requirement)
             stop()
         print("Done.")
-    --no-dependencies
     for wheel in glob.glob("*.whl"):
         print("Installing:", wheel + "...", end=" ", flush=True)
         test = os.system(python + " -m pip install --no-dependencies " + wheel + " > " + os.devnull)
         if test != 0:
             print("\n/!\\ Failed to install", wheel)
         print("Done.")
+    for targz in glob.glob("*.tar.gz"):
+        print("Unpacking:", targz + "...", end=" ", flush=True)
+        file = tarfile.open(targz)
+        file.extractall(path="./setup-{0}/".format(targz[:-7]))
+        file.close()
+        print("Done.")
+        print("Installing:", targz[:-7] + "...", end=" ", flush=True)
+        os.chdir("setup-" + targz[:-7])
+        os.chdir(targz[:-7])
+        os.system(python + " setup.py build > " + os.devnull)
+        os.system(python + " setup.py install > " + os.devnull)
+        os.chdir("../..")
+        print("Done.")
+
+
+def install_crocrodile(python):
+    print("Downloading: https://codeload.github.com/Virinas-code/Crocrodile/zip/refs/heads/master...", end=" ", flush=True)
+    download("https://codeload.github.com/Virinas-code/Crocrodile/zip/refs/heads/master", "crocrodile.zip")
+    print("Done.")
+    print("Unpacking: crocrodile.zip...", end=" ", flush=True)
+    system = platform.system()
+    with zipfile.ZipFile("crocrodile.zip", 'r') as zip_ref:
+        if system == "Linux":
+            zip_ref.extractall("/usr/lib/crocrodile/")
+        elif system == "Windows":
+            zip_ref.extractall("C:/Program Files (x86)/Crocrodile/")
+        else:
+            print()
+            print("/!\\ Unindentified or unsupported OS.")
+            stop()
+    print("Done.")
+    print("Installing: Crocrodile...", end=" ", flush=True)
+    if system == "Linux":
+        with open("/usr/bin/crocrodile", "w") as file:
+            file.write("#!/usr/bin/sh\ncd /usr/lib/crocrodile/Crocrodile-master/\n" + python + " uci.py")
+            st = os.stat('/usr/bin/crocrodile')
+            os.chmod('/usr/bin/crocrodile', st.st_mode | stat.S_IEXEC)
+    elif system == "Windows":
+        with open("C:/Program Files (x86)/Crocrodile/crocrodile.bat") as file:
+            file.write("cd C:/Program Files (x86)/Crocrodile/Crocrodile-master/\n" + python + " uci.py")
+    print("Done.")
 
 
 def install(requirements):
@@ -93,6 +138,7 @@ def install(requirements):
     python = detect_python()
     detect_pip(python)
     install_requirements(requirements, python)
+    install_crocrodile(python)
 
 
 def stop():
