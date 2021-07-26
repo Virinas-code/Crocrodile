@@ -141,7 +141,6 @@ class Game(threading.Thread):
             self.my_turn = chess.WHITE
         if self.my_turn == chess.WHITE:
             self.time_control = "wtime"
-            self.game_state_change({'status':'started', 'moves':'', 'btime':datetime.datetime(1970, 1, 1, 12), 'wtime': datetime.datetime(1970, 1, 1, 12)})
         else:
             self.time_control = "btime"
         lok("Game", self.game_id, "| Started")
@@ -166,7 +165,7 @@ class Game(threading.Thread):
                 for move in mvs:
                     board.push(chess.Move.from_uci(move))
             ldebug("\n" + str(board))
-            if board.turn != self.my_turn:
+            if board.turn == self.my_color:
                 t = event[self.time_control].time()
                 time_s = (t.hour * 60 + t.minute) * 60 + t.second
                 t = event.get("winc", datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc))
@@ -224,6 +223,17 @@ class Game(threading.Thread):
     def chat(self, event):
         lok("Game", self.game_id, "|", event['room'].capitalize(), "@" + event['username'], "says", event['text'])
 
+    def game_full(self, event):
+        lok("Game", self.game_id, "| Game full")
+        if event["white"]["id"] in ("crocrodile-dev", "Crocrodile"):
+            self.my_color = True
+            self.time_control = "wtime"
+            lok("Game", self.game_id, "| Playing as White")
+            self.game_state_change({'status':'started', 'moves':'', 'btime':datetime.datetime(1970, 1, 1, 12), 'wtime': datetime.datetime(1970, 1, 1, 12)})
+        else:
+            self.my_color = False
+            self.time_control = "btime"
+            lok("Game", self.game_id, "| Playing as Black")
 
 
 lok("Token is", token)
