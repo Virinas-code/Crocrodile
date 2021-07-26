@@ -868,7 +868,7 @@ class NeuralNetwork:
         tests_bias5 = self.tests_bias5
         self.masters_train_good = masters_good_moves.split("\n\n")
         self.masters_train_bad = masters_bad_moves.split("\n\n")
-        max_iters = 50
+        max_iters = 200
         max_success = 100
         inverse_rate = 100 / config["mutation_rate"]
         mutation_change = config["mutation_change"]
