@@ -141,3 +141,9 @@ tags
 # NNs saves
 save/
 nns/Population */
+
+# Installation files
+*.whl
+setup-*/
+*.tar.gz
+crocrodile.zip
