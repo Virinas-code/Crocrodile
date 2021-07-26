@@ -17,8 +17,6 @@ import chess
 # os.chdir("../")
 # ==== END IDLE ====
 
-sys.path.append("/home/alexei/Documents/Code/Python/Crocrodile/lichess-bot/engines/")
-print(sys.path, file=sys.stderr)
 
 class NeuralNetwork:
     """Base class for NN."""
@@ -870,7 +868,7 @@ class NeuralNetwork:
         tests_bias5 = self.tests_bias5
         self.masters_train_good = masters_good_moves.split("\n\n")
         self.masters_train_bad = masters_bad_moves.split("\n\n")
-        max_iters = 25
+        max_iters = 50
         max_success = 100
         inverse_rate = 100 / config["mutation_rate"]
         mutation_change = config["mutation_change"]
@@ -924,22 +922,22 @@ class NeuralNetwork:
             maxis = list()
             for element in maxis_brut:
                 maxis.append(element)
-            maxis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub], reverse=True)[:32]
-            minis_brut = sorted(tests_results)[:32]
+            maxis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub], reverse=True)[:4]
+            minis_brut = sorted(tests_results)[:4]
             minis = list()
             for element in minis_brut:
                 minis.append(element)
-            minis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub])[:32]
+            minis_indices = sorted(range(len(tests_results)), key = lambda sub: tests_results[sub])[:4]
             print("Done.")
             liste = []
-            for count in range(8):
+            for count in range(4):
                 liste.append("#" + str(minis_indices[count]) + " (" + str(minis[count]) + ")")
             print(f"Worst networks : {', '.join(liste)}")
             liste = []
-            for count in range(8):
+            for count in range(4):
                 liste.append("#" + str(maxis_indices[count]) + " (" + str(maxis[count]) + ")")
             print(f"Best networks : {', '.join(liste)}")
-            for network_indice in range(32):
+            for network_indice in range(4):
                 print(f"Coupling network #{network_indice + 1}... (selecting second network)", end="\r", flush=True)
                 cont = True
                 while cont:
