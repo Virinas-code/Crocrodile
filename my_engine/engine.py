@@ -14,6 +14,7 @@ import time
 import chess
 import chess.polyglot
 import my_engine.nn as nn
+import my_engine.evaluate as evaluator
 
 PAWN_VALUE = 130
 KNIGHT_VALUE = 290
@@ -143,93 +144,12 @@ class EngineBase:
         self.tb = dict()
         self.tb_limit = 10000000
         self.nn_tb = dict()
+        self.nn_tb_limit = 1000000
 
     @staticmethod
     def evaluate(board):
         """Evaluate position."""
-        white_score = 0
-        black_score = 0
-        if board.is_stalemate():
-            return 0
-        if board.is_checkmate():
-            if board.turn == chess.WHITE:
-                return -10000
-            return 10000
-        piece_map = board.piece_map()
-        white_bishops = 0
-        black_bishops = 0
-        for piece in piece_map:
-            if piece_map[piece].symbol().isupper():
-                white_score += PIECES_VALUES[piece_map[piece].symbol().lower()]
-                if piece in CENTRAL_SQUARES and not piece_map[piece].symbol() == "Q":
-                    white_score += 10
-                if piece in ELARGED_SQUARES and not piece_map[piece].symbol() == "Q":
-                    white_score += 5
-                if piece_map[piece].symbol() == 'P' and piece in SEVENTH_ROW:
-                    white_score += 20
-                if piece_map[piece].symbol() == 'P' and piece in EIGHT_ROW:
-                    white_score += QUEEN_VALUE
-                if piece_map[piece].symbol() == 'B':
-                    white_bishops += 1
-                if piece_map[piece].symbol() == 'Q' and len(piece_map) > 20:
-                    white_score -= 30
-                if piece_map[piece].symbol() == 'K':
-                    if piece + 7 in piece_map and piece_map[piece + 7].symbol() == 'P' and len(piece_map) > 16:
-                        white_score += PROTECTED_KING
-                    if piece + 8 in piece_map and piece_map[piece + 8].symbol() == 'P' and len(piece_map) > 16:
-                        white_score += PROTECTED_KING
-                    if piece + 9 in piece_map and piece_map[piece + 9].symbol() == 'P' and len(piece_map) > 16:
-                        white_score += PROTECTED_KING
-            else:
-                black_score += PIECES_VALUES[piece_map[piece].symbol()]
-                if piece in CENTRAL_SQUARES and not piece_map[piece].symbol() == "q":
-                    black_score += 10
-                if piece in ELARGED_SQUARES and not piece_map[piece].symbol() == "q":
-                    black_score += 5
-                if piece_map[piece].symbol() == 'p' and piece in SECOND_ROW:
-                    black_score += 20
-                if piece_map[piece].symbol() == 'p' and piece in FIRST_ROW:
-                    black_score += QUEEN_VALUE
-                if piece_map[piece].symbol() == 'b':
-                    black_bishops += 1
-                if piece_map[piece].symbol() == 'k':
-                    if piece - 7 in piece_map and piece_map[piece - 7].symbol() == 'p' and len(piece_map) > 16:
-                        black_score += PROTECTED_KING
-                    if piece - 8 in piece_map and piece_map[piece - 8].symbol() == 'p' and len(piece_map) > 16:
-                        black_score += PROTECTED_KING
-                    if piece - 9 in piece_map and piece_map[piece - 9].symbol() == 'p' and len(piece_map) > 16:
-                        black_score += PROTECTED_KING
-                if piece_map[piece].symbol() == 'q' and len(piece_map) > 28:
-                    black_score -= 30
-        if white_bishops >= 2:
-            white_score += BISHOPS_PAIR
-        if black_bishops >= 2:
-            black_score += BISHOPS_PAIR
-        if board.has_kingside_castling_rights(chess.WHITE):
-            white_score += 7
-        if board.has_kingside_castling_rights(chess.BLACK):
-            black_score += 7
-        if board.has_queenside_castling_rights(chess.WHITE):
-            white_score += 7
-        if board.has_queenside_castling_rights(chess.BLACK):
-            black_score += 7
-        # if board.peek().uci() in ['e1g1', 'e1c1']:
-            # white_score += 101
-            # print("white castle !")
-        # if board.peek().uci() in ['e8g8', 'e8c8']:
-            # black_score += 101
-            # print("black castle !")
-        if board.turn == chess.WHITE:
-            white_score += len(list(board.legal_moves))
-            board.push(chess.Move.from_uci("0000"))
-            black_score += len(list(board.legal_moves))
-            board.pop()
-        else:
-            black_score += len(list(board.legal_moves))
-            board.push(chess.Move.from_uci("0000"))
-            white_score += len(list(board.legal_moves))
-            board.pop()
-        return white_score-black_score
+        return evaluator.evaluate(board)
 
     def search(self, depth, board):
         """Search best move (Minimax from wikipedia)."""
@@ -296,6 +216,8 @@ class EngineBase:
         """Select best moves in board."""
         hash = chess.polyglot.zobrist_hash(board)
         if hash not in self.nn_tb:
+            if len(self.nn_tb) > self.nn_tb_limit:
+                del self.nn_tb[list(self.nn_tb.keys())[0]]
             good_moves = list()
             for move in board.legal_moves:
                 if neural_network.check_move(board.fen(), move.uci()):
@@ -341,9 +263,6 @@ class EngineBase:
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
                 evaluation = self.minimax_nn(test_board, depth-1, False, limit_time)[0]
-                if move.uci() in ['e1g1', 'e1c1']:
-                    evaluation += 11
-                    # print('castle')
                 if value == evaluation:
                     list_best_moves.append(move)
                 elif value < evaluation:
@@ -361,9 +280,6 @@ class EngineBase:
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
                 evaluation = self.minimax_nn(test_board, depth-1, True, limit_time)[0]
-                if move.uci() in ['e8g8', 'e8c8']:
-                    evaluation -= 11
-                    # print('castle')
                 if value == evaluation:
                     list_best_moves.append(move)
                 elif value > evaluation:
