@@ -39,6 +39,7 @@ DOUBLED_PAWNS = 15
 TRIPLED_PAWNS = 35
 QUADRUPLED_PAWNS = 60
 ISOLATED_PAWN = 17
+PASSED_PAWN = 22
 
 def pawn_on_column(column, pawn, piece_map):
     pawns_count = 0
@@ -46,6 +47,43 @@ def pawn_on_column(column, pawn, piece_map):
         if piece_map[square] == pawn:
             pawns_count += 1
     return pawns_count
+
+
+def check_passed_pawns(board: chess.Board, color: bool) -> int:
+    """Evaluation: Check paseed pawns.
+
+    :param chess.Board board: Board.
+    :param bool color: Color to add bonus (True is white).
+    :return: Bonus points.
+    :rtype: int
+
+    """
+    result = 0
+    piece_map = board.piece_map()
+    pawn = ("P" if color else "p")
+    def pawn_on_column_after_rank(column, rank, pawn, piece_map):
+        pawns_count = 0
+        for square in column:
+            print(f"{square} > {rank * 7 + 1}")
+            if square > rank * 7 + 1:
+                print("yes")
+                if square in piece_map:
+                    print("square found")
+                    if piece_map[square].symbol() == pawn:
+                        print(f"pawn found square {chess.square_name(square)} column {column}")
+                        pawns_count += 1
+        return pawns_count
+    for square in piece_map:
+        if piece_map[square].symbol() == pawn:
+            # Get rank and column of square
+            rank = chess.square_rank(square)
+            column = chess.square_file(square)
+            print(f"pawn rank {rank} column {column}")
+            if pawn_on_column_after_rank(COLUMNS[column], rank, pawn.swapcase(), piece_map) == 0 \
+                and pawn_on_column_after_rank(COLUMNS[min(7, column+1)], rank, pawn.swapcase(), piece_map) == 0 \
+                and pawn_on_column_after_rank(COLUMNS[max(0, column-1)], rank, pawn.swapcase(), piece_map) == 0:
+                result += PASSED_PAWN
+    return result
 
 
 def evaluate(board: chess.Board):
@@ -140,9 +178,7 @@ def evaluate(board: chess.Board):
             else:
                 if pawn_on_column(COLUMNS[index-1], "P", piece_map) == 0 and pawn_on_column(COLUMNS[index+1], "P", piece_map) == 0:
                     white_score -= ISOLATED_PAWN
-    for square in COLUMN_A:
-        if piece_map[square].symbol() == "P":
-            if not
+    white_score += check_passed_pawns(board, True)
     if board.turn == chess.WHITE:
         white_score += len(list(board.legal_moves))
         board.push(chess.Move.from_uci("0000"))
