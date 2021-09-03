@@ -34,17 +34,19 @@ COLUMN_E = [4, 12, 20, 28, 36, 44, 52, 60]
 COLUMN_F = [5, 13, 21, 29, 37, 45, 53, 61]
 COLUMN_G = [6, 14, 22, 30, 38, 46, 54, 62]
 COLUMN_H = [7, 15, 23, 31, 39, 47, 55, 63]
-COLUMNS = [COLUMN_A, COLUMN_B, COLUMN_C, COLUMN_D, COLUMN_E, COLUMN_F, COLUMN_G, COLUMN_H]
+COLUMNS = [COLUMN_A, COLUMN_B, COLUMN_C, COLUMN_D,
+           COLUMN_E, COLUMN_F, COLUMN_G, COLUMN_H]
 DOUBLED_PAWNS = 15
 TRIPLED_PAWNS = 35
 QUADRUPLED_PAWNS = 60
 ISOLATED_PAWN = 17
 PASSED_PAWN = 22
 
+
 def pawn_on_column(column, pawn, piece_map):
     pawns_count = 0
     for square in column:
-        if piece_map[square] == pawn:
+        if piece_map.get(square, None) == pawn:
             pawns_count += 1
     return pawns_count
 
@@ -61,16 +63,13 @@ def check_passed_pawns(board: chess.Board, color: bool) -> int:
     result = 0
     piece_map = board.piece_map()
     pawn = ("P" if color else "p")
+
     def pawn_on_column_after_rank(column, rank, pawn, piece_map):
         pawns_count = 0
         for square in column:
-            print(f"{square} > {rank * 7 + 1}")
             if square > rank * 7 + 1:
-                print("yes")
                 if square in piece_map:
-                    print("square found")
                     if piece_map[square].symbol() == pawn:
-                        print(f"pawn found square {chess.square_name(square)} column {column}")
                         pawns_count += 1
         return pawns_count
     for square in piece_map:
@@ -78,10 +77,9 @@ def check_passed_pawns(board: chess.Board, color: bool) -> int:
             # Get rank and column of square
             rank = chess.square_rank(square)
             column = chess.square_file(square)
-            print(f"pawn rank {rank} column {column}")
             if pawn_on_column_after_rank(COLUMNS[column], rank, pawn.swapcase(), piece_map) == 0 \
-                and pawn_on_column_after_rank(COLUMNS[min(7, column+1)], rank, pawn.swapcase(), piece_map) == 0 \
-                and pawn_on_column_after_rank(COLUMNS[max(0, column-1)], rank, pawn.swapcase(), piece_map) == 0:
+                    and pawn_on_column_after_rank(COLUMNS[min(7, column+1)], rank, pawn.swapcase(), piece_map) == 0 \
+                    and pawn_on_column_after_rank(COLUMNS[max(0, column-1)], rank, pawn.swapcase(), piece_map) == 0:
                 result += PASSED_PAWN
     return result
 

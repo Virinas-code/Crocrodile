@@ -6,6 +6,7 @@ Crocrodile Neural Network.
 Base class for Crocrodile NN.
 """
 import sys
+import os  # Path problems
 import csv
 import random
 import heapq
@@ -25,26 +26,27 @@ class NeuralNetwork:
 
     def __init__(self):
         """Initialize NN."""
-        self.weight1 = self.csv_to_array("w1.csv")
-        self.weight2 = self.csv_to_array("w2.csv")
-        self.weight3 = self.csv_to_array("w3.csv")
-        self.weight4 = self.csv_to_array("w4.csv")
-        self.weight5 = self.csv_to_array("w5.csv")
-        self.b1 = self.csv_to_array("b1.csv")
-        self.b2 = self.csv_to_array("b2.csv")
-        self.b3 = self.csv_to_array("b3.csv")
-        self.b4 = self.csv_to_array("b4.csv")
-        self.b5 = self.csv_to_array("b5.csv")
-        self.cweight1 = self.csv_to_array("cw1.csv")
-        self.cweight2 = self.csv_to_array("cw2.csv")
-        self.cweight3 = self.csv_to_array("cw3.csv")
-        self.cweight4 = self.csv_to_array("cw4.csv")
-        self.cweight5 = self.csv_to_array("cw5.csv")
-        self.cb1 = self.csv_to_array("cb1.csv")
-        self.cb2 = self.csv_to_array("cb2.csv")
-        self.cb3 = self.csv_to_array("cb3.csv")
-        self.cb4 = self.csv_to_array("cb4.csv")
-        self.cb5 = self.csv_to_array("cb5.csv")
+        print(f"Path: {os.getcwd()}")
+        self.weight1 = self.csv_to_array("nns/default/w1.csv")
+        self.weight2 = self.csv_to_array("nns/default/w2.csv")
+        self.weight3 = self.csv_to_array("nns/default/w3.csv")
+        self.weight4 = self.csv_to_array("nns/default/w4.csv")
+        self.weight5 = self.csv_to_array("nns/default/w5.csv")
+        self.b1 = self.csv_to_array("nns/default/b1.csv")
+        self.b2 = self.csv_to_array("nns/default/b2.csv")
+        self.b3 = self.csv_to_array("nns/default/b3.csv")
+        self.b4 = self.csv_to_array("nns/default/b4.csv")
+        self.b5 = self.csv_to_array("nns/default/b5.csv")
+        self.cweight1 = self.csv_to_array("nns/default/cw1.csv")
+        self.cweight2 = self.csv_to_array("nns/default/cw2.csv")
+        self.cweight3 = self.csv_to_array("nns/default/cw3.csv")
+        self.cweight4 = self.csv_to_array("nns/default/cw4.csv")
+        self.cweight5 = self.csv_to_array("nns/default/cw5.csv")
+        self.cb1 = self.csv_to_array("nns/default/cb1.csv")
+        self.cb2 = self.csv_to_array("nns/default/cb2.csv")
+        self.cb3 = self.csv_to_array("nns/default/cb3.csv")
+        self.cb4 = self.csv_to_array("nns/default/cb4.csv")
+        self.cb5 = self.csv_to_array("nns/default/cb5.csv")
         self.pre_input_layer = numpy.zeros(768)
         self.input_layer = numpy.zeros(64)
         self.hidden_layer_1 = numpy.zeros(64)
@@ -61,6 +63,15 @@ class NeuralNetwork:
             self.genetic_train_settings["test_good"]).read().split("\n\n")
         self.test_bad = open(
             self.genetic_train_settings["test_bad"]).read().split("\n\n")
+        self.result = None  # Basics training
+
+    def load_networks(self) -> None:
+        """
+        Load networks from folder nns/
+
+        :return: None
+        :rtype: None
+        """
         print("Loading networks... (counting networks)", end="\r", flush=True)
         self.tests_weight1 = list()
         self.tests_weight2 = list()
@@ -460,6 +471,7 @@ class NeuralNetwork:
 
         New training algorithm using a real genetic algorithm.
         """
+        self.load_networks()
         def sprint(value):
             centered = value.center(18)
             print("********** {0} **********".format(centered))
@@ -961,6 +973,7 @@ class NeuralNetwork:
 
         New training algorithm using a real genetic algorithm.
         """
+        self.load_networks()
         def sprint(value):
             centered = value.center(18)
             print("********** {0} **********".format(centered))
@@ -1444,8 +1457,10 @@ class NeuralNetwork:
                 print(
                     f"Coupling network #{network_indice + 1}... Done.   ", end="\r", flush=True)
                 """
-                random_matrix1 = numpy.random.rand(64, 64) * (2 * mutation_change) - mutation_change
-                rand1 = numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate)
+                random_matrix1 = numpy.random.rand(
+                    64, 64) * (2 * mutation_change) - mutation_change
+                rand1 = numpy.random.rand(
+                    64, 64) * inverse_rate + (1 - inverse_rate)
                 new_weight1 = numpy.heaviside(rand1, 0) * self.cweight1
                 self.weight1 = self.weight1 + random_matrix1 * new_weight1
                 """
@@ -1472,6 +1487,24 @@ class NeuralNetwork:
             saved_results.append([float(element)])
         self.array_to_csv(saved_results, "nns/results.csv")
         print("Done.")
+
+    def __str__(self):
+        """
+        Implements str(self).
+
+        :return: Neural Network #{id}
+        :rtype: str
+        """
+        return f"Neural Network #{id(self)}"
+
+    def __repr__(self):
+        """
+        Implements repr(self).
+
+        :return: <NeuralNetwork object #{id(self)}>
+        :rtype: str
+        """
+        return f"<NeuralNetwork object #{id(self)}"
 
 
 if __name__ == '__main__':

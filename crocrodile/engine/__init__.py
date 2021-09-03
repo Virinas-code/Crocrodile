@@ -13,8 +13,8 @@ import csv
 import time
 import chess
 import chess.polyglot
-import my_engine.nn as nn
-import my_engine.evaluate as evaluator
+import crocrodile.nn as nn
+import crocrodile.engine.evaluate as evaluator
 
 PAWN_VALUE = 130
 KNIGHT_VALUE = 290
@@ -46,14 +46,12 @@ def csv_to_array(csv_path):
     return results
 
 
-
-
 def normalisation(val):
     """Sigmoïde modifiée."""
     return (1 / (1 + math.exp(-val))) * 2 - 1
 
 
-def nn_opening_white_check_move(fen, move): # Move is UCI str
+def nn_opening_white_check_move(fen, move):  # Move is UCI str
     """Neural network check if move is interesting for board."""
     board = chess.Board(fen=fen)
     pieces = board.piece_map()
@@ -154,26 +152,29 @@ class EngineBase:
     def search(self, depth, board):
         """Search best move (Minimax from wikipedia)."""
 
-    def minimax_std(self, board, depth, maximimize_white):
-        """Minimax algorithm from Wikipedia without NN."""
+    def minimax_std(self, board, depth, maximimize_white, limit_time):
+        """Minimax algorithm from Wikipedia with NN."""
         if depth == 0 or board.is_game_over():
             zobrist_hash = chess.polyglot.zobrist_hash(board)
             if zobrist_hash not in self.tb:
+                # if j'ai du temps
                 self.tb[zobrist_hash] = self.evaluate(board)
                 if len(self.tb) > self.tb_limit:
                     del self.tb[list(self.tb.keys())[0]]
+                # else
+                #
             evaluation = self.tb[zobrist_hash]
             # evaluation = self.evaluate(board)
             attackers = board.attackers(board.turn, board.peek().to_square)
             if len(attackers) > 0:
                 # Quiescent
                 if board.turn == chess.WHITE:
-                    evaluation += PIECES_VALUES[board.piece_map()\
-                                                [board.peek().to_square].\
+                    evaluation += PIECES_VALUES[board.piece_map()
+                                                [board.peek().to_square].
                                                 symbol().lower()]
                 else:
-                    evaluation -= PIECES_VALUES[board.piece_map()\
-                                                [board.peek().to_square].\
+                    evaluation -= PIECES_VALUES[board.piece_map()
+                                                [board.peek().to_square].
                                                 symbol().lower()]
             return evaluation, chess.Move.from_uci("0000")
         if maximimize_white:
@@ -181,12 +182,12 @@ class EngineBase:
             legal_moves = list(board.legal_moves)
             list_best_moves = [legal_moves[0]]
             for move in legal_moves:
+                if time.time() > limit_time:
+                    return float('inf'), chess.Move.from_uci("0000")
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
-                evaluation = self.minimax_std(test_board, depth-1, False)[0]
-                if move.uci() in ['e1g1', 'e1c1']:
-                    evaluation += 11
-                    # print('castle')
+                evaluation = self.minimax_std(
+                    test_board, depth-1, False, limit_time)[0]
                 if value == evaluation:
                     list_best_moves.append(move)
                 elif value < evaluation:
@@ -199,12 +200,12 @@ class EngineBase:
             legal_moves = list(board.legal_moves)
             list_best_moves = [legal_moves[0]]
             for move in legal_moves:
+                if time.time() > limit_time:
+                    return float('inf'), chess.Move.from_uci("0000")
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
-                evaluation = self.minimax_std(test_board, depth-1, True)[0]
-                if move.uci() in ['e8g8', 'e8c8']:
-                    evaluation -= 11
-                    # print('castle')
+                evaluation = self.minimax_std(
+                    test_board, depth-1, True, limit_time)[0]
                 if value == evaluation:
                     list_best_moves.append(move)
                 elif value > evaluation:
@@ -228,7 +229,8 @@ class EngineBase:
             good_moves = list(board.legal_moves)
         return good_moves
 
-    def minimax_nn(self, board, depth, maximimize_white, limit_time):  # + param time + param best move depth-1 + param evaluation
+    # + param time + param best move depth-1 + param evaluation
+    def minimax_nn(self, board, depth, maximimize_white, limit_time):
         """Minimax algorithm from Wikipedia with NN."""
         if depth == 0 or board.is_game_over():
             zobrist_hash = chess.polyglot.zobrist_hash(board)
@@ -245,12 +247,12 @@ class EngineBase:
             if len(attackers) > 0:
                 # Quiescent
                 if board.turn == chess.WHITE:
-                    evaluation += PIECES_VALUES[board.piece_map()\
-                                                [board.peek().to_square].\
+                    evaluation += PIECES_VALUES[board.piece_map()
+                                                [board.peek().to_square].
                                                 symbol().lower()]
                 else:
-                    evaluation -= PIECES_VALUES[board.piece_map()\
-                                                [board.peek().to_square].\
+                    evaluation -= PIECES_VALUES[board.piece_map()
+                                                [board.peek().to_square].
                                                 symbol().lower()]
             return evaluation, chess.Move.from_uci("0000")
         if maximimize_white:
@@ -262,7 +264,8 @@ class EngineBase:
                     return float('inf'), chess.Move.from_uci("0000")
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
-                evaluation = self.minimax_nn(test_board, depth-1, False, limit_time)[0]
+                evaluation = self.minimax_nn(
+                    test_board, depth-1, False, limit_time)[0]
                 if value == evaluation:
                     list_best_moves.append(move)
                 elif value < evaluation:
@@ -279,7 +282,8 @@ class EngineBase:
                     return float('inf'), chess.Move.from_uci("0000")
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
-                evaluation = self.minimax_nn(test_board, depth-1, True, limit_time)[0]
+                evaluation = self.minimax_nn(
+                    test_board, depth-1, True, limit_time)[0]
                 if value == evaluation:
                     list_best_moves.append(move)
                 elif value > evaluation:
