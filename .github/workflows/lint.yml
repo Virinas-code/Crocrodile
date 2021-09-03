@@ -1,9 +1,9 @@
-name: Pylint
+name: Lint
 
 on: [push]
 
 jobs:
-  lint:
+  check:
 
     runs-on: ubuntu-latest
 
@@ -22,3 +22,9 @@ jobs:
       continue-on-error: true
       run: |
         pylint *.py */*.py || exit 0
+  
+  autolint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Super-Linter
+      uses: github/super-linter@v4.6.4
