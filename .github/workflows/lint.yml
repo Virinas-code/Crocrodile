@@ -24,7 +24,17 @@ jobs:
         pylint *.py */*.py || exit 0
   
   autolint:
+    name: Super-Lint
     runs-on: ubuntu-latest
+
     steps:
-    - name: Super-Linter
-      uses: github/super-linter@v4.6.4
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Lint Code Base
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
