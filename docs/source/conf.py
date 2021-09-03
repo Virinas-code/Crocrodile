@@ -12,8 +12,9 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath(
-    '/home/alexei/Documents/Code/Python/Crocrodile/'))
+dirname = os.path.dirname(__file__)
+path = os.path.join(dirname, '../')
+sys.path.insert(0, path)
 
 
 # -- Project information -----------------------------------------------------
