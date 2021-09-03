@@ -170997,6 +170997,3 @@ b1a2
 
 5rbk/2b5/B3p3/3pP1R1/p2N4/2P5/KP4P1/8 b - - 2 38
 f8f4
-
-6bk/2b5/B3p3/3pP1R1/p2N1r2/2P5/KP4P1/8 w - - 3 39
-a6c8
