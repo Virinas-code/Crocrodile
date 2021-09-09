@@ -160,6 +160,35 @@ class BasicsTrain:
         progress.done()
 
     def train(self, param_good_moves: list, param_bad_moves: list, config: dict) -> None:
+    def load(self) -> None:
+        """
+        Load neural networks from nns/ folder.
+
+        :return: None
+        """
+        progress = Progress()
+        progress.text = "Loading population"
+        number = int(open("nns/population.dat", "r").read())
+        progress.text = "Creating network objects"
+        progress.total = number
+        for loop in range(number):
+            progress.update(loop)
+            self.neural_networks.append(crocrodile.nn.NeuralNetwork())
+        progress.done()
+        progress.text = "Loading networks"
+        for loop in range(number):
+            progress.update(loop)
+            self.neural_networks[loop].weight1 = numpy.genfromtxt(f"nns/{loop}-w1.csv", delimiter=',')
+            self.neural_networks[loop].weight2 = numpy.genfromtxt(f"nns/{loop}-w2.csv", delimiter=',')
+            self.neural_networks[loop].weight3 = numpy.genfromtxt(f"nns/{loop}-w3.csv", delimiter=',')
+            self.neural_networks[loop].weight4 = numpy.genfromtxt(f"nns/{loop}-w4.csv", delimiter=',')
+            self.neural_networks[loop].weight5 = numpy.genfromtxt(f"nns/{loop}-w5.csv", delimiter=',').reshape(-1,1)
+            self.neural_networks[loop].b1 = numpy.genfromtxt(f"nns/{loop}-b1.csv", delimiter=',')
+            self.neural_networks[loop].b2 = numpy.genfromtxt(f"nns/{loop}-b2.csv", delimiter=',')
+            self.neural_networks[loop].b3 = numpy.genfromtxt(f"nns/{loop}-b3.csv", delimiter=',')
+            self.neural_networks[loop].b4 = numpy.genfromtxt(f"nns/{loop}-b4.csv", delimiter=',')
+            self.neural_networks[loop].b5 = numpy.array(float(open(f"nns/{loop}-b5.csv").read()))  # patch-001
+        progress.done()
         """
         Train neural networks.
 
@@ -351,6 +380,8 @@ class BasicsTrain:
         bad_moves_list = list()
         if "-n" in argv or "--new-networks" in argv:
             self.generate()
+        else:
+            self.load()
         for good_move in good_moves_list:
             good_moves_train.append(good_move)
             print(f"########## Training #{len(good_moves_train)} ##########")
