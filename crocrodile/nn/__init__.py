@@ -65,6 +65,7 @@ class NeuralNetwork:
         self.test_bad = open(
             self.genetic_train_settings["test_bad"]).read().split("\n\n")
         self.result = None  # Basics training
+        self.perf: tuple[int] = (0, 0)
 
     def load_networks(self) -> None:
         """
