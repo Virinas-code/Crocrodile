@@ -4,5 +4,5 @@ Crocrodile UCI
 
 Module reference
 ----------------
-.. automodule:: uci
+.. automodule:: crocrodile.uci
    :members:
