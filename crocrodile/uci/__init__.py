@@ -146,6 +146,10 @@ class UCI:
 
         Start calculating.
         """
+        depth: Optional[int] = None
+        for indice, element in enumerate(args):
+            if element == "depth":
+                depth = int(args[indice + 1])
         print("In developpement.")
 
     def position(self, args: list) -> None:
