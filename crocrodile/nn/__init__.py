@@ -1531,7 +1531,7 @@ class NeuralNetwork:
         :return: <NeuralNetwork object #{id(self)}>
         :rtype: str
         """
-        return f"<NeuralNetwork object #{id(self)}"
+        return f"<NeuralNetwork object #{id(self)} (performance {self.result})>"
 
 
 if __name__ == '__main__':
