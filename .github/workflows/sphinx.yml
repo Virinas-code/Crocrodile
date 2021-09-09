@@ -22,10 +22,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
-      - name: Install dependencies
-        run: pip install sphinx_rtd_theme
-      
+
       - name: Sphinx Build
         # You may pin to the exact commit or the version.
         # uses: ammaraskar/sphinx-action@8b4f60114d7fd1faeba1a712269168508d4750d2
@@ -35,7 +32,7 @@ jobs:
       - name: Commit documentation changes
         run: |
           git clone https://github.com/Virinas-code/Crocrodile.git --branch gh-pages --single-branch gh-pages
-          cp -r build/html/* gh-pages/
+          cp -r docs/build/html/* gh-pages/
           cd gh-pages
           touch .nojekyll
           git config --local user.email "action@github.com"
