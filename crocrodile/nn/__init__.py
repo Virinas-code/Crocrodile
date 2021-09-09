@@ -311,6 +311,33 @@ class NeuralNetwork:
                 errs += 1
         return correct_on_good_moves, correct_on_bad_moves, len(file_goodmoves), len(file_badmoves)
 
+    def test(self, list_good_moves: list, list_bad_moves: list) -> tuple[int]:
+        """
+        Test neural network.
+        Used by basics training.
+
+        :param list_good_moves: List of good moves at format ["<FEN>\\n<Good move>", "<FEN>\\n<Good move>"]
+        :type list_good_moves: list
+        :param list_bad_moves: List of bad moves at format ["<FEN>\\n<Bad move>", "<FEN>\\n<Bad move>"]
+        :type list_bad_moves: list
+        :return: Tupple (Number of correct answers on good moves, Number of correct answers on bad moves)
+        :rtype: tuple[int]
+        """
+        good_moves_result = 0
+        bad_moves_result = 0
+        for position_and_move in list_good_moves:
+            position = position_and_move.split("\n")[0]
+            move = position_and_move.split("\n")[1]
+            if self.check_move(position, move):
+                good_moves_result += 1
+        for position_and_move in list_bad_moves:
+            position = position_and_move.split("\n")[0]
+            move = position_and_move.split("\n")[1]
+            if self.check_move(position, move):
+                bad_moves_result += 1
+        return good_moves_result, bad_moves_result
+
+
     def train(self):
         """Train Neural Network."""
         self.change_files()
