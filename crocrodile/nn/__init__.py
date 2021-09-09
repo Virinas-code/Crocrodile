@@ -27,7 +27,6 @@ class NeuralNetwork:
 
     def __init__(self):
         """Initialize NN."""
-        print(f"Path: {os.getcwd()}")
         self.weight1 = self.csv_to_array("nns/default/w1.csv")
         self.weight2 = self.csv_to_array("nns/default/w2.csv")
         self.weight3 = self.csv_to_array("nns/default/w3.csv")
