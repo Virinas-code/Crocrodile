@@ -182,7 +182,6 @@ class BasicsTrain:
             open(f"nns/{loop}-b5.csv", 'w').write(str(float(self.neural_networks[loop].b5)))  # patch-001
         progress.done()
 
-    def train(self, param_good_moves: list, param_bad_moves: list, config: dict) -> None:
     def load(self) -> None:
         """
         Load neural networks from nns/ folder.
@@ -212,6 +211,8 @@ class BasicsTrain:
             self.neural_networks[loop].b4 = numpy.genfromtxt(f"nns/{loop}-b4.csv", delimiter=',')
             self.neural_networks[loop].b5 = numpy.array(float(open(f"nns/{loop}-b5.csv").read()))  # patch-001
         progress.done()
+
+    def train(self, param_good_moves: list, param_bad_moves: list) -> None:
         """
         Train neural networks.
 
