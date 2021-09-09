@@ -55,18 +55,16 @@ class BasicsTrain:
         :rtype: str
         """
         if "-i" in sys.argv or "--input" in sys.argv:
-            good_moves_file = input("Good moves file (Enter for default) : ")
-            mutation_rate = input("Mutation rate : ")
-            mutation_change = input("Mutation change : ")
-            min_bad_moves = input("Minimum performance on bad moves : ")
-        else:
-            good_moves_file = ""
-        if good_moves_file == "":
-            good_moves_file = self.config["good_moves"]
-        else:
+            good_moves_file: str = input("Good moves file : ")
+            mutation_rate: float = float(input("Mutation rate : "))
+            mutation_change: float = float(input("Mutation change : "))
+            min_bad_moves: int = int(input("Minimum performance on bad moves : "))
             self.config["good_moves"] = good_moves_file
+            self.config["mutation_rate"] = mutation_rate
+            self.config["mutation_change"] = mutation_change
+            self.config["min_bad_moves"] = min_bad_moves
             open("basics_train.json", 'w').write(json.dumps(self.config))
-        return good_moves_file
+        return self.config
 
     @staticmethod
     def parse_good_moves(good_moves_file: str) -> list:
