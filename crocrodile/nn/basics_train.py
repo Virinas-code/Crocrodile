@@ -10,6 +10,8 @@ Back to basics.
 import sys
 import json
 import csv
+import random
+import pickle
 import chess
 import numpy
 import crocrodile
