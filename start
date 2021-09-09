@@ -1,2 +1,19 @@
 #!/usr/bin/bash
-/usr/bin/python3 /home/boursier/Documents/Alexeï/Yukoo/Crocrodile/client.py
+DIALOG=${DIALOG=gdialog}
+ fichtemp=`tempfile 2>/dev/null` || fichtemp=/tmp/test$$
+trap "rm -f $fichtemp" 0 1 2 5 15
+$DIALOG --clear --title "Start Crocrodile" \
+	--menu "Select Crocrodile element to run :" 20 51 4 \
+	 "Basics Training" "Start training" \
+	 "UCI" "Start UCI" 2> $fichtemp
+valret=$?
+choix=`cat $fichtemp`
+case $valret in
+ 0)	echo "'$choix' selected";;
+ 1) 	echo "Appuyé sur Annuler.";;
+255) 	echo "Appuyé sur Echap.";;
+esac
+case $choix in
+  UCI) python3 start.py uci;;
+  'Basics Training') python3 start.py basics;;
+esac
