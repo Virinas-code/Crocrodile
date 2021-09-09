@@ -1,0 +1,618 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>crocrodile.nn.basics_train &mdash; Documentation Crocrodile 3.0-dev</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Crocrodile
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../uci.html">Crocrodile UCI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../train.html">Training</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Crocrodile</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Code du module</a> &raquo;</li>
+        
+          <li><a href="../nn.html">crocrodile.nn</a> &raquo;</li>
+        
+      <li>crocrodile.nn.basics_train</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Code source de crocrodile.nn.basics_train</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Crocrodile Training.</span>
+
+<span class="sd">Back to basics.</span>
+
+<span class="sd">:author: Virinas-code and ZeBox</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">chess</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">crocrodile</span>
+<span class="kn">import</span> <span class="nn">crocrodile.nn</span>
+<span class="kn">from</span> <span class="nn">crocrodile.cli</span> <span class="kn">import</span> <span class="n">Progress</span>
+
+<span class="n">NoneType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BasicsTrain"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain">[docs]</a><span class="k">class</span> <span class="nc">BasicsTrain</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Basics train - class for training Crocrodile.</span>
+
+<span class="sd">    :author: @ZeBox and Virinas-code</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize training.</span>
+
+<span class="sd">        :param self: Current BasicsTrain object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;basics_train.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">crocrodile</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">NeuralNetwork</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BasicsTrain.array_to_csv"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain.array_to_csv">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">array_to_csv</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write array in csv_path CSV file.&quot;&quot;&quot;</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="BasicsTrain.ask"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ask for inputs.</span>
+
+<span class="sd">        :param self: Current BasicsTrain object.</span>
+<span class="sd">        :type self: BasicsTrain</span>
+<span class="sd">        :return: Good moves file.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;-i&quot;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="ow">or</span> <span class="s2">&quot;--input&quot;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">:</span>
+            <span class="n">good_moves_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Good moves file : &quot;</span><span class="p">)</span>
+            <span class="n">mutation_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Mutation rate : &quot;</span><span class="p">))</span>
+            <span class="n">mutation_change</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Mutation change : &quot;</span><span class="p">))</span>
+            <span class="n">min_bad_moves</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Minimum performance on bad moves : &quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;good_moves&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">good_moves_file</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;mutation_rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutation_rate</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;mutation_change&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutation_change</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;min_bad_moves&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_bad_moves</span>
+            <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;basics_train.json&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span></div>
+
+<div class="viewcode-block" id="BasicsTrain.parse_good_moves"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain.parse_good_moves">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_good_moves</span><span class="p">(</span><span class="n">good_moves_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse good moves in good_moves_file. good_moves_file is only a file path.</span>
+
+<span class="sd">        :param good_moves_file: Path to the good moves file.</span>
+<span class="sd">        :type good_moves_file: str</span>
+<span class="sd">        :return: The list of FENs + good move.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">good_moves_content</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">good_moves_file</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Remove \n at the end</span>
+        <span class="n">good_moves_content</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">good_moves_content</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">good_moves_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">good_moves_content</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">good_moves_list</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">good_moves_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">good_moves_list</span></div>
+
+<div class="viewcode-block" id="BasicsTrain.generate_bad_moves"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain.generate_bad_moves">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_bad_moves</span><span class="p">(</span><span class="n">good_move_pos</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">good_moves_list</span><span class="p">,</span> <span class="n">bad_moves_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate bad moves for position.</span>
+
+<span class="sd">        :param good_move_pos: Godd move in position (FEN + good move)</span>
+<span class="sd">        :type good_move_pos: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="n">good_move_pos</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">position</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">:</span>
+            <span class="n">generated_position</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">fen</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">move</span><span class="o">.</span><span class="n">uci</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">generated_position</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">good_moves_list</span> <span class="ow">and</span> <span class="n">generated_position</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bad_moves_list</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">generated_position</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="BasicsTrain.generate"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate random networks and save them.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Population : &quot;</span><span class="p">))</span>
+        <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;nns/population.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">))</span>
+        <span class="n">progress</span> <span class="o">=</span> <span class="n">Progress</span><span class="p">()</span>
+        <span class="n">tests_weight1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">tests_weight2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">tests_weight3</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">tests_weight4</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">tests_weight5</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">tests_bias1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">tests_bias2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">tests_bias3</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">tests_bias4</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">tests_bias5</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">number</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Generating random matrixes&quot;</span>
+        <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+            <span class="n">tests_weight1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">tests_weight2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">tests_weight3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">tests_weight4</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">tests_weight5</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">tests_bias1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">tests_bias2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">tests_bias3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">tests_bias4</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">tests_bias5</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Creating networks&quot;</span>
+        <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">crocrodile</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">NeuralNetwork</span><span class="p">())</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Saving random matrixes to networks&quot;</span>
+        <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight1</span> <span class="o">=</span> <span class="n">tests_weight1</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight2</span> <span class="o">=</span> <span class="n">tests_weight2</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight3</span> <span class="o">=</span> <span class="n">tests_weight3</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight4</span> <span class="o">=</span> <span class="n">tests_weight4</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight5</span> <span class="o">=</span> <span class="n">tests_weight5</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">tests_bias1</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">tests_bias2</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b3</span> <span class="o">=</span> <span class="n">tests_bias3</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b4</span> <span class="o">=</span> <span class="n">tests_bias4</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b5</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tests_bias5</span><span class="p">[</span><span class="n">loop</span><span class="p">])</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BasicsTrain.save"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save neural networks to nns/ folder.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">progress</span> <span class="o">=</span> <span class="n">Progress</span><span class="p">()</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">)</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Saving networks&quot;</span>
+        <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">)):</span>
+            <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w1.csv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight1</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w2.csv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight2</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w3.csv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight3</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w4.csv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight4</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w5.csv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight5</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b1.csv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b1</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b2.csv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b2</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b3.csv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b3</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b4.csv&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b4</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b5.csv&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b5</span><span class="p">)))</span>  <span class="c1"># patch-001</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BasicsTrain.load"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load neural networks from nns/ folder.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">progress</span> <span class="o">=</span> <span class="n">Progress</span><span class="p">()</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Loading population&quot;</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;nns/population.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Creating network objects&quot;</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">total</span> <span class="o">=</span> <span class="n">number</span>
+        <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">crocrodile</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">NeuralNetwork</span><span class="p">())</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Loading networks&quot;</span>
+        <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w1.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w2.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w3.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight4</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w4.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">weight5</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-w5.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b1.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b2.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b3.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b4</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b4.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">b5</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b5.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()))</span>  <span class="c1"># patch-001</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">done</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BasicsTrain.train"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_good_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">param_bad_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train neural networks.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">sprint</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">centered</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;********** </span><span class="si">{0}</span><span class="s2"> **********&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">centered</span><span class="p">))</span>
+        <span class="n">max_iters</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="n">max_success</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">inverse_rate</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;mutation_rate&quot;</span><span class="p">]</span>
+        <span class="n">mutation_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;mutation_change&quot;</span><span class="p">]</span>
+        <span class="n">sprint</span><span class="p">(</span><span class="s2">&quot;Initialize&quot;</span><span class="p">)</span>
+        <span class="n">iters</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">tests_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">population</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">population</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Testing networks... (</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">population</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">on_good_moves</span><span class="p">,</span> <span class="n">on_bad_moves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">param_good_moves</span><span class="p">,</span> <span class="n">param_bad_moves</span><span class="p">)</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="p">((</span><span class="n">on_good_moves</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_good_moves</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">on_bad_moves</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_bad_moves</span><span class="p">)))</span> <span class="o">*</span> <span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">success</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">perfs</span> <span class="o">=</span> <span class="p">(</span><span class="n">on_good_moves</span><span class="p">,</span> <span class="n">on_bad_moves</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Testing networks... Done.          &quot;</span><span class="p">)</span>
+        <span class="n">good_moves_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bad_moves_score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># https://stackoverflow.com/questions/16225677/get-the-second-largest-number-in-a-list-in-linear-time</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">iters</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">sprint</span><span class="p">(</span><span class="s2">&quot;Training #</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iters</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Selecting best networks...&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">sub</span><span class="p">:</span> <span class="n">sub</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">maxis_indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+            <span class="n">minis_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">population</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">population</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">population</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span> <span class="n">population</span> <span class="o">-</span> <span class="mi">4</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Worst networks : </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">nn</span><span class="p">)</span> <span class="k">for</span> <span class="n">nn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best networks : </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">nn</span><span class="p">)</span> <span class="k">for</span> <span class="n">nn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">network_indice</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Coupling network #</span><span class="si">{</span><span class="n">network_indice</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">... (selecting second network)&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">population</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span>
+                <span class="n">second_network</span> <span class="o">=</span> <span class="n">rand</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Coupling network #</span><span class="si">{</span><span class="n">network_indice</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">... (generating coupling matrixes)&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">choose_w1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">))</span>
+                <span class="n">choose_w2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">))</span>
+                <span class="n">choose_w3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">))</span>
+                <span class="n">choose_matrixes1</span> <span class="o">=</span> <span class="p">[</span><span class="n">choose_w1</span><span class="p">,</span> <span class="n">choose_w2</span><span class="p">,</span> <span class="n">choose_w3</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">choose_matrix</span> <span class="ow">in</span> <span class="n">choose_matrixes1</span><span class="p">:</span>
+                    <span class="c1"># True : column else line</span>
+                    <span class="n">direction</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="n">choose</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">choose_matrix</span><span class="p">)):</span>
+                        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">choose_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">:</span>
+                                <span class="n">choose</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">choose</span>
+                            <span class="n">fill</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">choose</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">direction</span><span class="p">:</span>
+                                <span class="n">choose_matrix</span><span class="p">[</span><span class="n">line</span><span class="p">][</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">fill</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">choose_matrix</span><span class="p">[</span><span class="n">column</span><span class="p">][</span><span class="n">line</span><span class="p">]</span> <span class="o">=</span> <span class="n">fill</span>
+                <span class="n">choose</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">choose_w5</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.0625</span><span class="p">:</span>
+                        <span class="n">choose</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">choose</span>
+                    <span class="n">choose_w5</span><span class="p">[</span><span class="n">line</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">choose</span><span class="p">)</span>
+                <span class="n">choose</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">choose_w4</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.0625</span><span class="p">:</span>
+                        <span class="n">choose</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">choose</span>
+                    <span class="n">choose_w4</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">choose</span><span class="p">)</span>
+                <span class="n">choose_b1</span> <span class="o">=</span> <span class="n">choose_w1</span>
+                <span class="n">choose_b2</span> <span class="o">=</span> <span class="n">choose_w2</span>
+                <span class="n">choose_b3</span> <span class="o">=</span> <span class="n">choose_w3</span>
+                <span class="n">choose_b4</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">))</span>
+                <span class="n">choose</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.0625</span><span class="p">:</span>
+                        <span class="n">choose</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">choose</span>
+                    <span class="n">choose_b4</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">choose</span><span class="p">)</span>
+                <span class="n">choose_b5</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="nb">int</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">getrandbits</span><span class="p">(</span><span class="mi">1</span><span class="p">)))]])</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Coupling network #</span><span class="si">{</span><span class="n">network_indice</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">... (coupling)                    &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                             <span class="p">]</span><span class="o">.</span><span class="n">weight1</span> <span class="o">*</span> <span class="n">choose_w1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">weight1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_w1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                             <span class="p">]</span><span class="o">.</span><span class="n">weight2</span> <span class="o">*</span> <span class="n">choose_w2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">weight2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_w2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                             <span class="p">]</span><span class="o">.</span><span class="n">weight3</span> <span class="o">*</span> <span class="n">choose_w3</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">weight3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_w3</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                             <span class="p">]</span><span class="o">.</span><span class="n">weight4</span> <span class="o">*</span> <span class="n">choose_w4</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">weight4</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_w4</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                             <span class="p">]</span><span class="o">.</span><span class="n">weight5</span> <span class="o">*</span> <span class="n">choose_w5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">weight5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_w5</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                         <span class="p">]</span><span class="o">.</span><span class="n">b1</span> <span class="o">*</span> <span class="n">choose_b1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">b1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_b1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                         <span class="p">]</span><span class="o">.</span><span class="n">b2</span> <span class="o">*</span> <span class="n">choose_b2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">b2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_b2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                         <span class="p">]</span><span class="o">.</span><span class="n">b3</span> <span class="o">*</span> <span class="n">choose_b3</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">b3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_b3</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                         <span class="p">]</span><span class="o">.</span><span class="n">b4</span> <span class="o">*</span> <span class="n">choose_b4</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">b4</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_b4</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b5</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">maxis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]</span>
+                                                                         <span class="p">]</span><span class="o">.</span><span class="n">b5</span> <span class="o">*</span> <span class="n">choose_b5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">second_network</span><span class="p">]</span><span class="o">.</span><span class="n">b5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">choose_b5</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight1</span> <span class="o">+=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight2</span> <span class="o">+=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight3</span> <span class="o">+=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight4</span> <span class="o">+=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">weight5</span> <span class="o">+=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b1</span> <span class="o">+=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b2</span> <span class="o">+=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b3</span> <span class="o">+=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b4</span> <span class="o">+=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">b5</span> <span class="o">+=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(((</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="mi">2</span> <span class="o">*</span> <span class="n">mutation_change</span><span class="p">)</span> <span class="o">-</span> <span class="n">mutation_change</span><span class="p">))</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">heaviside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">inverse_rate</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">inverse_rate</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Coupling network #</span><span class="si">{</span><span class="n">network_indice</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">... (testing)                    &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">on_good_moves</span><span class="p">,</span> <span class="n">on_bad_moves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">minis_indices</span><span class="p">[</span><span class="n">network_indice</span><span class="p">]]</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">param_good_moves</span><span class="p">,</span> <span class="n">param_bad_moves</span><span class="p">)</span>
+                <span class="n">success</span> <span class="o">=</span> <span class="p">((</span><span class="n">on_good_moves</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_good_moves</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">on_bad_moves</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_bad_moves</span><span class="p">)))</span> <span class="o">*</span> <span class="mi">100</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">success</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">perfs</span> <span class="o">=</span> <span class="p">(</span><span class="n">on_good_moves</span><span class="p">,</span> <span class="n">on_bad_moves</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Coupling network #</span><span class="si">{</span><span class="n">network_indice</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2">... Done.   &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                random_matrix1 = numpy.random.rand(</span>
+<span class="sd">                    64, 64) * (2 * mutation_change) - mutation_change</span>
+<span class="sd">                rand1 = numpy.random.rand(</span>
+<span class="sd">                    64, 64) * inverse_rate + (1 - inverse_rate)</span>
+<span class="sd">                new_weight1 = numpy.heaviside(rand1, 0) * self.cweight1</span>
+<span class="sd">                self.weight1 = self.weight1 + random_matrix1 * new_weight1</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coupling networks... Done.                           &quot;</span><span class="p">)</span>
+            <span class="n">perf_sum</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">loop</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">population</span><span class="p">):</span>
+                <span class="n">perf_sum</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="n">loop</span><span class="p">]</span><span class="o">.</span><span class="n">result</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Mean performance : </span><span class="si">{</span><span class="p">(</span><span class="n">perf_sum</span> <span class="o">/</span> <span class="n">population</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;perf: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">perfs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gdmvs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">perfs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_good_moves</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bdmvs: </span><span class="si">{</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">perfs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_bad_moves</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">sub</span><span class="p">:</span> <span class="n">sub</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">perfs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_good_moves</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_networks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">perfs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_bad_moves</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;min_bad_moves&quot;</span><span class="p">]:</span>
+                <span class="k">break</span>  <span class="c1"># :)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saving tests result...&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">saved_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">tests_results</span><span class="p">:</span>
+            <span class="n">saved_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">element</span><span class="p">)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array_to_csv</span><span class="p">(</span><span class="n">saved_results</span><span class="p">,</span> <span class="s2">&quot;nns/results.csv&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BasicsTrain.main"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain.main">[docs]</a>    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Start training.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ask</span><span class="p">()</span>
+        <span class="n">good_moves_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;good_moves&quot;</span><span class="p">]</span>
+        <span class="n">good_moves_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_good_moves</span><span class="p">(</span><span class="n">good_moves_file</span><span class="p">)</span>
+        <span class="n">good_moves_train</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">bad_moves_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;-n&quot;</span> <span class="ow">in</span> <span class="n">argv</span> <span class="ow">or</span> <span class="s2">&quot;--new-networks&quot;</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">good_move</span> <span class="ow">in</span> <span class="n">good_moves_list</span><span class="p">:</span>
+            <span class="n">good_moves_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">good_move</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;########## Session #</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">good_moves_train</span><span class="p">)</span><span class="si">}</span><span class="s2"> ##########&quot;</span><span class="p">)</span>
+            <span class="n">bad_moves_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_bad_moves</span><span class="p">(</span>
+                <span class="n">good_move</span><span class="p">,</span> <span class="n">good_moves_list</span><span class="p">,</span> <span class="n">bad_moves_list</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Bad moves: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">bad_moves_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> / Good moves: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">good_moves_train</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training...&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">good_moves_train</span><span class="p">,</span> <span class="n">bad_moves_list</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Start function called in init.</span>
+
+<span class="sd">    :param argv: sys.argv</span>
+<span class="sd">    :type argv: list</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :rtype: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">trainer</span> <span class="o">=</span> <span class="n">BasicsTrain</span><span class="p">()</span>  <span class="c1"># Create trainer object</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>  <span class="c1"># Start trainer</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Virinas-code.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

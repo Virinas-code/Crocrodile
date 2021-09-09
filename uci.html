@@ -88,7 +88,7 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Crocrodile UCI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-reference">Module reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-crocrodile.uci">Module reference</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="train.html">Training</a></li>
@@ -162,8 +162,108 @@
   <div class="section" id="crocrodile-uci">
 <h1>Crocrodile UCI<a class="headerlink" href="#crocrodile-uci" title="Lien permanent vers ce titre">¶</a></h1>
 <p><a class="reference external" href="https://www.shredderchess.com/download/div/uci.zip">UCI</a> (Universal Chess Interface, creatted by Shredder Chess) is protocol for communicating with chess engines.</p>
-<div class="section" id="module-reference">
-<h2>Module reference<a class="headerlink" href="#module-reference" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="section" id="module-crocrodile.uci">
+<span id="module-reference"></span><h2>Module reference<a class="headerlink" href="#module-crocrodile.uci" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Crocrodile UCI.</p>
+<p>Created by &#64;Virinas-code.</p>
+<dl class="class">
+<dt id="crocrodile.uci.UCI">
+<em class="property">class </em><code class="sig-prename descclassname">crocrodile.uci.</code><code class="sig-name descname">UCI</code><a class="reference internal" href="_modules/crocrodile/uci.html#UCI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.uci.UCI" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Base class for Crocrodile UCI.</p>
+<dl class="method">
+<dt id="crocrodile.uci.UCI.debug">
+<code class="sig-name descname">debug</code><span class="sig-paren">(</span><em class="sig-param">boolean: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/uci.html#UCI.debug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.uci.UCI.debug" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Enable or disable debug mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>boolean</strong> (<em>str</em>) – “on” or “off”</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.uci.UCI.go">
+<code class="sig-name descname">go</code><span class="sig-paren">(</span><em class="sig-param">args: list</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/uci.html#UCI.go"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.uci.UCI.go" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Go UCI command.</p>
+<p>Start calculating.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.uci.UCI.info">
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param">msg: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/uci.html#UCI.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.uci.UCI.info" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Print debug information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str</em>) – Message to display.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.uci.UCI.position">
+<code class="sig-name descname">position</code><span class="sig-paren">(</span><em class="sig-param">args: list</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/uci.html#UCI.position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.uci.UCI.position" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Position UCI command.</p>
+<p>Change current position.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.uci.UCI.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/uci.html#UCI.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.uci.UCI.run" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Run UCI input.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.uci.UCI.set_option">
+<code class="sig-name descname">set_option</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/uci.html#UCI.set_option"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.uci.UCI.set_option" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Setoption UCI command.</p>
+<p>Configure Crocrodile.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.uci.UCI.uci">
+<code class="sig-name descname">uci</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/uci.html#UCI.uci"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.uci.UCI.uci" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Uci UCI command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.uci.UCI.uci_parse">
+<code class="sig-name descname">uci_parse</code><span class="sig-paren">(</span><em class="sig-param">string: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/uci.html#UCI.uci_parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.uci.UCI.uci_parse" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Parse UCI command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – UCI command</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
