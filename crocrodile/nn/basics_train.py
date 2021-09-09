@@ -400,6 +400,8 @@ class BasicsTrain:
             print(
                 f"Bad moves: {len(bad_moves_list)} / Good moves: {len(good_moves_train)}")
             print("Training...", end="\r")
+            self.train(good_moves_train, bad_moves_list)
+            self.save()
 
 
 def main(argv):
