@@ -21,7 +21,7 @@ print("Done.")
 dirname = os.path.dirname(__file__)
 path = os.path.join(dirname, '../../')
 sys.path.insert(0, path)
-print(sys.path)
+print("PATH", sys.path, sys.stderr)
 
 
 # -- Project information -----------------------------------------------------
