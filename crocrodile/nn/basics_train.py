@@ -157,8 +157,10 @@ class BasicsTrain:
             self.neural_networks[loop].b2 = tests_bias2[loop]
             self.neural_networks[loop].b3 = tests_bias3[loop]
             self.neural_networks[loop].b4 = tests_bias4[loop]
-            self.neural_networks[loop].b5 = tests_bias5[loop]
-        print(self.neural_networks)
+            self.neural_networks[loop].b5 = numpy.array(tests_bias5[loop])
+        progress.done()
+        self.save()
+
     def save(self) -> None:
         """
         Save neural networks to nns/ folder.
