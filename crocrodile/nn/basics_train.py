@@ -111,6 +111,7 @@ class BasicsTrain:
         :rtype: None
         """
         number = int(input("Population : "))
+        open("nns/population.dat", "w").write(str(number))
         progress = Progress()
         tests_weight1 = list()
         tests_weight2 = list()
