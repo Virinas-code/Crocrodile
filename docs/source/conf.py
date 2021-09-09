@@ -16,12 +16,15 @@ import sys
 print("Installing: sphinx-rtd-theme...", end=" ")
 os.system("pip install sphinx-rtd-theme")
 print("Done.")
+print("Installing: requirements...", end=" ")
+os.system("pip install -r ../../requirements.txt")
+print("Done.")
 
 
 dirname = os.path.dirname(__file__)
 path = os.path.join(dirname, '../../')
 sys.path.insert(0, path)
-print("PATH", sys.path, sys.stderr)
+print("PATH", sys.path, file=sys.stderr)
 
 
 # -- Project information -----------------------------------------------------
