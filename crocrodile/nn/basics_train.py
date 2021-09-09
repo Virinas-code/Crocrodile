@@ -344,7 +344,8 @@ class BasicsTrain:
 
     def main(self, argv):
         """Start training."""
-        good_moves_file = self.ask()
+        self.ask()
+        good_moves_file = self.config["good_moves"]
         good_moves_list = self.parse_good_moves(good_moves_file)
         good_moves_train = list()
         bad_moves_list = list()
