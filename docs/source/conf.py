@@ -12,6 +12,12 @@
 #
 import os
 import sys
+
+print("Installing: sphinx-rtd-theme...", end=" ")
+os.system("pip install sphinx-rtd-theme")
+print("Done.")
+
+
 dirname = os.path.dirname(__file__)
 path = os.path.join(dirname, '../')
 sys.path.insert(0, path)
