@@ -138,12 +138,13 @@ class BasicsTrain:
             tests_bias2.append(numpy.random.rand(64, 64) * 2 - 1)
             tests_bias3.append(numpy.random.rand(64, 64) * 2 - 1)
             tests_bias4.append(numpy.random.rand(1, 64) * 2 - 1)
-            tests_bias5.append(numpy.random.rand(1, 1) * 2 - 1)
+            tests_bias5.append(numpy.array(numpy.random.rand(1, 1) * 2 - 1))
         progress.done()
         progress.text = "Creating networks"
         for loop in range(number):
             progress.update(loop)
             self.neural_networks.append(crocrodile.nn.NeuralNetwork())
+        progress.done()
         progress.text = "Saving random matrixes to networks"
         for loop in range(number):
             progress.update(loop)
