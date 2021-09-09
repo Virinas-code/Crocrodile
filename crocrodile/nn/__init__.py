@@ -13,6 +13,7 @@ import heapq
 import json
 import numpy
 import chess
+import crocrodile.nn.basics_train
 # ====== IDLE ======
 # import os
 # os.chdir("../")
