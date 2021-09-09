@@ -225,8 +225,8 @@ class BasicsTrain:
             print("********** {0} **********".format(centered))
         max_iters = 200
         max_success = 100
-        inverse_rate = 100 / config["mutation_rate"]
-        mutation_change = config["mutation_change"]
+        inverse_rate = 100 / self.config["mutation_rate"]
+        mutation_change = self.config["mutation_change"]
         sprint("Initialize")
         iters = 0
         tests_results = list()
@@ -234,34 +234,28 @@ class BasicsTrain:
         for loop in range(population):
             print(
                 f"Testing networks... ({loop}/{population})", end="\r", flush=True)
-            on_good_moves, on_bad_moves, good_moves, bad_moves = self.neural_networks[loop].test(param_good_moves, param_bad_moves)
-            success = ((on_good_moves / good_moves)**2
-                       * (on_bad_moves / bad_moves)) * 100
+            on_good_moves, on_bad_moves = self.neural_networks[loop].test(param_good_moves, param_bad_moves)
+            success = ((on_good_moves / len(param_good_moves)) + (on_bad_moves / len(param_bad_moves))) * 100
             self.neural_networks[loop].result = success
+            self.neural_networks[loop].perfs = (on_good_moves, on_bad_moves)
         print("Testing networks... Done.          ")
         good_moves_score = 0
         bad_moves_score = 0
         # https://stackoverflow.com/questions/16225677/get-the-second-largest-number-in-a-list-in-linear-time
-        while good_moves_score < 100 or bad_moves_score < config["min_bad_moves"]:
+        while True:
             iters += 1
             sprint("Training #{0}".format(iters))
             print("Selecting best networks...", end=" ", flush=True)
-            print(sorted(self.neural_networks, key=lambda sub: sub.result))
-            print(f"Worst networks : {', '.join(liste)}")
-            liste = []
-            for count in range(4):
-                liste.append(
-                    "#" + str(maxis_indices[count]) + " (" + str(maxis[count]) + ")")
-            print(f"Best networks : {', '.join(liste)}")
+            self.neural_networks: list = sorted(self.neural_networks, key=lambda sub: sub.result, reverse=True)
+            maxis_indices = [0, 1, 2, 3]
+            minis_indices = [population - 1, population - 2, population - 3, population - 4]
+            print("Done.")
+            print(f"Worst networks : {', '.join(repr(nn) for nn in self.neural_networks[-4:])}")
+            print(f"Best networks : {', '.join(repr(nn) for nn in self.neural_networks[:4])}")
             for network_indice in range(4):
                 print(
                     f"Coupling network #{network_indice + 1}... (selecting second network)", end="\r", flush=True)
-                cont = True
-                while cont:
-                    cont = False
-                    rand = random.randint(0, population - 1)
-                    if rand in minis_indices or rand in maxis_indices:
-                        cont = True
+                rand = random.randint(4, population - 5)
                 second_network = rand
                 print(
                     f"Coupling network #{network_indice + 1}... (generating coupling matrixes)", end="\r", flush=True)
