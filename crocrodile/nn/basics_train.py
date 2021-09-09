@@ -363,22 +363,17 @@ class BasicsTrain:
                 self.weight1 = self.weight1 + random_matrix1 * new_weight1
                 """
             print("Coupling networks... Done.                           ")
+            perf_sum = 0
+            for loop in range(population):
+                perf_sum += self.neural_networks[loop].result
             print(
-                f"Mean performance : {(sum(tests_results) / len(tests_results))}")
-        for loop in range(population):
-            print(
-                f"Saving networks... ({loop}/{population})", end="\r", flush=True)
-            self.array_to_csv(tests_weight1[loop], f"nns/{loop}-w1.csv")
-            self.array_to_csv(tests_weight2[loop], f"nns/{loop}-w2.csv")
-            self.array_to_csv(tests_weight3[loop], f"nns/{loop}-w3.csv")
-            self.array_to_csv(tests_weight4[loop], f"nns/{loop}-w4.csv")
-            self.array_to_csv(tests_weight5[loop], f"nns/{loop}-w5.csv")
-            self.array_to_csv(tests_bias1[loop], f"nns/{loop}-b1.csv")
-            self.array_to_csv(tests_bias2[loop], f"nns/{loop}-b2.csv")
-            self.array_to_csv(tests_bias3[loop], f"nns/{loop}-b3.csv")
-            self.array_to_csv(tests_bias4[loop], f"nns/{loop}-b4.csv")
-            self.array_to_csv(tests_bias5[loop], f"nns/{loop}-b5.csv")
-        print("Saving networks... Done.          ")
+                f"Mean performance : {(perf_sum / population)}")
+            print(f"perf: {self.neural_networks[-1].perfs}")
+            print(f"gdmvs: {self.neural_networks[-1].perfs[0] / len(param_good_moves)}")
+            print(f"bdmvs: {(self.neural_networks[-1].perfs[1] / len(param_bad_moves)) * 100}")
+            self.neural_networks: list = sorted(self.neural_networks, key=lambda sub: sub.result, reverse=True)
+            if self.neural_networks[-1].perfs[0] / len(param_good_moves) == 1 and (self.neural_networks[-1].perfs[1] / len(param_bad_moves)) * 100 > self.config["min_bad_moves"]:
+                break  # :)
         print("Saving tests result...", end=" ", flush=True)
         saved_results = list()
         for element in tests_results:
