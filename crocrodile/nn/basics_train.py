@@ -159,6 +159,27 @@ class BasicsTrain:
             self.neural_networks[loop].b4 = tests_bias4[loop]
             self.neural_networks[loop].b5 = tests_bias5[loop]
         print(self.neural_networks)
+    def save(self) -> None:
+        """
+        Save neural networks to nns/ folder.
+
+        :return: None
+        """
+        progress = Progress()
+        progress.total = len(self.neural_networks)
+        progress.text = "Saving networks"
+        for loop in range(len(self.neural_networks)):
+            progress.update(loop)
+            numpy.savetxt(f"nns/{loop}-w1.csv", self.neural_networks[loop].weight1, delimiter=",")
+            numpy.savetxt(f"nns/{loop}-w2.csv", self.neural_networks[loop].weight2, delimiter=",")
+            numpy.savetxt(f"nns/{loop}-w3.csv", self.neural_networks[loop].weight3, delimiter=",")
+            numpy.savetxt(f"nns/{loop}-w4.csv", self.neural_networks[loop].weight4, delimiter=",")
+            numpy.savetxt(f"nns/{loop}-w5.csv", self.neural_networks[loop].weight5, delimiter=",")
+            numpy.savetxt(f"nns/{loop}-b1.csv", self.neural_networks[loop].b1, delimiter=",")
+            numpy.savetxt(f"nns/{loop}-b2.csv", self.neural_networks[loop].b2, delimiter=",")
+            numpy.savetxt(f"nns/{loop}-b3.csv", self.neural_networks[loop].b3, delimiter=",")
+            numpy.savetxt(f"nns/{loop}-b4.csv", self.neural_networks[loop].b4, delimiter=",")
+            open(f"nns/{loop}-b5.csv", 'w').write(str(float(self.neural_networks[loop].b5)))  # patch-001
         progress.done()
 
     def train(self, param_good_moves: list, param_bad_moves: list, config: dict) -> None:
