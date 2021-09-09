@@ -5,8 +5,9 @@ Crocrodile UCI.
 
 Created by @Virinas-code.
 """
+from typing import Optional
 import chess
-import my_engine
+import crocrodile
 # ====== IDLE ======
 # import os
 # os.chdir("../")
