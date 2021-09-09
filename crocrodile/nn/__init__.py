@@ -102,9 +102,14 @@ class NeuralNetwork:
 
     def output(self):
         """Return NN output."""
-        if self.output_layer[0] > 0.5:
-            return True
-        return False
+        try:
+            if self.output_layer > 0.5:
+                return True
+            return False
+        except ValueError:
+            if self.output_layer[0] > 0.5:
+                return True
+            return False
 
     def generate_inputs(self, board, move):
         """Generate inputs for move move in board."""
