@@ -45,7 +45,7 @@ class BasicsTrain:
             file.close()
         return 0
 
-    def ask(self: object) -> str:
+    def ask(self) -> dict:
         """
         Ask for inputs.
 
