@@ -394,7 +394,7 @@ class BasicsTrain:
             self.load()
         for good_move in good_moves_list:
             good_moves_train.append(good_move)
-            print(f"########## Training #{len(good_moves_train)} ##########")
+            print(f"########## Session #{len(good_moves_train)} ##########")
             bad_moves_list.extend(self.generate_bad_moves(
                 good_move, good_moves_list, bad_moves_list))
             print(
