@@ -31,7 +31,7 @@ jobs:
         # uses: ammaraskar/sphinx-action@8b4f60114d7fd1faeba1a712269168508d4750d2
         uses: ammaraskar/sphinx-action@0.4
         with:
-          docs-folder: ./
+          docs-folder: docs/
       - name: Commit documentation changes
         run: |
           git clone https://github.com/Virinas-code/Crocrodile.git --branch gh-pages --single-branch gh-pages
