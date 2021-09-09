@@ -11,9 +11,9 @@ Welcome to Crocrodile's documentation!
 
    uci
    train
-.. automodule:: my_engine
+.. automodule:: crocrodile
    :members:
-.. automodule:: my_engine.nn
+.. automodule:: crocrodile.nn
    :members:
 
 
