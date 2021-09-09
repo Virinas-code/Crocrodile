@@ -86,7 +86,6 @@ class BasicsTrain:
             if move in good_moves_list:
                 continue
             good_moves_list.append(move)
-        print(good_moves_list)
         return good_moves_list
 
     @staticmethod
@@ -307,62 +306,52 @@ class BasicsTrain:
                 choose_b5 = numpy.array([[int(bool(random.getrandbits(1)))]])
                 print(
                     f"Coupling network #{network_indice + 1}... (coupling)                    ", end="\r", flush=True)
-                tests_weight1[minis_indices[network_indice]] = tests_weight1[maxis_indices[network_indice]
-                                                                             ] * choose_w1 + tests_weight1[second_network] * (1 - choose_w1)
-                tests_weight2[minis_indices[network_indice]] = tests_weight2[maxis_indices[network_indice]
-                                                                             ] * choose_w2 + tests_weight2[second_network] * (1 - choose_w2)
-                tests_weight3[minis_indices[network_indice]] = tests_weight3[maxis_indices[network_indice]
-                                                                             ] * choose_w3 + tests_weight3[second_network] * (1 - choose_w3)
-                tests_weight4[minis_indices[network_indice]] = tests_weight4[maxis_indices[network_indice]
-                                                                             ] * choose_w4 + tests_weight4[second_network] * (1 - choose_w4)
-                tests_weight5[minis_indices[network_indice]] = tests_weight5[maxis_indices[network_indice]
-                                                                             ] * choose_w5 + tests_weight5[second_network] * (1 - choose_w5)
-                tests_bias1[minis_indices[network_indice]] = tests_bias1[maxis_indices[network_indice]
-                                                                         ] * choose_b1 + tests_bias1[second_network] * (1 - choose_b1)
-                tests_bias2[minis_indices[network_indice]] = tests_bias2[maxis_indices[network_indice]
-                                                                         ] * choose_b2 + tests_bias2[second_network] * (1 - choose_b2)
-                tests_bias3[minis_indices[network_indice]] = tests_bias3[maxis_indices[network_indice]
-                                                                         ] * choose_b3 + tests_bias3[second_network] * (1 - choose_b3)
-                tests_bias4[minis_indices[network_indice]] = tests_bias4[maxis_indices[network_indice]
-                                                                         ] * choose_b4 + tests_bias4[second_network] * (1 - choose_b4)
-                tests_bias5[minis_indices[network_indice]] = tests_bias5[maxis_indices[network_indice]
-                                                                         ] * choose_b5 + tests_bias5[second_network] * (1 - choose_b5)
-                tests_weight1[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (
+                self.neural_networks[minis_indices[network_indice]].weight1 = self.neural_networks[maxis_indices[network_indice]
+                                                                             ].weight1 * choose_w1 + self.neural_networks[second_network].weight1 * (1 - choose_w1)
+                self.neural_networks[minis_indices[network_indice]].weight2 = self.neural_networks[maxis_indices[network_indice]
+                                                                             ].weight2 * choose_w2 + self.neural_networks[second_network].weight2 * (1 - choose_w2)
+                self.neural_networks[minis_indices[network_indice]].weight3 = self.neural_networks[maxis_indices[network_indice]
+                                                                             ].weight3 * choose_w3 + self.neural_networks[second_network].weight3 * (1 - choose_w3)
+                self.neural_networks[minis_indices[network_indice]].weight4 = self.neural_networks[maxis_indices[network_indice]
+                                                                             ].weight4 * choose_w4 + self.neural_networks[second_network].weight4 * (1 - choose_w4)
+                self.neural_networks[minis_indices[network_indice]].weight5 = self.neural_networks[maxis_indices[network_indice]
+                                                                             ].weight5 * choose_w5 + self.neural_networks[second_network].weight5 * (1 - choose_w5)
+                self.neural_networks[minis_indices[network_indice]].b1 = self.neural_networks[maxis_indices[network_indice]
+                                                                         ].b1 * choose_b1 + self.neural_networks[second_network].b1 * (1 - choose_b1)
+                self.neural_networks[minis_indices[network_indice]].b2 = self.neural_networks[maxis_indices[network_indice]
+                                                                         ].b2 * choose_b2 + self.neural_networks[second_network].b2 * (1 - choose_b2)
+                self.neural_networks[minis_indices[network_indice]].b3 = self.neural_networks[maxis_indices[network_indice]
+                                                                         ].b3 * choose_b3 + self.neural_networks[second_network].b3 * (1 - choose_b3)
+                self.neural_networks[minis_indices[network_indice]].b4 = self.neural_networks[maxis_indices[network_indice]
+                                                                         ].b4 * choose_b4 + self.neural_networks[second_network].b4 * (1 - choose_b4)
+                self.neural_networks[minis_indices[network_indice]].b5 = numpy.array(self.neural_networks[maxis_indices[network_indice]
+                                                                         ].b5 * choose_b5 + self.neural_networks[second_network].b5 * (1 - choose_b5))
+                self.neural_networks[minis_indices[network_indice]].weight1 += ((numpy.random.rand(64, 64) * (
                     2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
-                tests_weight2[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (
+                self.neural_networks[minis_indices[network_indice]].weight2 += ((numpy.random.rand(64, 64) * (
                     2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
-                tests_weight3[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (
+                self.neural_networks[minis_indices[network_indice]].weight3 += ((numpy.random.rand(64, 64) * (
                     2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
-                tests_weight4[minis_indices[network_indice]] += ((numpy.random.rand(1, 64) * (
+                self.neural_networks[minis_indices[network_indice]].weight4 += ((numpy.random.rand(1, 64) * (
                     2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate), 0)
-                tests_weight5[minis_indices[network_indice]] += ((numpy.random.rand(64, 1) * (
+                self.neural_networks[minis_indices[network_indice]].weight5 += ((numpy.random.rand(64, 1) * (
                     2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 1) * inverse_rate + (1 - inverse_rate), 0)
-                tests_bias1[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (
+                self.neural_networks[minis_indices[network_indice]].b1 += ((numpy.random.rand(64, 64) * (
                     2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
-                tests_bias2[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (
+                self.neural_networks[minis_indices[network_indice]].b2 += ((numpy.random.rand(64, 64) * (
                     2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
-                tests_bias3[minis_indices[network_indice]] += ((numpy.random.rand(64, 64) * (
+                self.neural_networks[minis_indices[network_indice]].b3 += ((numpy.random.rand(64, 64) * (
                     2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0)
-                tests_bias4[minis_indices[network_indice]] += ((numpy.random.rand(1, 64) * (
+                self.neural_networks[minis_indices[network_indice]].b4 += ((numpy.random.rand(1, 64) * (
                     2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate), 0)
-                tests_bias5[minis_indices[network_indice]] += ((numpy.random.rand(1, 1) * (
-                    2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 1) * inverse_rate + (1 - inverse_rate), 0)
+                self.neural_networks[minis_indices[network_indice]].b5 += numpy.array(((numpy.random.rand(1, 1) * (
+                    2 * mutation_change) - mutation_change)) * numpy.heaviside(numpy.random.rand(1, 1) * inverse_rate + (1 - inverse_rate), 0))
                 print(
                     f"Coupling network #{network_indice + 1}... (testing)                    ", end="\r", flush=True)
-                self.weight1 = tests_weight1[minis_indices[network_indice]]
-                self.weight2 = tests_weight2[minis_indices[network_indice]]
-                self.weight3 = tests_weight3[minis_indices[network_indice]]
-                self.weight4 = tests_weight4[minis_indices[network_indice]]
-                self.weight5 = tests_weight5[minis_indices[network_indice]]
-                self.b1 = tests_bias1[minis_indices[network_indice]]
-                self.b2 = tests_bias2[minis_indices[network_indice]]
-                self.b3 = tests_bias3[minis_indices[network_indice]]
-                self.b4 = tests_bias4[minis_indices[network_indice]]
-                self.b5 = tests_bias5[minis_indices[network_indice]]
-                on_good_moves, on_bad_moves, good_moves, bad_moves = self.masters_check_train()
-                success = ((on_good_moves / good_moves)**2
-                           * (on_bad_moves / bad_moves)) * 100
-                tests_results[minis_indices[network_indice]] = success
+                on_good_moves, on_bad_moves = self.neural_networks[minis_indices[network_indice]].test(param_good_moves, param_bad_moves)
+                success = ((on_good_moves / len(param_good_moves)) + (on_bad_moves / len(param_bad_moves))) * 100
+                self.neural_networks[loop].result = success
+                self.neural_networks[loop].perfs = (on_good_moves, on_bad_moves)
                 print(
                     f"Coupling network #{network_indice + 1}... Done.   ", end="\r", flush=True)
                 """
