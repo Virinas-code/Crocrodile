@@ -210,6 +210,8 @@ class Game(threading.Thread):
                         lok("Game", self.game_id, "| Depth "
                             + str(depth) + ": Not enough time")
                         break
+                    elif score == 10000 or score == -10000:
+                        break
                     else:
                         lok("Game", self.game_id, "| Depth " + str(depth) + ": Score "
                             + str(score) + " (best move " + best_move.uci() + ")")
