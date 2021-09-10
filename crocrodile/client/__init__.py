@@ -279,7 +279,7 @@ while continue_loop:
     for event in client.bots.stream_incoming_events():
         ldebug(event)
         if event['type'] == 'challenge':
-            if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors and event['challenge']['challenger']['id'] != "crocrodile" and event['challenge']['color'] != 'random':
+            if event['challenge']['speed'] in SPEEDS and event['challenge']['variant']['key'] in VARIANTS and not event['challenge']['id'] in colors and event['challenge']['challenger']['id'] != "crocrodile":  # patch-002
                 client.bots.accept_challenge(event['challenge']['id'])
                 lok("Challenge", event["challenge"]["id"], "| Accepted")
                 colors[event['challenge']['id']] = event['challenge']['color']
