@@ -245,7 +245,7 @@ class Game(threading.Thread):
 
     def game_full(self, event):
         lok("Game", self.game_id, "| Game full")
-        if event["white"]["id"] in ("crocrodile-dev", "Crocrodile"):
+        if event["white"]["id"] in ("crocrodile-dev", "crocrodile"):
             self.my_color = True
             self.time_control = "wtime"
             lok("Game", self.game_id, "| Playing as White")
