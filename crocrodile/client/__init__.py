@@ -35,7 +35,10 @@ load_network()
 
 
 def _lok(*args, **kwargs):
-    main_log.write(" ".join(str(arg) for arg in args) + "\n")
+    if kwargs.get("store", True):
+        main_log.write(" ".join(str(arg) for arg in args) + "\n")
+    else:
+        del kwargs["store"]
     print(colorama.Style.RESET_ALL + colorama.Fore.GREEN
           + time.asctime(time.localtime()) + ":", *args, **kwargs)
 
@@ -257,10 +260,10 @@ class Game(threading.Thread):
             lok("Game", self.game_id, "| Playing as Black")
 
 
-lok("Token is", token)
+lok("Token is", token, store=False)
 
 lok("Connected to", client.account.get().get("title", "USER"),
-    client.account.get().get("username", "Anonymous"))
+    client.account.get().get("username", "Anonymous"), store=False)
 lok("Waiting for challenges")
 continue_loop = True
 colors = {}
