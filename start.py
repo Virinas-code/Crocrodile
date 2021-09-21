@@ -16,6 +16,8 @@ if sys.argv[1] == "uci":
     uci.run()
 elif sys.argv[1] == "basics":
     crocrodile.nn.basics_train.main(sys.argv)
+elif sys.argv[1] == "client":
+    import crocrodile.client
 else:
     print("ERROR: Target not found", file=sys.stderr)
     sys.exit(1)
