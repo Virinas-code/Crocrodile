@@ -140,6 +140,7 @@ if len(sys.argv) > 1:
                 client = berserk.Client(session)
         else:
             arg_list = arg.split(" ")
+            print(arg_list)
             if len(arg) > 3:
                 CHALLENGE = True
                 challenge_user = arg_list[0]
@@ -234,6 +235,15 @@ class Game(threading.Thread):
                     "| Maximum " + str(int(limit)) + "s to calculate",
                 )
                 limit += time.time()
+                lok(
+                    "Game",
+                    self.game_id,
+                    "| Legal moves :",
+                    len(list(board.legal_moves)),
+                    "/ Selected moves :",
+                    len(yukoo.nn_select_best_moves(board)),
+                    "(" + ", ".join(move.uci() for move in yukoo.nn_select_best_moves(board)) + ")"
+                )
                 lok(
                     "Game",
                     self.game_id,
