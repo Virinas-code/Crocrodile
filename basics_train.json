@@ -1,1 +1,1 @@
-{"good_moves": "training_files/mats_roi_tour_vs_roi.txt", "mutation_rate": 5.0, "mutation_change": 0.25, "min_bad_moves": 90}
+{"iterations_done": 345, "good_moves": "training_files/basics.txt", "mutation_rate": 2.0, "mutation_change": 0.15, "min_bad_moves": 85}
