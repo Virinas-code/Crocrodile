@@ -104,7 +104,7 @@ def evaluate(board: chess.Board):
             if piece in CENTRAL_SQUARES:
                 white_score += CENTER_BONUS
             if piece in ELARGED_SQUARES:
-                white_score += CENTER_BONUS / 2
+                white_score += int(CENTER_BONUS / 2)
             if piece_map[piece].symbol() == 'P' and piece in SEVENTH_ROW:
                 white_score += PAWN_SEVENTH_ROW
             if piece_map[piece].symbol() == 'P' and piece in EIGHT_ROW:
