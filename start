@@ -1,10 +1,11 @@
 #!/usr/bin/bash
-DIALOG=${DIALOG=gdialog}
+DIALOG=${DIALOG=dialog}
  fichtemp=`tempfile 2>/dev/null` || fichtemp=/tmp/test$$
 trap "rm -f $fichtemp" 0 1 2 5 15
 $DIALOG --clear --title "Start Crocrodile" \
 	--menu "Select Crocrodile element to run :" 20 51 4 \
 	 "Basics Training" "Start training" \
+   "Client" "Start client" \
 	 "UCI" "Start UCI" 2> $fichtemp
 valret=$?
 choix=`cat $fichtemp`
@@ -15,5 +16,6 @@ case $valret in
 esac
 case $choix in
   UCI) python3 start.py uci;;
-  'Basics Training') python3 start.py basics;;
+  'Basics Training') python3 start.py basics $*;;
+  'Client') python3 start.py client $*;;
 esac
