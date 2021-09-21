@@ -356,7 +356,70 @@ class NeuralNetwork:
                 correct_on_bad_moves += 1
             else:
                 errs += 1
-        return correct_on_good_moves, correct_on_bad_moves, len(file_goodmoves), len(file_badmoves)
+        return (
+            correct_on_good_moves,
+            correct_on_bad_moves,
+            len(file_goodmoves),
+            len(file_badmoves),
+        )
+
+    def test_full(self, list_good_moves: list, list_bad_moves: list) -> Tuple[int, int]:
+        """
+        Test neural network on full files.
+        Lists list_good_moves and list_bad_moves can be obtained from training
+        files with open("<path>").read().split("\\n\\n").
+        Standard format is ["<FEN>\\n<move>", "<FEN>\\n<move>"]
+
+        :param list_good_moves: List of good moves at standard format
+        :type list_good_moves: list
+        :param list_bad_moves: List of bad moves at standard format
+        :type list_bad_moves: list
+        :return: Number of correct answers on good moves, on bad moves
+        :rtype: Tuple[int, int]
+        """
+        good_moves_result = 0
+        bad_moves_result = 0
+        for position_and_move in list_good_moves:
+            position = position_and_move.split("\n")[0]
+            move = position_and_move.split("\n")[1]
+            if self.check_move(position, move):
+                good_moves_result += 1
+        for position_and_move in list_bad_moves:
+            position = position_and_move.split("\n")[0]
+            move = position_and_move.split("\n")[1]
+            if not self.check_move(position, move):
+                bad_moves_result += 1
+        self.old_good_moves_result = good_moves_result
+        self.old_bad_moves_result = bad_moves_result
+        return good_moves_result, bad_moves_result
+
+    def test_new(self, new_good_move: str, new_bad_moves: list) -> Tuple[int, int]:
+        """
+        Test neural network on new moves new_good_move and new_bad_moves.
+        Standard format is ["<FEN>\\n<move>", "<FEN>\\n<move>"]
+        Standard format for new_good_move is "<FEN>\\n<move>"
+
+        :param list_good_moves: The new good move to test at standard format
+        :type list_good_moves: list
+        :param list_bad_moves: The new bad moves to test at standard format
+        :type list_bad_moves: list
+        :return: Total number of correct answers on good moves, on bad moves
+        :rtype: Tuple[int, int]
+        """
+        good_moves_result = int(self.old_good_moves_result)
+        bad_moves_result = int(self.old_bad_moves_result)
+        position = new_good_move.split("\n")[0]
+        move = new_good_move.split("\n")[1]
+        if self.check_move(position, move):
+            good_moves_result += 1
+        for position_and_move in new_bad_moves:
+            position = position_and_move.split("\n")[0]
+            move = position_and_move.split("\n")[1]
+            if not self.check_move(position, move):
+                bad_moves_result += 1
+        self.old_good_moves_result = good_moves_result
+        self.old_bad_moves_result = bad_moves_result
+        return good_moves_result, bad_moves_result
 
     def test(self, list_good_moves: list, list_bad_moves: list) -> tuple[int]:
         """
