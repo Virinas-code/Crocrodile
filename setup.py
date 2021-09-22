@@ -146,7 +146,7 @@ def install_crocrodile(python):
             st = os.stat('/usr/bin/crocrodile')
             os.chmod('/usr/bin/crocrodile', st.st_mode | stat.S_IEXEC)
     elif system == "Windows":
-        with open("C:/Program Files (x86)/Crocrodile/crocrodile.bat") as file:
+        with open("C:/Program Files (x86)/Crocrodile/crocrodile.bat", "w") as file:
             file.write(
                 "cd C:/Program Files (x86)/Crocrodile/Crocrodile-master/\n" + python + " uci.py")
     print("Done.")
