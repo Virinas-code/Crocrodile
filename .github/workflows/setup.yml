@@ -45,7 +45,7 @@ jobs:
 
     - name: Run setup.py
       run: |
-        python setup.py
+        sudo python setup.py
   
   macos:
 
