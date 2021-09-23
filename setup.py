@@ -15,6 +15,7 @@ import zipfile
 import tarfile
 import platform
 import shutil
+import time
 
 try:
     shutil.rmtree("setup-env")
@@ -22,6 +23,16 @@ except FileNotFoundError:
     pass
 os.mkdir("setup-env")
 os.chdir("setup-env")
+
+try:
+    is_admin = os.getuid() == 0
+except AttributeError:
+    is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+if not is_admin:
+    print("ERROR: Program is not running as root. Please run this program as root.", file=sys.stderr)
+    time.sleep(10)
+    sys.exit(1)
 
 
 def load_requirements(requirements):
