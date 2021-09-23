@@ -22,7 +22,7 @@ jobs:
         pip install pyinstaller
 
     - name: Build setup.py
-      run: pyinstaller --noconfirm --onefile --console --name "Crocrodile Setup Program"  "/home/alexei/Documents/Code/Python/Crocrodile/setup.py"
+      run: pyinstaller --noconfirm --onefile --console --name "Crocrodile Setup Program"  "setup.py"
 
     - name: Upload result
       uses: actions/upload-artifact@v2
