@@ -4,6 +4,7 @@ on:
   release:
   push:
     paths: .github/workflows/build-setup.yml
+  workflow_dispatch:
 
 jobs:
   build-ubuntu:
