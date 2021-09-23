@@ -2,7 +2,8 @@ name: Build Setup Script
 
 on:
   release:
-  workflow_dispatch:
+  push:
+    paths: .github/workflows/python-publish.yml
 
 jobs:
   build-ubuntu:
