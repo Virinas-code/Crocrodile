@@ -3,7 +3,7 @@ name: Build Setup Script
 on:
   release:
   push:
-    paths: .github/workflows/python-publish.yml
+    paths: .github/workflows/build-setup.yml
 
 jobs:
   build-ubuntu:
