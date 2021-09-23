@@ -28,8 +28,7 @@ jobs:
         python-version: 3.9
 
     - name: Run setup.py
-      run: |
-        python setup.py
+      run: python setup.py
   
   ubuntu:
 
@@ -44,5 +43,7 @@ jobs:
         python-version: 3.9
 
     - name: Run setup.py
-      run: |
-        sudo python setup.py
+      run: sudo python setup.py
+    
+    - name: Test if command exists
+      run: type crocrodile
