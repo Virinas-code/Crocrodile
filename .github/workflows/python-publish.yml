@@ -2,6 +2,7 @@ name: Build Setup Script
 
 on:
   release:
+  workflow_dispatch:
 
 jobs:
   build-ubuntu:
