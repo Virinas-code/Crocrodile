@@ -29,4 +29,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Ubuntu Executable
-        path: output/Crocrodile Setup Program
+        path: build/Crocrodile Setup Program
