@@ -46,19 +46,3 @@ jobs:
     - name: Run setup.py
       run: |
         sudo python setup.py
-  
-  macos:
-
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-
-    - name: Run setup.py
-      run: |
-        python setup.py
