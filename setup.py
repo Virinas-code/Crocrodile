@@ -16,6 +16,7 @@ import tarfile
 import platform
 import shutil
 import time
+import ctypes
 
 try:
     shutil.rmtree("setup-env")
