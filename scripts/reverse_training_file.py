@@ -29,7 +29,7 @@ def reverse_training_file(path, dest):
     print("Done.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     input_path = "training_files/" + input("1. Input file  : ")  # Path to training file
     output_path = "training_files/" + input("2. Output file : ")  # Destination file
     reverse_training_file(input_path, output_path)
