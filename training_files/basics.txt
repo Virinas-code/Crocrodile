@@ -3750,3 +3750,87 @@ e5d3
 
 4k2r/1pp2pPp/8/p1P5/Pn2b3/KP1n2P1/8/1r6 b k - 0 28
 b1a1
+
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
+c7c5
+
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
+e7e5
+
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
+e7e6
+
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
+c7c6
+
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
+d7d6
+
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1
+g7g6
+
+rn2kb1r/ppp1pppp/5n2/3N4/6Q1/8/PPPP1PPP/R1B1KBNR w KQkq - 1 6
+g4c8
+
+rn2kb1r/ppp1pppp/7n/3N4/6Q1/8/PPPP1PPP/R1B1KBNR w KQkq - 1 6
+g4c8
+
+rn2k1nr/ppp1pp1p/7b/3N2p1/6Q1/8/PPPP1PPP/R1B1KBNR w KQkq - 1 6
+g4c8
+
+rn1qkbnr/ppp1pppp/8/3P4/6b1/8/PPPP1PPP/RNBQKBNR w KQkq - 1 3
+d1g4
+
+rn2kbnr/ppp1pppp/8/3q4/6Q1/2N5/PPPP1PPP/R1B1KBNR w KQkq - 0 5
+c3d5
+
+rn2kbnr/ppp1pppp/8/3q4/6Q1/2N5/PPPP1PPP/R1B1KBNR w KQkq - 0 5
+f1b5
+
+rn1qk2r/ppp1bppp/3p1n2/Pb2p3/2R4P/2N5/1PPPPPP1/2BQKBNR b Kkq - 6 7
+b5c4
+
+rn1qk2r/ppp1bppp/b2p1n2/PN2p3/7P/3P4/1PP1PPP1/2BQKBNR b Kkq - 2 9
+a6b5
+
+1r1q1rk1/pppnbppp/b4n2/P2pp3/2P4P/Q2P4/1P2PPP1/2B1KBNR b K - 1 15
+e7a3
+
+1r1q1rk1/pppn1ppp/b4n2/P2pp3/2P4P/b2P4/1P2PPP1/2B1KBNR w K - 0 16
+b2a3
+
+1r1q1rk1/pppn1ppp/b4n1B/P2pp3/2P4P/b2P4/1P2PPP1/4KBNR b K - 1 16
+g7h6
+
+1r1q1rk1/pppn1ppp/b4n1B/P2pp3/2P4P/b2P4/1P2PPP1/4KBNR b K - 1 16
+a3b4
+
+rn1qk2r/ppp1bppp/3p1n2/Pb2p3/2R4P/8/1PPPPPPR/1NBQKBN1 b kq - 6 7
+b5c4
+
+rn1q1rk1/ppp1bppp/b4n2/P2pp3/2N4P/2PP4/1P2PPPR/2BQKBN1 b - - 1 11
+d5c4
+
+rn1q1rk1/ppp1bppp/b4n2/P2pp3/2N4P/2PP4/1P2PPPR/2BQKBN1 b - - 1 11
+f6g4
+
+rn1r2k1/ppp1bppp/5n2/P3p3/2P4P/1b2B3/1P2PPPR/4KBN1 b - - 0 16
+d8d1
+
+rn1r2k1/ppp1bppp/5n2/P3p3/2P4P/1b2B3/1P2PPPR/4KBN1 b - - 0 16
+e7b4
+
+rn2kbnr/ppp1pp1p/8/3q2p1/6Q1/2N5/PPPP1PPP/R1B1KBNR w KQkq - 0 5
+c3d5
+
+rn2k1nr/ppp1pp1p/7b/3N2p1/6Q1/8/PPPP1PPP/R1B1KBNR w KQkq - 1 6
+g4c8
+
+rn1q1rk1/ppp2ppp/b4n2/P3b3/2p4P/2P2N2/1P1PPPPR/2B1KB2 w - - 0 16
+f3e5
+
+rn1q1rk1/ppp2ppp/b4n2/P3b3/2p4P/2PP1N2/1P2PPPR/2B1KB2 b - - 0 16
+e5h2
+
+rn2r1k1/2p1qp1p/bp3n1p/7P/1P6/2P2N2/4BPP1/4K3 b - - 0 24
+e7e2
