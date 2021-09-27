@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 """
 reverse_training_file
-=====================
+
 Reverse positions and good moves in file.
 """
-import sys  # Using sys.argv
 
 
 def reverse_training_file(path, dest):
-    """Reverse training file at path.
+    """
+    Reverse training file at path.
 
     :param str path: Path to training file.
     :param str dest: Destination file.
