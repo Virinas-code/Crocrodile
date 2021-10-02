@@ -122,137 +122,80 @@ class NeuralNetwork:
                 return True
             return False
 
-    def generate_inputs(self, board, move):
-        """Generate inputs for move move in board."""
-        board = chess.Board(board)
+    def generate_inputs(self, board: str, move: str) -> None:
+        """
+        Generate inputs for move move in board.
+
+        :param str board: FEN of the board.
+        :param str move: UCI notation of the move to check.
+        :return: None
+        :rtype: None
+        """
+        board: chess.Board = chess.Board(board)
         if board.turn == chess.BLACK:
-            board = board.mirror()
-        pieces = board.piece_map()
-        inputs = []
-        inputs_values = {
-            "": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "P": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "N": [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "B": [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            "R": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            "Q": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-            "K": [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-            "p": [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            "n": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-            "b": [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-            "r": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-            "q": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-            "k": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            board: chess.Board = board.mirror()
+        pieces: dict[int, chess.Piece] = board.piece_map()
+        inputs: list[list[float]] = []
+        inputs_values: dict[str, float] = {
+            "": 0.0,
+            "P": 0.1,
+            "N": 0.2,
+            "B": 0.3,
+            "R": 0.5,
+            "Q": 0.9,
+            "K": 1,
+            "p": -0.1,
+            "n": -0.2,
+            "b": -0.3,
+            "r": -0.5,
+            "q": -0.9,
+            "k": -1,
         }
-        for square in range(64):
-            if pieces.get(square, None):
-                inputs.extend(inputs_values[pieces[square].symbol()])
-            else:
-                inputs.extend(inputs_values[""])
-        self.pre_input_layer = numpy.array(inputs)
-        # Generate piece types inputs.self.hidden_layer_9
-        white_pawns = list()
-        for index in range(0, 768, 12):
-            white_pawns.append(self.pre_input_layer[index])
-        white_knights = list()
-        for index in range(1, 769, 12):
-            white_knights.append(self.pre_input_layer[index])
-        white_bishops = list()
-        for index in range(2, 770, 12):
-            white_bishops.append(self.pre_input_layer[index])
-        white_rooks = list()
-        for index in range(3, 771, 12):
-            white_rooks.append(self.pre_input_layer[index])
-        white_queens = list()
-        for index in range(4, 772, 12):
-            white_queens.append(self.pre_input_layer[index])
-        white_king = list()
-        for index in range(5, 773, 12):
-            white_king.append(self.pre_input_layer[index])
-        black_pawns = list()
-        for index in range(6, 774, 12):
-            black_pawns.append(self.pre_input_layer[index])
-        black_knights = list()
-        for index in range(7, 769, 12):
-            black_knights.append(self.pre_input_layer[index])
-        black_bishops = list()
-        for index in range(8, 770, 12):
-            black_bishops.append(self.pre_input_layer[index])
-        black_rooks = list()
-        for index in range(9, 771, 12):
-            black_rooks.append(self.pre_input_layer[index])
-        black_queens = list()
-        for index in range(10, 772, 12):
-            black_queens.append(self.pre_input_layer[index])
-        black_king = list()
-        for index in range(11, 773, 12):
-            black_king.append(self.pre_input_layer[index])
-        result = (
-            white_pawns,
-            white_knights,
-            white_bishops,
-            white_rooks,
-            white_queens,
-            white_king,
-            black_pawns,
-            black_knights,
-            black_bishops,
-            black_rooks,
-            black_queens,
-            black_king,
-        )
-        future = list(result)
-        self.input_layer = []
-        self.input_layer.extend(future)
-        self.input_layer.append([0] * 64)
-        inputs = []
-        if board.has_kingside_castling_rights(chess.WHITE):
-            inputs.append(1)
-        else:
-            inputs.append(0)
-        if board.has_queenside_castling_rights(chess.WHITE):
-            inputs.append(1)
-        else:
-            inputs.append(0)
-        if board.has_kingside_castling_rights(chess.BLACK):
-            inputs.append(1)
-        else:
-            inputs.append(0)
-        if board.has_queenside_castling_rights(chess.BLACK):
-            inputs.append(1)
-        else:
-            inputs.append(0)
-        self.input_layer.append(inputs + [0] * 60)
-        inputs = []
-        cols = [0, 0, 0, 0, 0, 0, 0, 0]
+        for rank in chess.RANK_NAMES:
+            inputs.append([])
+            for file in chess.FILE_NAMES:
+                square: int = chess.parse_square(file + rank)
+                if pieces.get(square, False):
+                    inputs[chess.RANK_NAMES.index(rank)].append(
+                        inputs_values[pieces[square].symbol()])
+                else:
+                    inputs[chess.RANK_NAMES.index(rank)].append(
+                        inputs_values[""])
         if board.has_legal_en_passant():
-            cols[chess.square_file(board.ep_square)] = 1
-        inputs.extend(cols)
-        self.input_layer.append(inputs + [0] * 56)
-        inputs = []
-        move = chess.Move.from_uci(move)
-        from_square = move.from_square
-        cols = [0, 0, 0, 0, 0, 0, 0, 0]
-        cols[chess.square_file(from_square)] = 1
-        inputs.extend(cols)
-        cols = [0, 0, 0, 0, 0, 0, 0, 0]
-        cols[chess.square_rank(from_square)] = 1
-        inputs.extend(cols)
-        to_square = move.to_square
-        cols = [0, 0, 0, 0, 0, 0, 0, 0]
-        cols[chess.square_file(to_square)] = 1
-        inputs.extend(cols)
-        cols = [0, 0, 0, 0, 0, 0, 0, 0]
-        cols[chess.square_rank(to_square)] = 1
-        inputs.extend(cols)
-        # Promotion
-        cols = [0, 0, 0, 0]
-        if move.promotion:
-            cols[move.promotion - 2] = 1
-        inputs.extend(cols)
-        self.input_layer.append(inputs + [0] * 28)
-        self.input_layer.extend([[0] * 64] * 48)
-        self.input_layer = numpy.array(self.input_layer)
+            inputs[chess.square_rank(board.ep_square)][chess.square_file(board.ep_square)] = -0.05
+        move: chess.Move = chess.Move.from_uci(move)
+        from_square: chess.Square = move.from_square
+        to_square: chess.Square = move.to_square
+        move_inputs: list[float] = [float()] * 4
+        move_inputs[0]: float = chess.square_file(from_square) / 10
+        move_inputs[1]: float = chess.square_rank(from_square) / 10
+        move_inputs[2]: float = chess.square_file(to_square) / 10
+        move_inputs[3]: float = chess.square_rank(to_square) / 10
+        castling_inputs: list[float] = []
+        if board.has_kingside_castling_rights(chess.WHITE):
+            castling_inputs.append(1)
+        else:
+            castling_inputs.append(0)
+        if board.has_queenside_castling_rights(chess.WHITE):
+            castling_inputs.append(1)
+        else:
+            castling_inputs.append(0)
+        if board.has_kingside_castling_rights(chess.BLACK):
+            castling_inputs.append(1)
+        else:
+            castling_inputs.append(0)
+        if board.has_queenside_castling_rights(chess.BLACK):
+            castling_inputs.append(1)
+        else:
+            castling_inputs.append(0)
+        en_passant_input: float = 0.0
+        if board.has_legal_en_passant():
+            en_passant_input: float = (chess.square_file(board.ep_square) + 1) / 10
+        inputs.append(move_inputs + castling_inputs + [en_passant_input])
+        for indice in range(4):
+            inputs[indice].append(move_inputs[indice])
+            inputs[indice + 4].append(castling_inputs[indice])
+        self.input_layer: numpy.array = numpy.array(inputs)
 
     @staticmethod
     def csv_to_array(csv_path):
