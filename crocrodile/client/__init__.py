@@ -81,6 +81,22 @@ def lnone(*args, **kwargs):
     pass
 
 
+def show_user_description(user):
+    """
+    Show user description <Status> <Title> <Username>.
+    Status: online ● offline ○
+    Title: BOT, GM, WGM, CM, WCM, IM, WIM, LM or nothing
+
+    :param dict user: JSON parsed from Lichess API
+    :return: String
+    :rtype: str
+    """
+    statuses = {True: "●", False: "○"}
+    if not user["title"]:
+        return f"{statuses[user['online']]} {user['name']}"
+    return f"{statuses[user['online']]} {user['title']} {user['name']}"
+
+
 ldebug = lnone
 lok = _lok
 lerr = _lerr
