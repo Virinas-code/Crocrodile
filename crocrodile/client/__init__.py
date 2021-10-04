@@ -292,9 +292,16 @@ class Game(threading.Thread):
             lok(self.game_id, "Draw")
         elif event["status"] == "resign":
             if event["winner"] == "white":
-                lok("Game", self.game_id, "| White wins - Black resign")
+                lok(self.game_id, "White wins - Black resign")
             else:
-                lok("Game", self.game_id, "| White resigns - Black wins")
+                lok(self.game_id, "White resigns - Black wins")
+        elif event["status"] == "mate":
+            if event["winner"] == "white":
+                lok(self.game_id, "White wins - Black is mate")
+            else:
+                lok(self.game_id, "White is mate - Black wins")
+        elif event["status"] == "aborted":
+            lok(self.game_id, "Aborted")
         else:
             lok(self.game_id, event["status"].capitalize())
             sys.exit(0)
