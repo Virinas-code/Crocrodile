@@ -11,6 +11,7 @@ import sys
 import json
 import csv
 import random
+import datetime
 import chess
 import numpy
 import crocrodile
@@ -259,12 +260,12 @@ class BasicsTrain:
         for indice in range(len(self.neural_networks)):
             self.neural_networks[indice].indice = indice
 
-    def train(self, new_good_move: str, new_bad_moves: str, param_good_moves: list, param_bad_moves: list) -> None:
+    def train(self, new_good_move: str, new_bad_moves: str, param_good_moves: list, param_bad_moves: list) -> float:
         """
         Train neural networks.
 
-        :return: None
-        :rtype: None
+        :return: Mean performance at end.
+        :rtype: float
         """
 
         def sprint(value):
@@ -576,7 +577,7 @@ class BasicsTrain:
                 > self.config["min_bad_moves"]
             ):  # patch-003
                 break  # :)
-            if iters >= 500:
+            if iters >= 137:
                 break  # Prevent complex moves
         print("Saving tests result...", end=" ", flush=True)
         saved_results = list()
@@ -584,10 +585,15 @@ class BasicsTrain:
             saved_results.append([float(element)])
         self.array_to_csv(saved_results, "nns/results.csv")
         print("Done.")
+        perf_sum = 0
+        for loop in range(population):
+            perf_sum += self.neural_networks[loop].result
+        return perf_sum / population
 
     def main(self, argv):
         """Start training."""
         self.ask()
+        performance_output_file = "nns/log/" + str(datetime.datetime.now()) + ".log"
         good_moves_file = self.config["good_moves"]
         good_moves_list = self.parse_good_moves(good_moves_file)
         good_moves_train = list()
@@ -618,7 +624,8 @@ class BasicsTrain:
                         self.neural_networks[network_indice].test_full(good_moves_train, bad_moves_list)
                     progress.done()
                     first_train = False
-                self.train(good_move, new_bad_moves, good_moves_train, bad_moves_list)
+                with open(performance_output_file, "a") as file:
+                    file.write(str(self.train(good_move, new_bad_moves, good_moves_train, bad_moves_list)) + "\n")
                 self.save()
                 self.config["iterations_done"] = len(good_moves_train)
                 open("basics_train.json", "w").write(json.dumps(self.config))
