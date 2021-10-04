@@ -1,1 +1,1 @@
-{"iterations_done": 345, "good_moves": "training_files/basics.txt", "mutation_rate": 2.0, "mutation_change": 0.15, "min_bad_moves": 85}
+{"iterations_done": 553, "good_moves": "training_files/basics_reversed.txt", "mutation_rate": 10, "mutation_change": 0.02, "min_bad_moves": 75}
