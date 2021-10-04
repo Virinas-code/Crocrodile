@@ -14,7 +14,6 @@ import time
 import berserk
 import chess
 import colorama
-
 # from Crocrodile.main import yukoo
 import crocrodile
 import crocrodile.engine
