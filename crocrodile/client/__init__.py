@@ -100,57 +100,6 @@ HELP_CHALLENGE = "\t-c, --challenge \"user time increment color\" : \
                     Challenge user in time+increment, BOT is playing with \
                     color ('white' or 'black')"
 
-if len(sys.argv) > 1:
-    argc = 0
-    for arg in sys.argv:
-        if argc == 0:
-            if arg == "-v" or arg == "--verbose":
-                ldebug = _ldebug
-            if arg == "-q" or arg == "--quiet":
-                lok = lnone
-                ldebug = lnone
-                lerr = lnone
-            if arg == "-h" or arg == "--help":
-                print(
-                    HELP_USAGE
-                )
-                print("Description : Crocrodile Lichess client")
-                print("Commands :")
-                print("\t-h, --help : Show this message and exit")
-                print("\t-v, --verbose : Show debug logs")
-                print("\t-q, --quiet : Don't show any logs")
-                print(
-                    HELP_CHALLENGE
-                )
-                print("\t-a, --auto : Auto challenge BOTs")
-                print("\t-n, --neural-network : Enable Neural Network")
-                print("\t-u, --upgrade: Upgrade to bot account")
-                print("\t-d, --dev : Dev account")
-                sys.exit(0)
-            if arg == "-c" or arg == "--challenge":
-                argc = 1
-            if arg in ("-a", "--auto"):
-                AUTO_CHALLENGE = True
-            if arg in ("-n", "--neural-network"):
-                minimax = yukoo.minimax_nn
-            if arg in ("-u", "--upgrade"):
-                client.account.upgrade_to_bot()
-            if arg in ("-d", "--dev"):
-                session = berserk.TokenSession(open("dev.token").read())
-                client = berserk.Client(session)
-        else:
-            arg_list = arg.split(" ")
-            print(arg_list)
-            if len(arg) > 3:
-                CHALLENGE = True
-                challenge_user = arg_list[0]
-                challenge_time = arg_list[1]
-                challenge_increment = arg_list[2]
-                challenge_color = arg_list[3]
-            argc = 0
-else:
-    ldebug = lnone
-
 
 def limit_time(total_time: float, increment: int) -> float:
     """Calculate minimum time to calculate best move."""
@@ -350,138 +299,179 @@ class Game(threading.Thread):
         else:
             self.my_color = False
             self.time_control = "btime"
-            lok("Game", self.game_id, "| Playing as Black")
+            lok(self.game_id, "Playing as Black")
 
 
-lok("Token is", token, store=False)
-
-lok(
-    "Connected to",
-    client.account.get().get("title", "USER"),
-    client.account.get().get("username", "Anonymous"),
-    store=False,
-)
-lok("Waiting for challenges")
-continue_loop = True
-colors = {}
-fens = {}
-if CHALLENGE:
-    print(challenge_time)
-    challenge = client.challenges.create(
-        challenge_user,
-        True,
-        clock_limit=int(float(challenge_time)) * 60,
-        clock_increment=int(challenge_increment),
-        color=challenge_color,
-    )
-    ldebug(challenge)
-    if challenge["challenge"]["color"] == "white":
-        colors[challenge["challenge"]["id"]] = "black"
-    else:
-        colors[challenge["challenge"]["id"]] = "white"
-    fens[challenge["challenge"]["id"]] = chess.STARTING_FEN
-while continue_loop:
-    for event in client.bots.stream_incoming_events():
-        ldebug(event)
-        if event["type"] == "challenge":
-            if (
-                event["challenge"]["speed"] in SPEEDS
-                and event["challenge"]["variant"]["key"] in VARIANTS
-                and not event["challenge"]["id"] in colors
-                and event["challenge"]["challenger"]["id"] != "crocrodile"
-            ):  # patch-002
-                client.bots.accept_challenge(event["challenge"]["id"])
-                lok("Challenge", event["challenge"]["id"], "| Accepted")
-                colors[event["challenge"]["id"]] = event["challenge"]["color"]
-                if event["challenge"]["variant"]["key"] == "fromPosition":
-                    fens[event["challenge"]["id"]] = event["challenge"][
-                        "initialFen"
-                    ]
-                else:
-                    fens[event["challenge"]["id"]] = chess.STARTING_FEN
+def main(argv: list) -> None:
+    global client, lok, CHALLENGE, challenge_time, challenge_user, challenge_increment, challenge_color, ldebug, AUTO_CHALLENGE
+    if len(argv) > 1:
+        argc = 0
+        for arg in argv:
+            if argc == 0:
+                if arg == "-v" or arg == "--verbose":
+                    ldebug = _ldebug
+                if arg == "-q" or arg == "--quiet":
+                    lok = lnone
+                    ldebug = lnone
+                    lerr = lnone
+                if arg == "-h" or arg == "--help":
+                    print(HELP_USAGE)
+                    print("Description : Crocrodile Lichess client")
+                    print("Commands :")
+                    print("\t-h, --help : Show this message and exit")
+                    print("\t-v, --verbose : Show debug logs")
+                    print("\t-q, --quiet : Don't show any logs")
+                    print(HELP_CHALLENGE)
+                    print("\t-a, --auto : Auto challenge BOTs")
+                    print("\t-n, --neural-network : Enable Neural Network")
+                    print("\t-u, --upgrade: Upgrade to bot account")
+                    print("\t-d, --dev : Dev account")
+                    sys.exit(0)
+                if arg == "-c" or arg == "--challenge":
+                    argc = 1
+                if arg in ("-a", "--auto"):
+                    AUTO_CHALLENGE = True
+                if arg in ("-n", "--neural-network"):
+                    minimax = yukoo.minimax_nn
+                if arg in ("-u", "--upgrade"):
+                    client.account.upgrade_to_bot()
+                if arg in ("-d", "--dev"):
+                    session = berserk.TokenSession(open("dev.token").read())
+                    client = berserk.Client(session)
             else:
-                if event["challenge"]["challenger"]["id"] != "crocrodile":
-                    if event["challenge"]["color"] == "random":
-                        lok(
-                            "Challenge",
-                            event["challenge"]["id"],
-                            "| Declining because this is a random color \
-                                challenge",
-                        )
-                    elif event["challenge"]["id"] in colors:
-                        lok(
-                            "Challenge",
-                            event["challenge"]["id"],
-                            "| Declining because this is a rematch",
-                        )
-                    elif event["challenge"]["speed"] not in SPEEDS:
-                        lok(
-                            "Challenge",
-                            event["challenge"]["id"],
-                            "| Declining because the bot doesn't play this \
-                                speed ("
-                            + event["challenge"]["speed"].capitalize()
-                            + ")",
-                        )
-                    elif event["challenge"]["variant"]["key"] not in VARIANTS:
-                        lok(
-                            "Challenge",
-                            event["challenge"]["id"],
-                            "| Declining because the bot doesn't play this \
-                                variant ("
-                            + event["challenge"]["variant"]["name"]
-                            + ")",
-                        )
+                arg_list = arg.split(" ")
+                print(arg_list)
+                if len(arg) > 3:
+                    CHALLENGE = True
+                    challenge_user = arg_list[0]
+                    challenge_time = arg_list[1]
+                    challenge_increment = arg_list[2]
+                    challenge_color = arg_list[3]
+                argc = 0
+    else:
+        ldebug = lnone
+    lok(None, "Token is", token, store=False)
+
+    lok(
+        None,
+        "Connected to",
+        client.account.get().get("title", "USER"),
+        client.account.get().get("username", "Anonymous"),
+        store=False,
+    )
+    lok(None, "Waiting for challenges")
+    continue_loop = True
+    colors = {}
+    fens = {}
+    if CHALLENGE:
+        print(challenge_time)
+        challenge = client.challenges.create(
+            challenge_user,
+            True,
+            clock_limit=int(float(challenge_time)) * 60,
+            clock_increment=int(challenge_increment),
+            color=challenge_color,
+        )
+        ldebug(challenge)
+        if challenge["challenge"]["color"] == "white":
+            colors[challenge["challenge"]["id"]] = "black"
+        else:
+            colors[challenge["challenge"]["id"]] = "white"
+        fens[challenge["challenge"]["id"]] = chess.STARTING_FEN
+    while continue_loop:
+        for event in client.bots.stream_incoming_events():
+            ldebug(event)
+            if event["type"] == "challenge":
+                lok(
+                    event["challenge"]["id"],
+                    "From",
+                    show_user_description(event["challenge"]["challenger"]),
+                    "- received",
+                )
+                if (
+                    event["challenge"]["speed"] in SPEEDS
+                    and event["challenge"]["variant"]["key"] in VARIANTS
+                    and not event["challenge"]["id"] in colors
+                    and event["challenge"]["challenger"]["id"] != "crocrodile"
+                ):  # patch-002
+                    client.bots.accept_challenge(event["challenge"]["id"])
+                    lok(event["challenge"]["id"], "Accepted")
+                    colors[event["challenge"]["id"]] = event["challenge"]["color"]
+                    if event["challenge"]["variant"]["key"] == "fromPosition":
+                        fens[event["challenge"]["id"]
+                             ] = event["challenge"]["initialFen"]
+                    else:
+                        fens[event["challenge"]["id"]] = chess.STARTING_FEN
+                else:
+                    if event["challenge"]["challenger"]["id"] != "crocrodile":
+                        if event["challenge"]["id"] in colors:
+                            lok(
+                                event["challenge"]["id"],
+                                "Declining because this is a rematch",
+                            )
+                        elif event["challenge"]["speed"] not in SPEEDS:
+                            lok(
+                                event["challenge"]["id"],
+                                "Declining because the bot doesn't play this \
+                                    speed ("
+                                + event["challenge"]["speed"].capitalize()
+                                + ")",
+                            )
+                        elif event["challenge"]["variant"]["key"] not in VARIANTS:
+                            lok(
+                                event["challenge"]["id"],
+                                "Declining because the bot doesn't play this \
+                                    variant ("
+                                + event["challenge"]["variant"]["name"]
+                                + ")",
+                            )
+                        else:
+                            lok(
+                                event["challenge"]["id"],
+                                "Declining",
+                            )
+                        client.bots.decline_challenge(event["challenge"]["id"])
+                        if event["challenge"]["id"] in colors:
+                            client.bots.post_message(
+                                event["challenge"]["id"],
+                                "I don't accept rematches (lot of bugs)",
+                            )
                     else:
                         lok(
-                            "Challenge",
                             event["challenge"]["id"],
-                            "| Declining",
+                            "Challenging " +
+                            show_user_description(event["challenge"]["destUser"]),
                         )
-                    client.bots.decline_challenge(event["challenge"]["id"])
-                    if event["challenge"]["id"] in colors:
-                        client.bots.post_message(
-                            event["challenge"]["id"],
-                            "I don't accept rematches (lot of bugs)",
-                        )
-                else:
-                    lok(
-                        "Challenge",
-                        event["challenge"]["id"],
-                        "| Challenging @"
-                        + event["challenge"]["destUser"]["name"],
+            elif event["type"] == "gameStart":
+                game = Game(
+                    client,
+                    event["game"]["id"],
+                    colors[event["game"]["id"]],
+                    fens[event["game"]["id"]],
+                )
+                game.start()
+            elif event["type"] == "gameFinish":
+                if AUTO_CHALLENGE:
+                    challenge = client.challenges.create(
+                        challenge_user,
+                        True,
+                        clock_limit=int(float(challenge_time)) * 60,
+                        clock_increment=int(challenge_increment),
+                        color=challenge_color,
                     )
-        elif event["type"] == "gameStart":
-            game = Game(
-                client,
-                event["game"]["id"],
-                colors[event["game"]["id"]],
-                fens[event["game"]["id"]],
-            )
-            game.start()
-        elif event["type"] == "gameFinish":
-            if AUTO_CHALLENGE:
-                challenge = client.challenges.create(
-                    challenge_user,
-                    True,
-                    clock_limit=int(float(challenge_time)) * 60,
-                    clock_increment=int(challenge_increment),
-                    color=challenge_color,
-                )
-                if challenge["challenge"]["color"] == "white":
-                    colors[challenge["challenge"]["id"]] = "black"
+                    if challenge["challenge"]["color"] == "white":
+                        colors[challenge["challenge"]["id"]] = "black"
+                    else:
+                        colors[challenge["challenge"]["id"]] = "white"
+                    fens[challenge["challenge"]["id"]] = chess.STARTING_FEN
+                lok(event["game"]["id"], "Finished")
+            elif event["type"] == "challengeDeclined":
+                if event["challenge"]["challenger"]["id"] == "crocrodile":
+                    lok(
+                        event["challenge"]["id"],
+                        "Declined by " + show_user_description(event["challenge"]["destUser"]),
+                    )
                 else:
-                    colors[challenge["challenge"]["id"]] = "white"
-                fens[challenge["challenge"]["id"]] = chess.STARTING_FEN
-            lok("Game", event["game"]["id"], "| Finished")
-        elif event["type"] == "challengeDeclined":
-            if event["challenge"]["challenger"]["id"] == "crocrodile":
-                lok(
-                    "Challenge",
-                    event["challenge"]["id"],
-                    "| Declined by @" + event["challenge"]["destUser"]["name"],
-                )
+                    lok(event["challenge"]["id"], "Declined")
             else:
-                lok("Challenge", event["challenge"]["id"], "| Declined")
-        else:
-            ldebug(event["type"], ":", event)
+                ldebug(event["type"], ":", event)
