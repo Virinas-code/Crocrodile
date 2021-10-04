@@ -37,18 +37,24 @@ colorama.init()
 load_network()
 
 
-def _lok(*args, **kwargs):
+def _lok(id, *args, **kwargs):
     if kwargs.get("store", True):
         main_log.write(" ".join(str(arg) for arg in args) + "\n")
     else:
         del kwargs["store"]
+    try:
+        client.bots.post_message(id, " ".join(args))
+        client.bots.post_message(id, " ".join(args), spectator=True)
+    except:
+        pass
     print(
         colorama.Style.RESET_ALL
         + colorama.Fore.GREEN
         + time.asctime(time.localtime())
         + ":",
+        f"Game {id} |",
         *args,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -60,19 +66,24 @@ def _ldebug(*args, **kwargs):
         + time.asctime(time.localtime())
         + ":",
         *args,
-        **kwargs
+        **kwargs,
     )
 
 
-def _lerr(*args, **kwargs):
+def _lerr(id, *args, **kwargs):
     error_log.write(" ".join(str(arg) for arg in args) + "\n")
+    try:
+        client.bots.post_message(id, "ERROR: " + " ".join(args))
+        client.bots.post_message(id, "ERROR: " + " ".join(args), spectator=True)
+    except:
+        pass
     print(
         colorama.Style.RESET_ALL
         + colorama.Fore.RED
         + time.asctime(time.localtime())
         + ":",
         *args,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -135,7 +146,7 @@ def start_depth(total_time: float) -> int:
 class Game(threading.Thread):
     def __init__(self, client, game_id, color, fen, **kwargs):
         super().__init__(**kwargs)
-        lok("Game", game_id, "| Starting... (FEN", fen + ")")
+        lok(game_id, "Starting... (FEN", fen + ")")
         self.game_id = game_id
         self.initial_fen = fen
         self.client = client
@@ -148,7 +159,7 @@ class Game(threading.Thread):
             self.time_control = "wtime"
         else:
             self.time_control = "btime"
-        lok("Game", self.game_id, "| Started")
+        lok(self.game_id, "Started")
 
     def run(self):
         for event in self.stream:
@@ -195,33 +206,29 @@ class Game(threading.Thread):
                 score = float("-inf")
                 best_move = chess.Move.null()
                 lok(
-                    "Game",
                     self.game_id,
-                    "| Maximum " + str(int(limit)) + "s to calculate",
+                    "Maximum " + str(int(limit)) + "s to calculate",
                 )
                 limit += time.time()
                 lok(
-                    "Game",
                     self.game_id,
-                    "| Legal moves :",
+                    "Legal moves :",
                     len(list(board.legal_moves)),
                     "/ Selected moves :",
                     len(yukoo.nn_select_best_moves(board)),
                     "(" + ", ".join(move.uci() for move in yukoo.nn_select_best_moves(board)) + ")"
                 )
                 lok(
-                    "Game",
                     self.game_id,
-                    "| Depth " + str(depth) + ": Calculating...",
+                    "Depth " + str(depth) + ": Calculating...",
                     end="\r",
                 )
                 last_score, last_best_move = minimax(
                     board, depth, board.turn, float("inf")
                 )
                 lok(
-                    "Game",
                     self.game_id,
-                    "| Depth "
+                    "Depth "
                     + str(depth)
                     + ": Score "
                     + str(last_score)
@@ -232,9 +239,8 @@ class Game(threading.Thread):
                 while True:
                     depth += 1
                     lok(
-                        "Game",
                         self.game_id,
-                        "| Depth " + str(depth) + ": Calculating...",
+                        "Depth " + str(depth) + ": Calculating...",
                         end="\r",
                     )
                     score, best_move = minimax(board, depth, board.turn, limit)
@@ -242,18 +248,16 @@ class Game(threading.Thread):
                         score = last_score
                         best_move = last_best_move
                         lok(
-                            "Game",
                             self.game_id,
-                            "| Depth " + str(depth) + ": Not enough time",
+                            "Depth " + str(depth) + ": Not enough time",
                         )
                         break
                     elif score == 10000 or score == -10000:
                         break
                     else:
                         lok(
-                            "Game",
                             self.game_id,
-                            "| Depth "
+                            "Depth "
                             + str(depth)
                             + ": Score "
                             + str(score)
@@ -272,23 +276,23 @@ class Game(threading.Thread):
                         self.client.bots.make_move(self.game_id, best_move)
                         retry = 0
                     except Exception as e:
-                        lerr("Game", self.game_id, "| Error:", e)
+                        lerr(self.game_id, "Error:", e)
                         time.sleep(3)
                         pass
                     retry = retry - 1
         elif event["status"] == "draw":
-            lok("Game", self.game_id, "| Draw")
+            lok(self.game_id, "Draw")
         elif event["status"] == "resign":
             if event["winner"] == "white":
                 lok("Game", self.game_id, "| White wins - Black resign")
             else:
                 lok("Game", self.game_id, "| White resigns - Black wins")
         else:
-            lok("Game", self.game_id, "|", event["status"].capitalize())
+            lok(self.game_id, event["status"].capitalize())
             sys.exit(0)
 
     def chat(self, event):
-        lok(
+        ldebug(
             "Game",
             self.game_id,
             "|",
@@ -299,11 +303,11 @@ class Game(threading.Thread):
         )
 
     def game_full(self, event):
-        lok("Game", self.game_id, "| Game full")
+        lok(self.game_id, "Game full")
         if event["white"]["id"] in ("crocrodile-dev", "crocrodile"):
             self.my_color = True
             self.time_control = "wtime"
-            lok("Game", self.game_id, "| Playing as White")
+            lok(self.game_id, "Playing as White")
             self.game_state_change(
                 {
                     "status": "started",
