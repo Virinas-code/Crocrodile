@@ -33,7 +33,6 @@ EIGHT_ROW = [56, 57, 58, 59, 60, 61, 62, 63]
 SECOND_ROW = [15, 14, 13, 12, 11, 10, 9, 8]
 FIRST_ROW = [0, 1, 2, 3, 4, 5, 6, 7]
 VARIANTS = ['standard', 'chess960']
-neural_network = nn.NeuralNetwork()
 
 
 def csv_to_array(csv_path):
@@ -143,6 +142,7 @@ class EngineBase:
         self.tb_limit = 10000000
         self.nn_tb = dict()
         self.nn_tb_limit = 1000000
+        self.nn = nn.NeuralNetwork()
 
     @staticmethod
     def evaluate(board):
@@ -221,7 +221,7 @@ class EngineBase:
                 del self.nn_tb[list(self.nn_tb.keys())[0]]
             good_moves = list()
             for move in board.legal_moves:
-                if neural_network.check_move(board.fen(), move.uci()):
+                if self.nn.check_move(board.fen(), move.uci()):
                     good_moves.append(move)
             self.nn_tb[hash] = good_moves
         good_moves = self.nn_tb[hash]

@@ -147,6 +147,7 @@ class Game(threading.Thread):
     def __init__(self, client, game_id, color, fen, **kwargs):
         super().__init__(**kwargs)
         lok(game_id, "Starting... (FEN", fen + ")")
+        self.engine =  crocrodile.engine.EngineBase("Crocrodile", "Virinas-code")
         self.game_id = game_id
         self.initial_fen = fen
         self.client = client
@@ -210,20 +211,27 @@ class Game(threading.Thread):
                     "Maximum " + str(int(limit)) + "s to calculate",
                 )
                 limit += time.time()
+                nn_moves: list = list()
+                for move in self.engine.nn_select_best_moves(board):
+                    nn_moves.append(move.uci())
                 lok(
                     self.game_id,
                     "Legal moves :",
                     len(list(board.legal_moves)),
                     "/ Selected moves :",
-                    len(yukoo.nn_select_best_moves(board)),
-                    "(" + ", ".join(move.uci() for move in yukoo.nn_select_best_moves(board)) + ")"
+                    len(self.engine.nn_select_best_moves(board)),
+                    "("
+                    + ", ".join(
+                        nn_moves
+                    )
+                    + ")",
                 )
                 lok(
                     self.game_id,
                     "Depth " + str(depth) + ": Calculating...",
                     end="\r",
                 )
-                last_score, last_best_move = minimax(
+                last_score, last_best_move = self.engine.minimax_nn(
                     board, depth, board.turn, float("inf")
                 )
                 lok(
@@ -243,7 +251,7 @@ class Game(threading.Thread):
                         "Depth " + str(depth) + ": Calculating...",
                         end="\r",
                     )
-                    score, best_move = minimax(board, depth, board.turn, limit)
+                    score, best_move = self.engine.minimax_nn(board, depth, board.turn, limit)
                     if score == float("inf"):
                         score = last_score
                         best_move = last_best_move
