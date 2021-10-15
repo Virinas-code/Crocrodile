@@ -73,7 +73,7 @@ class NeuralNetwork:
             open(self.genetic_train_settings["test_bad"]).read().split("\n\n")
         )
         self.result = None  # Basics training
-        self.perf: tuple[int] = (0, 0)
+        self.perfs: tuple[int, int] = (0, 0)
         self.old_good_moves_result: Optional[int] = None
         self.old_bad_moves_result: Optional[int] = None
         self.indice: int = -1
