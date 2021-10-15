@@ -139,10 +139,14 @@
             <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genetic_train_settings</span><span class="p">[</span><span class="s2">&quot;test_bad&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Basics training</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">perf</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perfs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">old_good_moves_result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">old_bad_moves_result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indice</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>  <span class="c1"># Multiple layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>  <span class="c1"># Multiple layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_bias</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="NeuralNetwork.load_networks"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.load_networks">[docs]</a>    <span class="k">def</span> <span class="nf">load_networks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -298,13 +302,13 @@
             <span class="sa">f</span><span class="s2">&quot;hl1 : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> / hl2 : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> / hl3 : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_3</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> / hl4 : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_4</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> / output : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.calculate"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.calculate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.old_calculate"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.old_calculate">[docs]</a>    <span class="k">def</span> <span class="nf">old_calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate NN result.&quot;&quot;&quot;</span>
         <span class="n">normalizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalisation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span> <span class="o">=</span> <span class="n">normalizer</span><span class="p">(</span>
             <span class="n">normalizer</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">weight4</span>
-<div class="viewcode-block" id="NeuralNetwork.check_move"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.check_move">[docs]</a>                <span class="o">@</span> <span class="n">normalizer</span><span class="p">(</span>
+<div class="viewcode-block" id="NeuralNetwork.calculate"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.calculate">[docs]</a>                <span class="o">@</span> <span class="n">normalizer</span><span class="p">(</span>
                     <span class="n">normalizer</span><span class="p">(</span>
                         <span class="n">normalizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight1</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_layer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b1</span><span class="p">)</span>
                         <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight2</span>
@@ -320,7 +324,23 @@
         <span class="p">)</span></div>
         <span class="c1"># self.output_layer = ((self.weight4 @ normalizer(((self.weight1 @ self.input_layer + self.b1) @ self.weight2 + self.b2) @ self.weight3 + self.b3) + self.b4) @ self.weight5 + self.b5)</span>
 
-    <span class="k">def</span> <span class="nf">check_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">move</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate NN result by using :attr:NeuralNetwork.layers with multiple layers.</span>
+
+<span class="sd">        :return: Output layer.</span>
+<span class="sd">        :rtype: numpy.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hidden_layer</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_layer</span>
+
+        <span class="k">for</span> <span class="n">layer_index</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">):</span>
+            <span class="n">hidden_layer</span> <span class="o">=</span> <span class="n">layer</span> <span class="o">@</span> <span class="n">hidden_layer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">[</span><span class="n">layer_index</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">hidden_layer</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_bias</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span></div>
+
+<div class="viewcode-block" id="NeuralNetwork.check_move"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.check_move">[docs]</a>    <span class="k">def</span> <span class="nf">check_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">move</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate inputs, calculate and return output.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">generate_inputs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">move</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
