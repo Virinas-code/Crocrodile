@@ -77,6 +77,10 @@ class NeuralNetwork:
         self.old_good_moves_result: Optional[int] = None
         self.old_bad_moves_result: Optional[int] = None
         self.indice: int = -1
+        self.layers: list[numpy.ndarray] = list()  # Multiple layers
+        self.bias: list[numpy.ndarray] = list()  # Multiple layers
+        self.last_layer: Optional[numpy.ndarray] = None
+        self.last_bias: Optional[numpy.ndarray] = None
 
     def load_networks(self) -> None:
         """
