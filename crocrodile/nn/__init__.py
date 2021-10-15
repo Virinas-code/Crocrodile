@@ -232,7 +232,7 @@ class NeuralNetwork:
             f"hl1 : {self.hidden_layer_1.shape} / hl2 : {self.hidden_layer_2.shape} / hl3 : {self.hidden_layer_3.shape} / hl4 : {self.hidden_layer_4.shape} / output : {self.output_layer.shape}"
         )
 
-    def calculate(self):
+    def old_calculate(self):
         """Calculate NN result."""
         normalizer = self.normalisation
         self.output_layer = normalizer(
@@ -253,6 +253,22 @@ class NeuralNetwork:
             + self.b5
         )
         # self.output_layer = ((self.weight4 @ normalizer(((self.weight1 @ self.input_layer + self.b1) @ self.weight2 + self.b2) @ self.weight3 + self.b3) + self.b4) @ self.weight5 + self.b5)
+
+    def calculate(self) -> numpy.ndarray:
+        """
+        Calculate NN result by using :attr:NeuralNetwork.layers with multiple layers.
+
+        :return: Output layer.
+        :rtype: numpy.ndarray
+        """
+        hidden_layer: numpy.ndarray = self.input_layer
+
+        for layer_index, layer in enumerate(self.layers):
+            hidden_layer = layer @ hidden_layer + self.bias[layer_index]
+
+        self.output_layer: numpy.ndarray = hidden_layer @ self.last_layer + self.last_bias
+
+        return self.output_layer
 
     def check_move(self, board, move):
         """Generate inputs, calculate and return output."""
