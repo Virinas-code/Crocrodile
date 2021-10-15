@@ -29,7 +29,8 @@ class StartUI(object):
         code, tag = self.dialog.menu("Wich element do you want to start ?",
                                      title="Main menu",
                                      choices=[("1", "Client"),
-                                              ("2", "Basics Training")])
+                                              ("2", "Basics Training"),
+                                              ("3", "Training file generator")])
         if code == self.dialog.OK:
             return int(tag)
 
@@ -96,6 +97,8 @@ class StartUI(object):
             self.start_client()
         elif choice == 2:  # Start basics training
             self.start_basics()
+        elif choice == 3:
+            self.start_generator()
 
     def start_client(self) -> None:
         """
@@ -129,6 +132,20 @@ class StartUI(object):
         :rtype: str
         """
         return self.dialog.msgbox("ERROR: Invalid challenge", title="Configure client")
+
+    def start_generator(self) -> None:
+        code, positions = self.dialog.inputbox("Maximum positions tested:", title="Configure generator")
+        if code == self.dialog.OK:
+            code, piece = self.dialog.inputbox("Piece added:",
+                                                title="Configure generator")
+            if code == self.dialog.OK:
+                code, dtm = self.dialog.inputbox("Maximum DTM:",
+                                                    title="Configure generator")
+                if code == self.dialog.OK:
+                    code, destination = self.dialog.inputbox("Destination file:",
+                                                        title="Configure generator")
+                    if code == self.dialog.OK:
+                        return os.system("python3 training_files/training_from_tb.py {positions} {dtm} {piece} {destination}")
 
 
 if __name__ == "__main__":
