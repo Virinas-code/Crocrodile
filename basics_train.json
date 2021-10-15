@@ -1,1 +1,1 @@
-{"iterations_done": 553, "good_moves": "training_files/basics_reversed.txt", "mutation_rate": 10, "mutation_change": 0.02, "min_bad_moves": 75}
+{"iterations_done": 1254, "good_moves": "training_files/crocro-super-training", "mutation_rate": 40, "mutation_change": 0.4, "min_bad_moves": 75}
