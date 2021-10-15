@@ -20,6 +20,8 @@ from crocrodile.cli import Progress
 
 NoneType = type(None)
 
+LAYERS_COUNT = 3
+
 
 class BasicsTrain:
     """
@@ -114,52 +116,26 @@ class BasicsTrain:
         :return: None
         :rtype: None
         """
+        self.neural_networks.clear()
         number = int(input("Population : "))
         open("nns/population.dat", "w").write(str(number))
         progress = Progress()
-        tests_weight1 = list()
-        tests_weight2 = list()
-        tests_weight3 = list()
-        tests_weight4 = list()
-        tests_weight5 = list()
-        tests_bias1 = list()
-        tests_bias2 = list()
-        tests_bias3 = list()
-        tests_bias4 = list()
-        tests_bias5 = list()
         progress.total = number
-        progress.text = "Generating random matrixes"
-        for loop in range(number):
-            progress.update(loop)
-            tests_weight1.append(numpy.random.rand(64, 64) * 2 - 1)
-            tests_weight2.append(numpy.random.rand(64, 64) * 2 - 1)
-            tests_weight3.append(numpy.random.rand(64, 64) * 2 - 1)
-            tests_weight4.append(numpy.random.rand(1, 64) * 2 - 1)
-            tests_weight5.append(numpy.random.rand(64, 1) * 2 - 1)
-            tests_bias1.append(numpy.random.rand(64, 64) * 2 - 1)
-            tests_bias2.append(numpy.random.rand(64, 64) * 2 - 1)
-            tests_bias3.append(numpy.random.rand(64, 64) * 2 - 1)
-            tests_bias4.append(numpy.random.rand(1, 64) * 2 - 1)
-            tests_bias5.append(numpy.array(numpy.random.rand(1, 1) * 2 - 1))
-        progress.done()
         progress.text = "Creating networks"
         for loop in range(number):
             progress.update(loop)
             self.neural_networks.append(crocrodile.nn.NeuralNetwork())
         progress.done()
-        progress.text = "Saving random matrixes to networks"
+        progress.text = "Generating identity matrixes"
         for loop in range(number):
             progress.update(loop)
-            self.neural_networks[loop].weight1 = tests_weight1[loop]
-            self.neural_networks[loop].weight2 = tests_weight2[loop]
-            self.neural_networks[loop].weight3 = tests_weight3[loop]
-            self.neural_networks[loop].weight4 = tests_weight4[loop]
-            self.neural_networks[loop].weight5 = tests_weight5[loop]
-            self.neural_networks[loop].b1 = tests_bias1[loop]
-            self.neural_networks[loop].b2 = tests_bias2[loop]
-            self.neural_networks[loop].b3 = tests_bias3[loop]
-            self.neural_networks[loop].b4 = tests_bias4[loop]
-            self.neural_networks[loop].b5 = numpy.array(tests_bias5[loop])
+            for layer in range(LAYERS_COUNT):
+                self.neural_networks[loop].layers.append(numpy.identity(9))
+                self.neural_networks[loop].bias.append(numpy.zeros((9, 9)))
+            self.neural_networks[loop].layers[-1] = numpy.random.rand(1, 9) * 2 - 1
+            self.neural_networks[loop].bias[-1] = numpy.random.rand(1, 9) * 2 - 1
+            self.neural_networks[loop].last_layer = numpy.random.rand(9, 1) * 2 - 1
+            self.neural_networks[loop].last_bias = numpy.random.rand(1, 1) * 2 - 1
         progress.done()
         self.config["iterations_done"] = 0
         open("basics_train.json", "w").write(json.dumps(self.config))
@@ -176,36 +152,13 @@ class BasicsTrain:
         progress.text = "Saving networks"
         for loop in range(len(self.neural_networks)):
             progress.update(loop)
-            numpy.savetxt(
-                f"nns/{loop}-w1.csv", self.neural_networks[loop].weight1, delimiter=","
-            )
-            numpy.savetxt(
-                f"nns/{loop}-w2.csv", self.neural_networks[loop].weight2, delimiter=","
-            )
-            numpy.savetxt(
-                f"nns/{loop}-w3.csv", self.neural_networks[loop].weight3, delimiter=","
-            )
-            numpy.savetxt(
-                f"nns/{loop}-w4.csv", self.neural_networks[loop].weight4, delimiter=","
-            )
-            numpy.savetxt(
-                f"nns/{loop}-w5.csv", self.neural_networks[loop].weight5, delimiter=","
-            )
-            numpy.savetxt(
-                f"nns/{loop}-b1.csv", self.neural_networks[loop].b1, delimiter=","
-            )
-            numpy.savetxt(
-                f"nns/{loop}-b2.csv", self.neural_networks[loop].b2, delimiter=","
-            )
-            numpy.savetxt(
-                f"nns/{loop}-b3.csv", self.neural_networks[loop].b3, delimiter=","
-            )
-            numpy.savetxt(
-                f"nns/{loop}-b4.csv", self.neural_networks[loop].b4, delimiter=","
-            )
-            open(f"nns/{loop}-b5.csv", "w").write(
-                str(float(self.neural_networks[loop].b5))
-            )  # patch-001
+            for layer in range(LAYERS_COUNT):
+                numpy.savetxt(f"nns/{loop}-w{layer}.csv", self.neural_networks[loop].layers[layer], delimiter=",")
+                numpy.savetxt(f"nns/{loop}-b{layer}.csv", self.neural_networks[loop].bias[layer], delimiter=",")
+            numpy.savetxt(f"nns/{loop}-w31.csv", self.neural_networks[loop].layers[-1], delimiter=",")
+            numpy.savetxt(f"nns/{loop}-b31.csv", self.neural_networks[loop].bias[-1], delimiter=",")
+            numpy.savetxt(f"nns/{loop}-wlast.csv", self.neural_networks[loop].last_layer, delimiter=",")
+            numpy.savetxt(f"nns/{loop}-blast.csv", self.neural_networks[loop].last_bias, delimiter=",")
         progress.done()
 
     def load(self) -> None:
@@ -214,6 +167,7 @@ class BasicsTrain:
 
         :return: None
         """
+        self.neural_networks.clear()
         progress = Progress()
         progress.text = "Loading population"
         number = int(open("nns/population.dat", "r").read())
@@ -226,39 +180,88 @@ class BasicsTrain:
         progress.text = "Loading networks"
         for loop in range(number):
             progress.update(loop)
-            self.neural_networks[loop].weight1 = numpy.genfromtxt(
-                f"nns/{loop}-w1.csv", delimiter=","
+            for layer in range(LAYERS_COUNT):
+                self.neural_networks[loop].layers.append(numpy.genfromtxt(f"nns/{loop}-w{layer}.csv", delimiter=","))
+                self.neural_networks[loop].bias.append(numpy.genfromtxt(f"nns/{loop}-b{layer}.csv", delimiter=","))
+            self.neural_networks[loop].layers.append(
+                numpy.genfromtxt(f"nns/{loop}-w31.csv", delimiter=","))
+            self.neural_networks[loop].bias.append(
+                numpy.genfromtxt(f"nns/{loop}-b31.csv", delimiter=","))
+            self.neural_networks[loop].layers[-1] = self.neural_networks[loop].layers[-1].reshape(
+                1, self.neural_networks[loop].layers[-1].size
             )
-            self.neural_networks[loop].weight2 = numpy.genfromtxt(
-                f"nns/{loop}-w2.csv", delimiter=","
+            self.neural_networks[loop].bias[-1] = self.neural_networks[loop].bias[-1].reshape(
+                1, self.neural_networks[loop].bias[-1].size
             )
-            self.neural_networks[loop].weight3 = numpy.genfromtxt(
-                f"nns/{loop}-w3.csv", delimiter=","
-            )
-            self.neural_networks[loop].weight4 = numpy.genfromtxt(
-                f"nns/{loop}-w4.csv", delimiter=","
-            )
-            self.neural_networks[loop].weight5 = numpy.genfromtxt(
-                f"nns/{loop}-w5.csv", delimiter=","
-            ).reshape(-1, 1)
-            self.neural_networks[loop].b1 = numpy.genfromtxt(
-                f"nns/{loop}-b1.csv", delimiter=","
-            )
-            self.neural_networks[loop].b2 = numpy.genfromtxt(
-                f"nns/{loop}-b2.csv", delimiter=","
-            )
-            self.neural_networks[loop].b3 = numpy.genfromtxt(
-                f"nns/{loop}-b3.csv", delimiter=","
-            )
-            self.neural_networks[loop].b4 = numpy.genfromtxt(
-                f"nns/{loop}-b4.csv", delimiter=","
-            )
-            self.neural_networks[loop].b5 = numpy.array(
-                float(open(f"nns/{loop}-b5.csv").read())
-            )  # patch-001
+            self.neural_networks[loop].last_layer = numpy.genfromtxt(f"nns/{loop}-wlast.csv", delimiter=",")
+            self.neural_networks[loop].last_layer = self.neural_networks[loop].last_layer.reshape(
+                self.neural_networks[loop].last_layer.size, 1)
+            self.neural_networks[loop].last_bias = numpy.genfromtxt(f"nns/{loop}-blast.csv", delimiter=",")
+            self.neural_networks[loop].last_bias = self.neural_networks[loop].last_bias.reshape(
+                1, 1)
         progress.done()
         for indice in range(len(self.neural_networks)):
             self.neural_networks[indice].indice = indice
+
+    def couple(self, matrix1: numpy.ndarray, matrix2: numpy.ndarray) -> numpy.ndarray:
+        """
+        Couple two matrixes.
+
+        :param numpy.ndarray matrix1: First matrix to couple.
+        :param numpy.ndarray matrix2: Second matrix to couple.
+        :return: A new matrix.
+        :rtype: numpy.ndarray
+        """
+        mutation_change = self.config["mutation_change"]
+        inverse_rate = 100 / self.config["mutation_rate"]
+        choose_matrix: numpy.ndarray = numpy.zeros(matrix1.shape)
+        direction: bool = bool(random.getrandbits(1))
+        choose: bool = bool(random.getrandbits(1))
+        try:
+            len2 = len(choose_matrix[0])
+        except TypeError:
+            matrix1 = numpy.array([matrix1])
+            matrix2 = numpy.array([matrix2])
+            choose_matrix: numpy.ndarray = numpy.zeros(matrix1.shape)
+            len2 = len(choose_matrix[0])
+        except IndexError:
+            matrix1 = numpy.array([[matrix1]])
+            matrix2 = numpy.array([[matrix2]])
+            choose_matrix: numpy.ndarray = numpy.zeros(matrix1.shape)
+            len2 = len(choose_matrix[0])
+        for line in range(len(choose_matrix)):
+            for column in range(len2):
+                if random.random() < 0.001:
+                    choose: bool = not choose
+                fill: int = int(choose)
+                if direction:
+                    choose_matrix[line][column] = fill
+                else:
+                    try:
+                        choose_matrix[column][line] = fill
+                    except IndexError:
+                        choose_matrix[line][column] = fill
+        return (matrix1 * choose_matrix + matrix2 * (1 - choose_matrix)) + (
+                    numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change) * numpy.heaviside(numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0)
+
+    def couple_networks(self, worst_network: int, network1: int, network2: int) -> None:
+        """
+        Couple two networks.
+
+        :param int network1: First network indice
+        :param int network2: Second network indice.
+        :return: Nothing.
+        :rtype: None.
+        """
+        for layer_indice, layer in enumerate(self.neural_networks[network1].layers):
+            self.neural_networks[worst_network].layers[layer_indice] = self.couple(
+                layer, self.neural_networks[network2].layers[layer_indice]
+            )
+            self.neural_networks[worst_network].bias[layer_indice] = self.couple(
+                self.neural_networks[network1].bias[layer_indice], self.neural_networks[network2].bias[layer_indice]
+            )
+        self.neural_networks[worst_network].last_layer = self.couple(self.neural_networks[network1].last_layer, self.neural_networks[network2].last_layer)
+        self.neural_networks[worst_network].last_bias = self.couple(self.neural_networks[network1].last_bias, self.neural_networks[network2].last_bias)
 
     def train(self, new_good_move: str, new_bad_moves: str, param_good_moves: list, param_bad_moves: list) -> float:
         """
@@ -333,209 +336,7 @@ class BasicsTrain:
                     end="\r",
                     flush=True,
                 )
-                choose_w1 = numpy.zeros((64, 64))
-                choose_w2 = numpy.zeros((64, 64))
-                choose_w3 = numpy.zeros((64, 64))
-                choose_matrixes1 = [choose_w1, choose_w2, choose_w3]
-                for choose_matrix in choose_matrixes1:
-                    # True : column else line
-                    direction = bool(random.getrandbits(1))
-                    choose = bool(random.getrandbits(1))
-                    for line in range(len(choose_matrix)):
-                        for column in range(len(choose_matrix[0])):
-                            if random.random() < 0.001:
-                                choose = not choose
-                            fill = int(choose)
-                            if direction:
-                                choose_matrix[line][column] = fill
-                            else:
-                                choose_matrix[column][line] = fill
-                choose = bool(random.getrandbits(1))
-                choose_w5 = numpy.zeros((64, 1))
-                for line in range(64):
-                    if random.random() < 0.0625:
-                        choose = not choose
-                    choose_w5[line][0] = int(choose)
-                choose = bool(random.getrandbits(1))
-                choose_w4 = numpy.zeros((1, 64))
-                for column in range(64):
-                    if random.random() < 0.0625:
-                        choose = not choose
-                    choose_w4[0][column] = int(choose)
-                choose_b1 = choose_w1
-                choose_b2 = choose_w2
-                choose_b3 = choose_w3
-                choose_b4 = numpy.zeros((1, 64))
-                choose = bool(random.getrandbits(1))
-                for column in range(64):
-                    if random.random() < 0.0625:
-                        choose = not choose
-                    choose_b4[0][column] = int(choose)
-                choose_b5 = numpy.array([[int(bool(random.getrandbits(1)))]])
-                print(
-                    f"Coupling network #{network_indice + 1}... (coupling)                    ",
-                    end="\r",
-                    flush=True,
-                )
-                self.neural_networks[
-                    minis_indices[network_indice]
-                ].weight1 = self.neural_networks[
-                    maxis_indices[network_indice]
-                ].weight1 * choose_w1 + self.neural_networks[
-                    second_network
-                ].weight1 * (
-                    1 - choose_w1
-                )
-                self.neural_networks[
-                    minis_indices[network_indice]
-                ].weight2 = self.neural_networks[
-                    maxis_indices[network_indice]
-                ].weight2 * choose_w2 + self.neural_networks[
-                    second_network
-                ].weight2 * (
-                    1 - choose_w2
-                )
-                self.neural_networks[
-                    minis_indices[network_indice]
-                ].weight3 = self.neural_networks[
-                    maxis_indices[network_indice]
-                ].weight3 * choose_w3 + self.neural_networks[
-                    second_network
-                ].weight3 * (
-                    1 - choose_w3
-                )
-                self.neural_networks[
-                    minis_indices[network_indice]
-                ].weight4 = self.neural_networks[
-                    maxis_indices[network_indice]
-                ].weight4 * choose_w4 + self.neural_networks[
-                    second_network
-                ].weight4 * (
-                    1 - choose_w4
-                )
-                self.neural_networks[
-                    minis_indices[network_indice]
-                ].weight5 = self.neural_networks[
-                    maxis_indices[network_indice]
-                ].weight5 * choose_w5 + self.neural_networks[
-                    second_network
-                ].weight5 * (
-                    1 - choose_w5
-                )
-                self.neural_networks[
-                    minis_indices[network_indice]
-                ].b1 = self.neural_networks[
-                    maxis_indices[network_indice]
-                ].b1 * choose_b1 + self.neural_networks[
-                    second_network
-                ].b1 * (
-                    1 - choose_b1
-                )
-                self.neural_networks[
-                    minis_indices[network_indice]
-                ].b2 = self.neural_networks[
-                    maxis_indices[network_indice]
-                ].b2 * choose_b2 + self.neural_networks[
-                    second_network
-                ].b2 * (
-                    1 - choose_b2
-                )
-                self.neural_networks[
-                    minis_indices[network_indice]
-                ].b3 = self.neural_networks[
-                    maxis_indices[network_indice]
-                ].b3 * choose_b3 + self.neural_networks[
-                    second_network
-                ].b3 * (
-                    1 - choose_b3
-                )
-                self.neural_networks[
-                    minis_indices[network_indice]
-                ].b4 = self.neural_networks[
-                    maxis_indices[network_indice]
-                ].b4 * choose_b4 + self.neural_networks[
-                    second_network
-                ].b4 * (
-                    1 - choose_b4
-                )
-                self.neural_networks[minis_indices[network_indice]].b5 = numpy.array(
-                    self.neural_networks[maxis_indices[network_indice]].b5 * choose_b5
-                    + self.neural_networks[second_network].b5 * (1 - choose_b5)
-                )
-                self.neural_networks[minis_indices[network_indice]].weight1 += (
-                    (
-                        numpy.random.rand(64, 64) * (2 * mutation_change)
-                        - mutation_change
-                    )
-                ) * numpy.heaviside(
-                    numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0
-                )
-                self.neural_networks[minis_indices[network_indice]].weight2 += (
-                    (
-                        numpy.random.rand(64, 64) * (2 * mutation_change)
-                        - mutation_change
-                    )
-                ) * numpy.heaviside(
-                    numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0
-                )
-                self.neural_networks[minis_indices[network_indice]].weight3 += (
-                    (
-                        numpy.random.rand(64, 64) * (2 * mutation_change)
-                        - mutation_change
-                    )
-                ) * numpy.heaviside(
-                    numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0
-                )
-                self.neural_networks[minis_indices[network_indice]].weight4 += (
-                    (numpy.random.rand(1, 64) * (2 * mutation_change) - mutation_change)
-                ) * numpy.heaviside(
-                    numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate), 0
-                )
-                self.neural_networks[minis_indices[network_indice]].weight5 += (
-                    (numpy.random.rand(64, 1) * (2 * mutation_change) - mutation_change)
-                ) * numpy.heaviside(
-                    numpy.random.rand(64, 1) * inverse_rate + (1 - inverse_rate), 0
-                )
-                self.neural_networks[minis_indices[network_indice]].b1 += (
-                    (
-                        numpy.random.rand(64, 64) * (2 * mutation_change)
-                        - mutation_change
-                    )
-                ) * numpy.heaviside(
-                    numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0
-                )
-                self.neural_networks[minis_indices[network_indice]].b2 += (
-                    (
-                        numpy.random.rand(64, 64) * (2 * mutation_change)
-                        - mutation_change
-                    )
-                ) * numpy.heaviside(
-                    numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0
-                )
-                self.neural_networks[minis_indices[network_indice]].b3 += (
-                    (
-                        numpy.random.rand(64, 64) * (2 * mutation_change)
-                        - mutation_change
-                    )
-                ) * numpy.heaviside(
-                    numpy.random.rand(64, 64) * inverse_rate + (1 - inverse_rate), 0
-                )
-                self.neural_networks[minis_indices[network_indice]].b4 += (
-                    (numpy.random.rand(1, 64) * (2 * mutation_change) - mutation_change)
-                ) * numpy.heaviside(
-                    numpy.random.rand(1, 64) * inverse_rate + (1 - inverse_rate), 0
-                )
-                self.neural_networks[minis_indices[network_indice]].b5 += numpy.array(
-                    (
-                        (
-                            numpy.random.rand(1, 1) * (2 * mutation_change)
-                            - mutation_change
-                        )
-                    )
-                    * numpy.heaviside(
-                        numpy.random.rand(1, 1) * inverse_rate + (1 - inverse_rate), 0
-                    )
-                )
+                self.couple_networks(minis_indices[network_indice], second_network, maxis_indices[network_indice])
                 print(
                     f"Coupling network #{network_indice + 1}... (testing)                    ",
                     end="\r",
@@ -577,7 +378,7 @@ class BasicsTrain:
                 > self.config["min_bad_moves"]
             ):  # patch-003
                 break  # :)
-            if iters >= 137:
+            if iters >= 20:
                 break  # Prevent complex moves
         print("Saving tests result...", end=" ", flush=True)
         saved_results = list()
