@@ -331,10 +331,13 @@
 <span class="sd">        :return: Output layer.</span>
 <span class="sd">        :rtype: numpy.ndarray</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">matrix</span><span class="p">)</span>
+        
         <span class="n">hidden_layer</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_layer</span>
 
         <span class="k">for</span> <span class="n">layer_index</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">):</span>
-            <span class="n">hidden_layer</span> <span class="o">=</span> <span class="n">layer</span> <span class="o">@</span> <span class="n">hidden_layer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">[</span><span class="n">layer_index</span><span class="p">]</span>
+            <span class="n">hidden_layer</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">layer</span> <span class="o">@</span> <span class="n">hidden_layer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">[</span><span class="n">layer_index</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">hidden_layer</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_bias</span>
 
