@@ -265,10 +265,13 @@ class NeuralNetwork:
         :return: Output layer.
         :rtype: numpy.ndarray
         """
+        def relu(matrix: numpy.ndarray) -> numpy.ndarray:
+            return numpy.maximum(0, matrix)
+        
         hidden_layer: numpy.ndarray = self.input_layer
 
         for layer_index, layer in enumerate(self.layers):
-            hidden_layer = layer @ hidden_layer + self.bias[layer_index]
+            hidden_layer = relu(layer @ hidden_layer + self.bias[layer_index])
 
         self.output_layer: numpy.ndarray = hidden_layer @ self.last_layer + self.last_bias
 
