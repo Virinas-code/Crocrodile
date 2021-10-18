@@ -20,7 +20,7 @@ from crocrodile.cli import Progress
 
 NoneType = type(None)
 
-LAYERS_COUNT = 3
+LAYERS_COUNT = 1
 
 
 class BasicsTrain:
