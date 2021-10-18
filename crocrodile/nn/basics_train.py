@@ -401,6 +401,7 @@ class BasicsTrain:
         bad_moves_list = list()
         if "-n" in argv or "--new-networks" in argv:
             self.generate()
+            sys.exit(0)
         else:
             self.load()
         first_train = True
