@@ -143,6 +143,7 @@ class EngineBase:
         self.nn_tb = dict()
         self.nn_tb_limit = 1000000
         self.nn = nn.NeuralNetwork()
+        self.nn.load_layers(0)
 
     @staticmethod
     def evaluate(board):
