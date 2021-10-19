@@ -338,6 +338,7 @@ class Game(threading.Thread):
 
 def main(argv: list) -> None:
     global client, lok, CHALLENGE, challenge_time, challenge_user, challenge_increment, challenge_color, ldebug, AUTO_CHALLENGE
+    print("Starting...")
     if len(argv) > 1:
         argc = 0
         for arg in argv:
@@ -509,3 +510,7 @@ def main(argv: list) -> None:
                     lok(event["challenge"]["id"], "Declined")
             else:
                 ldebug(event["type"], ":", event)
+
+
+if __name__ == "__main__":
+    main(sys.argv)
