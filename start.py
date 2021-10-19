@@ -18,6 +18,7 @@ elif sys.argv[1] == "basics":
     crocrodile.nn.basics_train.main(sys.argv)
 elif sys.argv[1] == "client":
     import crocrodile.client
+    crocrodile.client.main(sys.argv)
 else:
     print("ERROR: Target not found", file=sys.stderr)
     sys.exit(1)
