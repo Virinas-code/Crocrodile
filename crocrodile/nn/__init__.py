@@ -2035,6 +2035,36 @@ class NeuralNetwork:
             saved_results.append([float(element)])
         self.array_to_csv(saved_results, "nns/results.csv")
         print("Done.")
+    
+    def load_layers(self, nn: int) -> None:
+        """
+        Load layers with a NN ID from nns/.
+        
+        :param int nn: NN to load (nns/<nn>-....csv)
+        :return: Nothing.
+        :rtype: None
+        """
+        for layer in range(30):
+            self.layers.append(
+                numpy.genfromtxt(f"nns/{nn}-w{layer}.csv", delimiter=","))
+            self.bias.append(
+                numpy.genfromtxt(f"nns/{nn}-b{layer}.csv", delimiter=","))
+        self.layers.append(
+            numpy.genfromtxt(f"nns/{nn}-w31.csv", delimiter=","))
+        self.bias.append(
+            numpy.genfromtxt(f"nns/{nn}-b31.csv", delimiter=","))
+        self.layers[-1] = self.layers[-1].reshape(
+            1, self.layers[-1].size
+        )
+        self.bias[-1] = self.bias[-1].reshape(
+            1, self.bias[-1].size
+        )
+        self.last_layer = numpy.genfromtxt(f"nns/{nn}-wlast.csv", delimiter=",")
+        self.last_layer = self.last_layer.reshape(
+            self.last_layer.size, 1)
+        self.last_bias = numpy.genfromtxt(f"nns/{nn}-blast.csv", delimiter=",")
+        self.last_bias = self.last_bias.reshape(
+            1, 1)
 
     def __str__(self):
         """
