@@ -1,1 +1,1 @@
-{"iterations_done": 5402, "good_moves": "training_files/crocro-super-training", "mutation_rate": 60, "mutation_change": 1, "min_bad_moves": 75}
+{"iterations_done": 1054, "good_moves": "training_files/crocro-super-training", "mutation_rate": 50, "mutation_change": 0.2, "min_bad_moves": 75}
