@@ -11,6 +11,7 @@ Welcome to Crocrodile's documentation!
 
    uci
    train
+   scripts
 .. automodule:: crocrodile
    :members:
 .. automodule:: crocrodile.nn
