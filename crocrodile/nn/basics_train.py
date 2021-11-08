@@ -20,7 +20,8 @@ from crocrodile.cli import Progress
 
 NoneType = type(None)
 
-LAYERS_COUNT = 1
+LAYERS_COUNT = 31
+MAX_ITERS = 30
 
 
 class BasicsTrain:
@@ -378,7 +379,7 @@ class BasicsTrain:
                 > self.config["min_bad_moves"]
             ):  # patch-003
                 break  # :)
-            if iters >= 20:
+            if iters >= MAX_ITERS:
                 break  # Prevent complex moves
         print("Saving tests result...", end=" ", flush=True)
         saved_results = list()
