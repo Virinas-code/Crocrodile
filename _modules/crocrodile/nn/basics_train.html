@@ -88,7 +88,8 @@
 
 <span class="n">NoneType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
-<span class="n">LAYERS_COUNT</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">LAYERS_COUNT</span> <span class="o">=</span> <span class="mi">31</span>
+<span class="n">MAX_ITERS</span> <span class="o">=</span> <span class="mi">30</span>
 
 
 <div class="viewcode-block" id="BasicsTrain"><a class="viewcode-back" href="../../../train.html#crocrodile.nn.basics_train.BasicsTrain">[docs]</a><span class="k">class</span> <span class="nc">BasicsTrain</span><span class="p">:</span>
@@ -446,7 +447,7 @@
                 <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;min_bad_moves&quot;</span><span class="p">]</span>
             <span class="p">):</span>  <span class="c1"># patch-003</span>
                 <span class="k">break</span>  <span class="c1"># :)</span>
-            <span class="k">if</span> <span class="n">iters</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">iters</span> <span class="o">&gt;=</span> <span class="n">MAX_ITERS</span><span class="p">:</span>
                 <span class="k">break</span>  <span class="c1"># Prevent complex moves</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saving tests result...&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">saved_results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -496,7 +497,8 @@
                     <span class="n">first_train</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">performance_output_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                     <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">good_move</span><span class="p">,</span> <span class="n">new_bad_moves</span><span class="p">,</span> <span class="n">good_moves_train</span><span class="p">,</span> <span class="n">bad_moves_list</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_moves_train</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;iterations_done&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_moves_train</span><span class="p">)</span>
                 <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;basics_train.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">))</span></div></div>
 
