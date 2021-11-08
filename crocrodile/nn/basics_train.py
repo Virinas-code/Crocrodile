@@ -429,7 +429,8 @@ class BasicsTrain:
                     first_train = False
                 with open(performance_output_file, "a") as file:
                     file.write(str(self.train(good_move, new_bad_moves, good_moves_train, bad_moves_list)) + "\n")
-                self.save()
+                if len(good_moves_train) % 10 == 0:
+                    self.save()
                 self.config["iterations_done"] = len(good_moves_train)
                 open("basics_train.json", "w").write(json.dumps(self.config))
 
