@@ -18,7 +18,6 @@ import colorama
 import crocrodile
 import crocrodile.engine
 import crocrodile.nn
-from crocrodile.nn.load_network import load_network  # Network loader
 
 yukoo = crocrodile.engine.EngineBase("Yukoo", "Virinas-code")
 minimax = yukoo.minimax_std
@@ -31,9 +30,6 @@ error_log = open("error.log", "w")
 debug_log = open("debug.log", "w")
 
 colorama.init()
-
-# Load best network
-load_network()
 
 
 def _lok(id, *args, **kwargs):
