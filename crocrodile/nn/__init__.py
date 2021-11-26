@@ -89,7 +89,12 @@ class NeuralNetwork:
         # Pawns and pieces
         self.w_pawns: list[numpy.ndarray] = list()
         self.w_pieces: list[numpy.ndarray] = list()
-        self.b: list[numpy.ndarray] = list()
+        self.b_pawns: list[numpy.ndarray] = list()
+        self.b_pieces: list[numpy.ndarray] = list()
+        self.w_pawns_last: numpy.ndarray = list()
+        self.w_pieces_last: numpy.ndarray = list()
+        self.b_pawns_last: numpy.ndarray = list()
+        self.b_pieces_last: numpy.ndarray = list()
 
     def load_networks(self) -> None:
         """
@@ -2193,36 +2198,36 @@ class NeuralNetwork:
             saved_results.append([float(element)])
         self.array_to_csv(saved_results, "nns/results.csv")
         print("Done.")
-    
+
     def load_layers(self, nn: int) -> None:
         """
         Load layers with a NN ID from nns/.
-        
+
         :param int nn: NN to load (nns/<nn>-....csv)
         :return: Nothing.
         :rtype: None
         """
-        for layer in range(30):
-            self.layers.append(
-                numpy.genfromtxt(f"nns/{nn}-w{layer}.csv", delimiter=","))
-            self.bias.append(
-                numpy.genfromtxt(f"nns/{nn}-b{layer}.csv", delimiter=","))
-        self.layers.append(
-            numpy.genfromtxt(f"nns/{nn}-w31.csv", delimiter=","))
-        self.bias.append(
-            numpy.genfromtxt(f"nns/{nn}-b31.csv", delimiter=","))
-        self.layers[-1] = self.layers[-1].reshape(
-            1, self.layers[-1].size
-        )
-        self.bias[-1] = self.bias[-1].reshape(
-            1, self.bias[-1].size
-        )
-        self.last_layer = numpy.genfromtxt(f"nns/{nn}-wlast.csv", delimiter=",")
-        self.last_layer = self.last_layer.reshape(
-            self.last_layer.size, 1)
-        self.last_bias = numpy.genfromtxt(f"nns/{nn}-blast.csv", delimiter=",")
-        self.last_bias = self.last_bias.reshape(
-            1, 1)
+        for layer in range(16):
+            self.w_pawns.append(numpy.genfromtxt(f"nns/{nn}-wpawns-{layer}.csv", delimiter=","))
+            self.b_pawns.append(numpy.genfromtxt(f"nns/{nn}-bpawns-{layer}.csv", delimiter=","))
+            self.w_pieces.append(numpy.genfromtxt(f"nns/{nn}-wpieces-{layer}.csv", delimiter=","))
+            self.b_pieces.append(numpy.genfromtxt(f"nns/{nn}-bpieces-{layer}.csv", delimiter=","))
+        self.w_pawns.append(numpy.genfromtxt(f"nns/{nn}-wpanws-beforelast.csv", delimiter=","))
+        self.b_pawns.append(numpy.genfromtxt(f"nns/{nn}-bpawns-beforelast.csv", delimiter=","))
+        self.w_pieces.append(numpy.genfromtxt(f"nns/{nn}-wpieces-beforelast.csv", delimiter=","))
+        self.b_pieces.append(numpy.genfromtxt(f"nns/{nn}-bpieces-beforelast.csv", delimiter=","))
+        self.w_pawns[-1] = self.w_pawns[-1].reshape(1, self.w_pawns[-1].size)
+        self.b_pawns[-1] = self.b_pawns[-1].reshape(1, self.b_pawns[-1].size)
+        self.w_pieces[-1] = self.w_pieces[-1].reshape(1, self.w_pieces[-1].size)
+        self.b_pieces[-1] = self.b_pieces[-1].reshape(1, self.b_pieces[-1].size)
+        self.w_pawns_last = numpy.genfromtxt(f"nns/{nn}-wpawns-last.csv", delimiter=",")
+        self.b_pawns_last = numpy.genfromtxt(f"nns/{nn}-bpawns-last.csv", delimiter=",")
+        self.w_pieces_last = numpy.genfromtxt(f"nns/{nn}-wpieces-last.csv", delimiter=",")
+        self.b_pieces_last = numpy.genfromtxt(f"nns/{nn}-bpieces-last.csv", delimiter=",")
+        self.w_pawns_last = self.last_layer.reshape(self.w_pawns_last.size, 1)
+        self.w_pieces_last = self.last_layer.reshape(self.w_pieces_last.size, 1)
+        self.b_pawns_last = self.b_pawns_last.reshape(1, 1)
+        self.b_pieces_last = self.b_pieces_last.reshape(1, 1)
 
     def __str__(self):
         """
