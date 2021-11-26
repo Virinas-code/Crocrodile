@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crocrodile.nn - Neural Network &mdash; Documentation Crocrodile 3.0-dev</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="crocrodile.uci - UCI" href="uci.html" />
+    <link rel="prev" title="crocrodile.engine - Engine" href="engine.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Crocrodile
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Crocrodile Module</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="client.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.client</span></code> - Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="engine.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.engine</span></code> - Engine</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn</span></code> - Neural Network</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-crocrodile.nn.basics_train"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.basics_train</span></code> - Basics Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-crocrodile.nn.load_network"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.load_network</span></code> - Load Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crocrodile-nn-masters-train-masters-training"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.masters_train</span></code> - Masters Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-crocrodile.nn.nn_auto"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.nn_auto</span></code> - Auto Neural Network Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crocrodile-nn-nn-random-random-neural-networks-generator"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.nn_random</span></code> - Random Neural Networks Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crocrodile-nn-old-nn-old-neural-network"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.old_nn</span></code> - Old Neural Network</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uci.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.uci</span></code> - UCI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.cli</span></code> - CLI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Crocrodile</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="docutils literal notranslate"><span class="pre">crocrodile.nn</span></code> - Neural Network</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/nn.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-crocrodile.nn">
+<span id="crocrodile-nn-neural-network"></span><h1><code class="docutils literal notranslate"><span class="pre">crocrodile.nn</span></code> - Neural Network<a class="headerlink" href="#module-crocrodile.nn" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Crocrodile Neural Network.</p>
+<p>Base class for Crocrodile NN.</p>
+<dl class="class">
+<dt id="crocrodile.nn.NeuralNetwork">
+<em class="property">class </em><code class="sig-prename descclassname">crocrodile.nn.</code><code class="sig-name descname">NeuralNetwork</code><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Base class for NN.</p>
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.array_to_csv">
+<em class="property">static </em><code class="sig-name descname">array_to_csv</code><span class="sig-paren">(</span><em class="sig-param">array</em>, <em class="sig-param">csv_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.array_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.array_to_csv" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Write array in csv_path CSV file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.calculate">
+<code class="sig-name descname">calculate</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.calculate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.calculate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Calculate NN result by using :attr:NeuralNetwork.layers with multiple layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Output layer.</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.change_files">
+<code class="sig-name descname">change_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.change_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.change_files" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Change files locations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.check_always_same">
+<code class="sig-name descname">check_always_same</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.check_always_same"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.check_always_same" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Check success rating on good moves and on bad moves.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.check_difference">
+<code class="sig-name descname">check_difference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.check_difference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.check_difference" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Check success rate on good moves and on bad moves and return it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.check_move">
+<code class="sig-name descname">check_move</code><span class="sig-paren">(</span><em class="sig-param">board</em>, <em class="sig-param">move</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.check_move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.check_move" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Generate inputs, calculate and return output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.check_test">
+<code class="sig-name descname">check_test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.check_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.check_test" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Check NN on test dataset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.check_train">
+<code class="sig-name descname">check_train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.check_train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.check_train" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Check NN on train dataset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.csv_to_array">
+<em class="property">static </em><code class="sig-name descname">csv_to_array</code><span class="sig-paren">(</span><em class="sig-param">csv_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.csv_to_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.csv_to_array" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Read CSV file and return array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.full_calculate">
+<code class="sig-name descname">full_calculate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.full_calculate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.full_calculate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Calculate NN result with all hidden layers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.generate_inputs">
+<code class="sig-name descname">generate_inputs</code><span class="sig-paren">(</span><em class="sig-param">board: str</em>, <em class="sig-param">move: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.generate_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.generate_inputs" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Generate inputs for move move in board.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>board</strong> (<em>str</em>) – FEN of the board.</p></li>
+<li><p><strong>move</strong> (<em>str</em>) – UCI notation of the move to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.genetic_configure">
+<code class="sig-name descname">genetic_configure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.genetic_configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.genetic_configure" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Configure genetic training algorithm.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.genetic_random">
+<code class="sig-name descname">genetic_random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.genetic_random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.genetic_random" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Random NNs for genetic algorithm.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.genetic_save">
+<code class="sig-name descname">genetic_save</code><span class="sig-paren">(</span><em class="sig-param">confirmation=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.genetic_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.genetic_save" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Save genetic algorithm configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.genetic_train">
+<code class="sig-name descname">genetic_train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.genetic_train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.genetic_train" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Genetic training algorithm.</p>
+<p>New training algorithm using a real genetic algorithm.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.load_layers">
+<code class="sig-name descname">load_layers</code><span class="sig-paren">(</span><em class="sig-param">nn: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.load_layers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.load_layers" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Load layers with a NN ID from nns/.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>nn</strong> (<em>int</em>) – NN to load (nns/&lt;nn&gt;-….csv)</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Nothing.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.load_networks">
+<code class="sig-name descname">load_networks</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.load_networks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.load_networks" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Load networks from folder nns/</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.masters_check_train">
+<code class="sig-name descname">masters_check_train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.masters_check_train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.masters_check_train" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Check NN on train dataset.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.masters_genetic_train">
+<code class="sig-name descname">masters_genetic_train</code><span class="sig-paren">(</span><em class="sig-param">masters_good_moves</em>, <em class="sig-param">masters_bad_moves</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.masters_genetic_train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.masters_genetic_train" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Genetic training algorithm.</p>
+<p>New training algorithm using a real genetic algorithm.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.masters_random">
+<code class="sig-name descname">masters_random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.masters_random"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.masters_random" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Random NNs for genetic masters training algorithm.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.normalisation">
+<em class="property">static </em><code class="sig-name descname">normalisation</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.normalisation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.normalisation" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Normalisation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.old_calculate">
+<code class="sig-name descname">old_calculate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.old_calculate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.old_calculate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Calculate NN result.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.output">
+<code class="sig-name descname">output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.output" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Return NN output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.save" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Save Neural Network.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.test">
+<code class="sig-name descname">test</code><span class="sig-paren">(</span><em class="sig-param">list_good_moves: list</em>, <em class="sig-param">list_bad_moves: list</em><span class="sig-paren">)</span> &#x2192; tuple<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.test" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Test neural network.
+Used by basics training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_good_moves</strong> (<em>list</em>) – List of good moves at format [« &lt;FEN&gt;n&lt;Good move&gt; », « &lt;FEN&gt;n&lt;Good move&gt; »]</p></li>
+<li><p><strong>list_bad_moves</strong> (<em>list</em>) – List of bad moves at format [« &lt;FEN&gt;n&lt;Bad move&gt; », « &lt;FEN&gt;n&lt;Bad move&gt; »]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Tupple (Number of correct answers on good moves, Number of correct answers on bad moves)</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>tuple[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.test_full">
+<code class="sig-name descname">test_full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.test_full"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.test_full" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Test neural network on full files.
+Lists list_good_moves and list_bad_moves can be obtained from training
+files with open(« &lt;path&gt; »).read().split(« nn »).
+Standard format is [« &lt;FEN&gt;n&lt;move&gt; », « &lt;FEN&gt;n&lt;move&gt; »]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_good_moves</strong> (<em>list</em>) – List of good moves at standard format</p></li>
+<li><p><strong>list_bad_moves</strong> (<em>list</em>) – List of bad moves at standard format</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Number of correct answers on good moves, on bad moves</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>Tuple[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.test_full_multiprocesses">
+<code class="sig-name descname">test_full_multiprocesses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.test_full_multiprocesses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.test_full_multiprocesses" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Test neural network on full files with multi-processing.
+Lists list_good_moves and list_bad_moves can be obtained from training
+files with open(« &lt;path&gt; »).read().split(« nn »).
+Standard format is [« &lt;FEN&gt;n&lt;move&gt; », « &lt;FEN&gt;n&lt;move&gt; »]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_good_moves</strong> (<em>list</em>) – List of good moves at standard format</p></li>
+<li><p><strong>list_bad_moves</strong> (<em>list</em>) – List of bad moves at standard format</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Number of correct answers on good moves, on bad moves</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>Tuple[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.test_new">
+<code class="sig-name descname">test_new</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.test_new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.test_new" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Test neural network on new moves new_good_move and new_bad_moves.
+Standard format is [« &lt;FEN&gt;n&lt;move&gt; », « &lt;FEN&gt;n&lt;move&gt; »]
+Standard format for new_good_move is « &lt;FEN&gt;n&lt;move&gt; »</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list_good_moves</strong> (<em>list</em>) – The new good move to test at standard format</p></li>
+<li><p><strong>list_bad_moves</strong> (<em>list</em>) – The new bad moves to test at standard format</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Total number of correct answers on good moves, on bad moves</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>Tuple[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.train" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Train Neural Network.</p>
+</dd></dl>
+
+</dd></dl>
+
+<section id="module-crocrodile.nn.basics_train">
+<span id="crocrodile-nn-basics-train-basics-training"></span><h2><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.basics_train</span></code> - Basics Training<a class="headerlink" href="#module-crocrodile.nn.basics_train" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Crocrodile Training.</p>
+<p>Back to basics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Virinas-code and ZeBox</p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="crocrodile.nn.basics_train.BasicsTrain">
+<em class="property">class </em><code class="sig-prename descclassname">crocrodile.nn.basics_train.</code><code class="sig-name descname">BasicsTrain</code><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Basics train - class for training Crocrodile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Author</dt>
+<dd class="field-odd"><p>&#64;ZeBox and Virinas-code</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.array_to_csv">
+<em class="property">static </em><code class="sig-name descname">array_to_csv</code><span class="sig-paren">(</span><em class="sig-param">array</em>, <em class="sig-param">csv_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.array_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.array_to_csv" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Write array in csv_path CSV file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.ask">
+<code class="sig-name descname">ask</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.ask" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Ask for inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>self</strong> (<a class="reference internal" href="train.html#crocrodile.nn.basics_train.BasicsTrain" title="crocrodile.nn.basics_train.BasicsTrain"><em>BasicsTrain</em></a>) – Current BasicsTrain object.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Good moves file.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.couple">
+<code class="sig-name descname">couple</code><span class="sig-paren">(</span><em class="sig-param">matrix1: numpy.ndarray</em>, <em class="sig-param">matrix2: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.couple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.couple" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Couple two matrixes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix1</strong> (<em>numpy.ndarray</em>) – First matrix to couple.</p></li>
+<li><p><strong>matrix2</strong> (<em>numpy.ndarray</em>) – Second matrix to couple.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>A new matrix.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.couple_networks">
+<code class="sig-name descname">couple_networks</code><span class="sig-paren">(</span><em class="sig-param">worst_network: int</em>, <em class="sig-param">network1: int</em>, <em class="sig-param">network2: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.couple_networks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.couple_networks" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Couple two networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network1</strong> (<em>int</em>) – First network indice</p></li>
+<li><p><strong>network2</strong> (<em>int</em>) – Second network indice.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Nothing.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.generate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Generate random networks and save them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.generate_bad_moves">
+<em class="property">static </em><code class="sig-name descname">generate_bad_moves</code><span class="sig-paren">(</span><em class="sig-param">good_move_pos: str</em>, <em class="sig-param">good_moves_list</em>, <em class="sig-param">bad_moves_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.generate_bad_moves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.generate_bad_moves" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Generate bad moves for position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>good_move_pos</strong> (<em>str</em>) – Good move in position (FEN + good move)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.load" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Load neural networks from nns/ folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.main">
+<code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param">argv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.main" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Start training.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.parse_good_moves">
+<em class="property">static </em><code class="sig-name descname">parse_good_moves</code><span class="sig-paren">(</span><em class="sig-param">good_moves_file: str</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.parse_good_moves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.parse_good_moves" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Parse good moves in good_moves_file. good_moves_file is only a file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>good_moves_file</strong> (<em>str</em>) – Path to the good moves file.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>The list of FENs + good move.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.save" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Save neural networks to nns/ folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">new_good_move: str</em>, <em class="sig-param">new_bad_moves: str</em>, <em class="sig-param">param_good_moves: list</em>, <em class="sig-param">param_bad_moves: list</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.train" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Train neural networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Mean performance at end.</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="crocrodile.nn.basics_train.main">
+<code class="sig-prename descclassname">crocrodile.nn.basics_train.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param">argv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.main" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Start function called in init.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>argv</strong> (<em>list</em>) – sys.argv</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-crocrodile.nn.load_network">
+<span id="crocrodile-nn-load-network-load-network"></span><h2><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.load_network</span></code> - Load Network<a class="headerlink" href="#module-crocrodile.nn.load_network" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Crocrodile NNs.</p>
+<p>Load network: Load network to use it with the client.</p>
+</section>
+<section id="crocrodile-nn-masters-train-masters-training">
+<h2><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.masters_train</span></code> - Masters Training<a class="headerlink" href="#crocrodile-nn-masters-train-masters-training" title="Lien permanent vers ce titre">¶</a></h2>
+</section>
+<section id="module-crocrodile.nn.nn_auto">
+<span id="crocrodile-nn-nn-auto-auto-neural-network-training"></span><h2><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.nn_auto</span></code> - Auto Neural Network Training<a class="headerlink" href="#module-crocrodile.nn.nn_auto" title="Lien permanent vers ce titre">¶</a></h2>
+<p>NN Auto.</p>
+<p>Simple tool to create Crocrodile NN Training files.</p>
+</section>
+<section id="crocrodile-nn-nn-random-random-neural-networks-generator">
+<h2><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.nn_random</span></code> - Random Neural Networks Generator<a class="headerlink" href="#crocrodile-nn-nn-random-random-neural-networks-generator" title="Lien permanent vers ce titre">¶</a></h2>
+</section>
+<section id="crocrodile-nn-old-nn-old-neural-network">
+<h2><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.old_nn</span></code> - Old Neural Network<a class="headerlink" href="#crocrodile-nn-old-nn-old-neural-network" title="Lien permanent vers ce titre">¶</a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="engine.html" class="btn btn-neutral float-left" title="crocrodile.engine - Engine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="uci.html" class="btn btn-neutral float-right" title="crocrodile.uci - UCI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Virinas-code.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

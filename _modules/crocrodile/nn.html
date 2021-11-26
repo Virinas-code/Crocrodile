@@ -34,10 +34,13 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../uci.html">Crocrodile UCI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../train.html">Training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts</a></li>
+              <p><span class="caption-text">Crocrodile Module</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../client.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.client</span></code> - Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../engine.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.engine</span></code> - Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nn.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn</span></code> - Neural Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../uci.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.uci</span></code> - UCI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.cli</span></code> - CLI</a></li>
 </ul>
 
         </div>
@@ -72,9 +75,11 @@
 
 <span class="sd">Base class for Crocrodile NN.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">heapq</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
 <span class="kn">import</span> <span class="nn">os</span>  <span class="c1"># Path problems</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -93,7 +98,7 @@
 <span class="n">NoneType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="NeuralNetwork"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork">[docs]</a><span class="k">class</span> <span class="nc">NeuralNetwork</span><span class="p">:</span>
+<div class="viewcode-block" id="NeuralNetwork"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork">[docs]</a><span class="k">class</span> <span class="nc">NeuralNetwork</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Base class for NN.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -148,8 +153,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>  <span class="c1"># Multiple layers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_bias</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Multiprocesses global results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multiprocesses_result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
-<div class="viewcode-block" id="NeuralNetwork.load_networks"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.load_networks">[docs]</a>    <span class="k">def</span> <span class="nf">load_networks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Pawns and pieces</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pawns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pawns_last</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces_last</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns_last</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces_last</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<div class="viewcode-block" id="NeuralNetwork.load_networks"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.load_networks">[docs]</a>    <span class="k">def</span> <span class="nf">load_networks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load networks from folder nns/</span>
 
@@ -186,7 +203,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">tests_bias5</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">loop</span><span class="si">}</span><span class="s2">-b5.csv&quot;</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading networks... Done.               &quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.output"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.output"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return NN output.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
@@ -197,7 +214,7 @@
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.generate_inputs"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.generate_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">generate_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">move</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="NeuralNetwork.generate_inputs"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.generate_inputs">[docs]</a>    <span class="k">def</span> <span class="nf">generate_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">move</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate inputs for move move in board.</span>
 
@@ -206,77 +223,170 @@
 <span class="sd">        :return: None</span>
 <span class="sd">        :rtype: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">board_to_matrix</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;Convert chess board to matrix.&quot;&quot;&quot;</span>
+            <span class="c1"># Base values</span>
+            <span class="n">inputs_values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;P&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+                <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+                <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+                <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="s2">&quot;Q&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
+                <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span>
+                <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span>
+                <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span>
+                <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>
+                <span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.9</span><span class="p">,</span>
+                <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Castling rights</span>
+            <span class="n">castling_bonus</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+                <span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_kingside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">):</span>
+                <span class="n">inputs_values</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">castling_bonus</span><span class="p">[</span><span class="s2">&quot;k&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_queenside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">):</span>
+                <span class="n">inputs_values</span><span class="p">[</span><span class="s2">&quot;K&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">castling_bonus</span><span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_kingside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">BLACK</span><span class="p">):</span>
+                <span class="n">inputs_values</span><span class="p">[</span><span class="s2">&quot;k&quot;</span><span class="p">]</span> <span class="o">-=</span> <span class="n">castling_bonus</span><span class="p">[</span><span class="s2">&quot;k&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_queenside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">BLACK</span><span class="p">):</span>
+                <span class="n">inputs_values</span><span class="p">[</span><span class="s2">&quot;k&quot;</span><span class="p">]</span> <span class="o">-=</span> <span class="n">castling_bonus</span><span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">]</span>
+
+            <span class="c1"># Generate board</span>
+            <span class="n">result</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+            <span class="n">piece_map</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">rank</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                    <span class="n">square</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">rank</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">file</span>
+                    <span class="n">piece</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Piece</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">piece_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">square</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">piece</span><span class="p">:</span>
+                        <span class="n">result</span><span class="p">[</span><span class="n">rank</span><span class="p">][</span><span class="n">file</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs_values</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">symbol</span><span class="p">()]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">result</span><span class="p">[</span><span class="n">rank</span><span class="p">][</span><span class="n">file</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs_values</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
+
+            <span class="c1"># En passant</span>
+            <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_legal_en_passant</span><span class="p">():</span>
+                <span class="n">ep_square</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Square</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">ep_square</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">square_rank</span><span class="p">(</span><span class="n">ep_square</span><span class="p">)][</span><span class="n">chess</span><span class="o">.</span><span class="n">square_file</span><span class="p">(</span><span class="n">ep_square</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+            <span class="c1"># Return</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="c1"># Mirror board</span>
+        <span class="k">def</span> <span class="nf">flip_rank</span><span class="p">(</span><span class="n">rank</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">ranks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s2">&quot;12345678&quot;</span><span class="p">)</span>
+            <span class="n">reversed_ranks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">ranks</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">reversed_ranks</span><span class="p">[</span><span class="n">ranks</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">rank</span><span class="p">)]</span>
+
+
+        <span class="k">def</span> <span class="nf">flip_move_vertical</span><span class="p">(</span><span class="n">uci</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Flip move vertically.</span>
+
+<span class="sd">            :param str uci: UCI representation of move</span>
+<span class="sd">            :return: UCI representation of flipped move</span>
+<span class="sd">            :rtype: str</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">from_square</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">uci</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">to_square</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">uci</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">uci</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1"># Promotion</span>
+                <span class="n">promotion</span> <span class="o">=</span> <span class="n">uci</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">promotion</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">from_square</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">flip_rank</span><span class="p">(</span><span class="n">from_square</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">to_square</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">flip_rank</span><span class="p">(</span><span class="n">to_square</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">from_square</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">to_square</span><span class="p">)</span> <span class="o">+</span> <span class="n">promotion</span>
+
         <span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">turn</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">BLACK</span><span class="p">:</span>
             <span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
-        <span class="n">pieces</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">Piece</span><span class="p">]</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
-        <span class="n">inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">inputs_values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-            <span class="s2">&quot;P&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-            <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-            <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
-            <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-            <span class="s2">&quot;Q&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
-            <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span>
-            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span>
-            <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span>
-            <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>
-            <span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.9</span><span class="p">,</span>
-            <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="k">for</span> <span class="n">rank</span> <span class="ow">in</span> <span class="n">chess</span><span class="o">.</span><span class="n">RANK_NAMES</span><span class="p">:</span>
-            <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
-            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">chess</span><span class="o">.</span><span class="n">FILE_NAMES</span><span class="p">:</span>
-                <span class="n">square</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">parse_square</span><span class="p">(</span><span class="n">file</span> <span class="o">+</span> <span class="n">rank</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">pieces</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">square</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                    <span class="n">inputs</span><span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">RANK_NAMES</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">rank</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="n">inputs_values</span><span class="p">[</span><span class="n">pieces</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()]</span>
-                    <span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">inputs</span><span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">RANK_NAMES</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">rank</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="n">inputs_values</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_legal_en_passant</span><span class="p">():</span>
-            <span class="n">inputs</span><span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">square_rank</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">ep_square</span><span class="p">)][</span>
-                <span class="n">chess</span><span class="o">.</span><span class="n">square_file</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">ep_square</span><span class="p">)</span>
-            <span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.05</span>
-        <span class="n">move</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
-        <span class="n">from_square</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Square</span> <span class="o">=</span> <span class="n">move</span><span class="o">.</span><span class="n">from_square</span>
-        <span class="n">to_square</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Square</span> <span class="o">=</span> <span class="n">move</span><span class="o">.</span><span class="n">to_square</span>
-        <span class="n">move_inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">()]</span> <span class="o">*</span> <span class="mi">4</span>
-        <span class="n">move_inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">square_file</span><span class="p">(</span><span class="n">from_square</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
-        <span class="n">move_inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">square_rank</span><span class="p">(</span><span class="n">from_square</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
-        <span class="n">move_inputs</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">square_file</span><span class="p">(</span><span class="n">to_square</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
-        <span class="n">move_inputs</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">square_rank</span><span class="p">(</span><span class="n">to_square</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
-        <span class="n">castling_inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_kingside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">):</span>
-            <span class="n">castling_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">castling_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_queenside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">):</span>
-            <span class="n">castling_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">castling_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_kingside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">BLACK</span><span class="p">):</span>
-            <span class="n">castling_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">castling_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_queenside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">BLACK</span><span class="p">):</span>
-            <span class="n">castling_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">castling_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">en_passant_input</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_legal_en_passant</span><span class="p">():</span>
-            <span class="n">en_passant_input</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">chess</span><span class="o">.</span><span class="n">square_file</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">ep_square</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span>
-        <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">move_inputs</span> <span class="o">+</span> <span class="n">castling_inputs</span> <span class="o">+</span> <span class="p">[</span><span class="n">en_passant_input</span><span class="p">])</span>
-        <span class="k">for</span> <span class="n">indice</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-            <span class="n">inputs</span><span class="p">[</span><span class="n">indice</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">move_inputs</span><span class="p">[</span><span class="n">indice</span><span class="p">])</span>
-            <span class="n">inputs</span><span class="p">[</span><span class="n">indice</span> <span class="o">+</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">castling_inputs</span><span class="p">[</span><span class="n">indice</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_layer</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span></div>
+            <span class="n">move</span> <span class="o">=</span> <span class="n">flip_move_vertical</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NeuralNetwork.csv_to_array"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.csv_to_array">[docs]</a>    <span class="nd">@staticmethod</span>
+        <span class="c1"># First board</span>
+        <span class="n">board1</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">board_to_matrix</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+
+        <span class="c1"># Second board</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="n">move</span><span class="p">))</span>
+        <span class="n">board2</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">board_to_matrix</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+
+        <span class="c1"># Result</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">block</span><span class="p">([[</span><span class="n">board1</span><span class="p">,</span> <span class="n">zeros</span><span class="p">],</span> <span class="p">[</span><span class="n">zeros</span><span class="p">,</span> <span class="n">board2</span><span class="p">]])</span></div>
+
+        <span class="c1"># Old code</span>
+        <span class="c1">#</span>
+        <span class="c1"># pieces: dict[int, chess.Piece] = board.piece_map()</span>
+        <span class="c1"># inputs: list[list[float]] = []</span>
+        <span class="c1"># inputs_values: dict[str, float] = {</span>
+        <span class="c1">#     &quot;&quot;: 0.0,</span>
+        <span class="c1">#     &quot;P&quot;: 0.1,</span>
+        <span class="c1">#     &quot;N&quot;: 0.2,</span>
+        <span class="c1">#     &quot;B&quot;: 0.3,</span>
+        <span class="c1">#     &quot;R&quot;: 0.5,</span>
+        <span class="c1">#     &quot;Q&quot;: 0.9,</span>
+        <span class="c1">#     &quot;K&quot;: 1,</span>
+        <span class="c1">#     &quot;p&quot;: -0.1,</span>
+        <span class="c1">#     &quot;n&quot;: -0.2,</span>
+        <span class="c1">#     &quot;b&quot;: -0.3,</span>
+        <span class="c1">#     &quot;r&quot;: -0.5,</span>
+        <span class="c1">#     &quot;q&quot;: -0.9,</span>
+        <span class="c1">#     &quot;k&quot;: -1,</span>
+        <span class="c1"># }</span>
+        <span class="c1"># for rank in chess.RANK_NAMES:</span>
+        <span class="c1">#     inputs.append([])</span>
+        <span class="c1">#     for file in chess.FILE_NAMES:</span>
+        <span class="c1">#         square: int = chess.parse_square(file + rank)</span>
+        <span class="c1">#         if pieces.get(square, False):</span>
+        <span class="c1">#             inputs[chess.RANK_NAMES.index(rank)].append(</span>
+        <span class="c1">#                 inputs_values[pieces[square].symbol()]</span>
+        <span class="c1">#             )</span>
+        <span class="c1">#         else:</span>
+        <span class="c1">#             inputs[chess.RANK_NAMES.index(rank)].append(</span>
+        <span class="c1">#                 inputs_values[&quot;&quot;])</span>
+        <span class="c1"># if board.has_legal_en_passant():</span>
+        <span class="c1">#     inputs[chess.square_rank(board.ep_square)][</span>
+        <span class="c1">#         chess.square_file(board.ep_square)</span>
+        <span class="c1">#     ] = -0.05</span>
+        <span class="c1"># move: chess.Move = chess.Move.from_uci(move)</span>
+        <span class="c1"># from_square: chess.Square = move.from_square</span>
+        <span class="c1"># to_square: chess.Square = move.to_square</span>
+        <span class="c1"># move_inputs: list[float] = [float()] * 4</span>
+        <span class="c1"># move_inputs[0]: float = chess.square_file(from_square) / 10</span>
+        <span class="c1"># move_inputs[1]: float = chess.square_rank(from_square) / 10</span>
+        <span class="c1"># move_inputs[2]: float = chess.square_file(to_square) / 10</span>
+        <span class="c1"># move_inputs[3]: float = chess.square_rank(to_square) / 10</span>
+        <span class="c1"># castling_inputs: list[float] = []</span>
+        <span class="c1"># if board.has_kingside_castling_rights(chess.WHITE):</span>
+        <span class="c1">#     castling_inputs.append(1)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     castling_inputs.append(0)</span>
+        <span class="c1"># if board.has_queenside_castling_rights(chess.WHITE):</span>
+        <span class="c1">#     castling_inputs.append(1)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     castling_inputs.append(0)</span>
+        <span class="c1"># if board.has_kingside_castling_rights(chess.BLACK):</span>
+        <span class="c1">#     castling_inputs.append(1)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     castling_inputs.append(0)</span>
+        <span class="c1"># if board.has_queenside_castling_rights(chess.BLACK):</span>
+        <span class="c1">#     castling_inputs.append(1)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     castling_inputs.append(0)</span>
+        <span class="c1"># en_passant_input: float = 0.0</span>
+        <span class="c1"># if board.has_legal_en_passant():</span>
+        <span class="c1">#     en_passant_input: float = (</span>
+        <span class="c1">#         chess.square_file(board.ep_square) + 1) / 10</span>
+        <span class="c1"># inputs.append(move_inputs + castling_inputs + [en_passant_input])</span>
+        <span class="c1"># for indice in range(4):</span>
+        <span class="c1">#     inputs[indice].append(move_inputs[indice])</span>
+        <span class="c1">#     inputs[indice + 4].append(castling_inputs[indice])</span>
+        <span class="c1"># self.input_layer: numpy.array = numpy.array(inputs)</span>
+
+<div class="viewcode-block" id="NeuralNetwork.csv_to_array"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.csv_to_array">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">csv_to_array</span><span class="p">(</span><span class="n">csv_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read CSV file and return array.&quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -286,7 +396,7 @@
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.full_calculate"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.full_calculate">[docs]</a>    <span class="k">def</span> <span class="nf">full_calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.full_calculate"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.full_calculate">[docs]</a>    <span class="k">def</span> <span class="nf">full_calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate NN result with all hidden layers.&quot;&quot;&quot;</span>
         <span class="n">normalizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalisation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight1</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_layer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b1</span>
@@ -303,13 +413,13 @@
             <span class="sa">f</span><span class="s2">&quot;hl1 : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> / hl2 : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> / hl3 : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_3</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> / hl4 : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_4</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> / output : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.old_calculate"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.old_calculate">[docs]</a>    <span class="k">def</span> <span class="nf">old_calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.old_calculate"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.old_calculate">[docs]</a>    <span class="k">def</span> <span class="nf">old_calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate NN result.&quot;&quot;&quot;</span>
         <span class="n">normalizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalisation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span> <span class="o">=</span> <span class="n">normalizer</span><span class="p">(</span>
             <span class="n">normalizer</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">weight4</span>
-<div class="viewcode-block" id="NeuralNetwork.calculate"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.calculate">[docs]</a>                <span class="o">@</span> <span class="n">normalizer</span><span class="p">(</span>
+<div class="viewcode-block" id="NeuralNetwork.calculate"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.calculate">[docs]</a>                <span class="o">@</span> <span class="n">normalizer</span><span class="p">(</span>
                     <span class="n">normalizer</span><span class="p">(</span>
                         <span class="n">normalizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight1</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_layer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b1</span><span class="p">)</span>
                         <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight2</span>
@@ -344,13 +454,13 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.check_move"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.check_move">[docs]</a>    <span class="k">def</span> <span class="nf">check_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">move</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.check_move"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.check_move">[docs]</a>    <span class="k">def</span> <span class="nf">check_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">move</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate inputs, calculate and return output.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">generate_inputs</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">move</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.check_test"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.check_test">[docs]</a>    <span class="k">def</span> <span class="nf">check_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.check_test"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.check_test">[docs]</a>    <span class="k">def</span> <span class="nf">check_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check NN on test dataset.&quot;&quot;&quot;</span>
         <span class="n">file_goodmoves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_good</span>
         <span class="n">file_badmoves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_bad</span>
@@ -373,7 +483,7 @@
                 <span class="n">errs</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">good</span> <span class="o">/</span> <span class="n">length</span> <span class="o">*</span> <span class="mi">100</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.check_train"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.check_train">[docs]</a>    <span class="k">def</span> <span class="nf">check_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.check_train"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.check_train">[docs]</a>    <span class="k">def</span> <span class="nf">check_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check NN on train dataset.&quot;&quot;&quot;</span>
         <span class="n">file_goodmoves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_good</span>
         <span class="n">file_badmoves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_bad</span>
@@ -404,7 +514,59 @@
             <span class="nb">len</span><span class="p">(</span><span class="n">file_badmoves</span><span class="p">),</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.test_full"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.test_full">[docs]</a>    <span class="k">def</span> <span class="nf">test_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_good_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">list_bad_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="NeuralNetwork.test_full_multiprocesses"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.test_full_multiprocesses">[docs]</a>    <span class="k">def</span> <span class="nf">test_full_multiprocesses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_good_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                 <span class="n">list_bad_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test neural network on full files with multi-processing.</span>
+<span class="sd">        Lists list_good_moves and list_bad_moves can be obtained from training</span>
+<span class="sd">        files with open(&quot;&lt;path&gt;&quot;).read().split(&quot;\\n\\n&quot;).</span>
+<span class="sd">        Standard format is [&quot;&lt;FEN&gt;\\n&lt;move&gt;&quot;, &quot;&lt;FEN&gt;\\n&lt;move&gt;&quot;]</span>
+
+<span class="sd">        :param list_good_moves: List of good moves at standard format</span>
+<span class="sd">        :type list_good_moves: list</span>
+<span class="sd">        :param list_bad_moves: List of bad moves at standard format</span>
+<span class="sd">        :type list_bad_moves: list</span>
+<span class="sd">        :return: Number of correct answers on good moves, on bad moves</span>
+<span class="sd">        :rtype: Tuple[int, int]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">## print(f&quot;DEBUG: {list_good_moves=} {list_bad_moves=}&quot;)</span>
+        <span class="c1"># Make 2 sub-lists</span>
+        <span class="n">list_good_moves1</span> <span class="o">=</span> <span class="n">list_good_moves</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">list_good_moves</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">list_good_moves2</span> <span class="o">=</span> <span class="n">list_good_moves</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">list_good_moves</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="n">list_bad_moves1</span> <span class="o">=</span> <span class="n">list_bad_moves</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">list_bad_moves</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">list_bad_moves2</span> <span class="o">=</span> <span class="n">list_bad_moves</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">list_bad_moves</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="c1">## print(f&quot;DEBUG: {list_good_moves1=} {list_good_moves2=}&quot;)</span>
+        <span class="c1">## print(f&quot;DEBUG: {list_bad_moves1=} {list_bad_moves2=}&quot;)</span>
+        <span class="c1"># Create shared variables</span>
+        <span class="n">good_moves_data</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">bad_moves_data</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Create processes</span>
+        <span class="n">process1</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_full</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">list_good_moves1</span><span class="p">,</span>
+                                                                        <span class="n">list_bad_moves1</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
+                                                                        <span class="n">good_moves_data</span><span class="p">,</span>
+                                                                        <span class="n">bad_moves_data</span><span class="p">))</span>
+        <span class="n">process2</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_full</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">list_good_moves2</span><span class="p">,</span>
+                                                                        <span class="n">list_bad_moves2</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
+                                                                        <span class="n">good_moves_data</span><span class="p">,</span>
+                                                                        <span class="n">bad_moves_data</span><span class="p">))</span>
+        <span class="c1"># Start them</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multiprocesses_result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">process1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">process2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="c1"># Get results</span>
+        <span class="n">process1</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="n">process2</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="n">good_moves_result</span> <span class="o">=</span> <span class="n">good_moves_data</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">bad_moves_result</span> <span class="o">=</span> <span class="n">bad_moves_data</span><span class="o">.</span><span class="n">value</span>
+        <span class="c1"># Old results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">old_good_moves_result</span> <span class="o">=</span> <span class="n">good_moves_result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">old_bad_moves_result</span> <span class="o">=</span> <span class="n">bad_moves_result</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">good_moves_result</span><span class="p">,</span> <span class="n">bad_moves_result</span></div>
+
+
+<div class="viewcode-block" id="NeuralNetwork.test_full"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.test_full">[docs]</a>    <span class="k">def</span> <span class="nf">test_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_good_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">list_bad_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">sub</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">good_moves_data</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bad_moves_data</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test neural network on full files.</span>
 <span class="sd">        Lists list_good_moves and list_bad_moves can be obtained from training</span>
@@ -418,6 +580,8 @@
 <span class="sd">        :return: Number of correct answers on good moves, on bad moves</span>
 <span class="sd">        :rtype: Tuple[int, int]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_good_moves</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">sub</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_full_multiprocesses</span><span class="p">(</span><span class="n">list_good_moves</span><span class="p">,</span> <span class="n">list_bad_moves</span><span class="p">)</span>
         <span class="n">good_moves_result</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">bad_moves_result</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">position_and_move</span> <span class="ow">in</span> <span class="n">list_good_moves</span><span class="p">:</span>
@@ -430,11 +594,13 @@
             <span class="n">move</span> <span class="o">=</span> <span class="n">position_and_move</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_move</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">move</span><span class="p">):</span>
                 <span class="n">bad_moves_result</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">old_good_moves_result</span> <span class="o">=</span> <span class="n">good_moves_result</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">old_bad_moves_result</span> <span class="o">=</span> <span class="n">bad_moves_result</span>
+        <span class="c1">## print(f&quot;DEBUG: crocrodile.nn.NeuralNetwork.test_full: {good_moves_result=} {bad_moves_result=}&quot;)</span>
+        <span class="n">good_moves_data</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">good_moves_data</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">good_moves_result</span>
+        <span class="n">bad_moves_data</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">bad_moves_data</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">bad_moves_result</span>
+        <span class="c1">## print(f&quot;DEBUG: crocrodile.nn.NeuralNetwork.test_full: {self.multiprocesses_result=}&quot;)</span>
         <span class="k">return</span> <span class="n">good_moves_result</span><span class="p">,</span> <span class="n">bad_moves_result</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.test_new"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.test_new">[docs]</a>    <span class="k">def</span> <span class="nf">test_new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_good_move</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_bad_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="NeuralNetwork.test_new"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.test_new">[docs]</a>    <span class="k">def</span> <span class="nf">test_new</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_good_move</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_bad_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test neural network on new moves new_good_move and new_bad_moves.</span>
 <span class="sd">        Standard format is [&quot;&lt;FEN&gt;\\n&lt;move&gt;&quot;, &quot;&lt;FEN&gt;\\n&lt;move&gt;&quot;]</span>
@@ -462,7 +628,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">old_bad_moves_result</span> <span class="o">=</span> <span class="n">bad_moves_result</span>
         <span class="k">return</span> <span class="n">good_moves_result</span><span class="p">,</span> <span class="n">bad_moves_result</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.test"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_good_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">list_bad_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="NeuralNetwork.test"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_good_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">list_bad_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test neural network.</span>
 <span class="sd">        Used by basics training.</span>
@@ -488,7 +654,7 @@
                 <span class="n">bad_moves_result</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">good_moves_result</span><span class="p">,</span> <span class="n">bad_moves_result</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.train"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.train"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Train Neural Network.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">change_files</span><span class="p">()</span>
         <span class="n">max_iters</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Maximum iterations : &quot;</span><span class="p">))</span>
@@ -721,7 +887,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.genetic_train"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.genetic_train">[docs]</a>    <span class="k">def</span> <span class="nf">genetic_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.genetic_train"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.genetic_train">[docs]</a>    <span class="k">def</span> <span class="nf">genetic_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Genetic training algorithm.</span>
 
@@ -1068,7 +1234,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">array_to_csv</span><span class="p">(</span><span class="n">saved_results</span><span class="p">,</span> <span class="s2">&quot;nns/results.csv&quot;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.genetic_random"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.genetic_random">[docs]</a>    <span class="k">def</span> <span class="nf">genetic_random</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.genetic_random"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.genetic_random">[docs]</a>    <span class="k">def</span> <span class="nf">genetic_random</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Random NNs for genetic algorithm.&quot;&quot;&quot;</span>
         <span class="n">tests_weight1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">tests_weight2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -1163,7 +1329,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">genetic_save</span><span class="p">(</span><span class="n">confirmation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.genetic_configure"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.genetic_configure">[docs]</a>    <span class="k">def</span> <span class="nf">genetic_configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.genetic_configure"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.genetic_configure">[docs]</a>    <span class="k">def</span> <span class="nf">genetic_configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Configure genetic training algorithm.&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">sprint</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
@@ -1195,7 +1361,7 @@
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">genetic_save</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.genetic_save"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.genetic_save">[docs]</a>    <span class="k">def</span> <span class="nf">genetic_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confirmation</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.genetic_save"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.genetic_save">[docs]</a>    <span class="k">def</span> <span class="nf">genetic_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confirmation</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save genetic algorithm configuration.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">confirmation</span><span class="p">:</span>
             <span class="n">confirm</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Save configuration ? [y/N] &quot;</span><span class="p">)</span>
@@ -1206,7 +1372,7 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;nns/settings.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                 <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genetic_train_settings</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.check_always_same"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.check_always_same">[docs]</a>    <span class="k">def</span> <span class="nf">check_always_same</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.check_always_same"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.check_always_same">[docs]</a>    <span class="k">def</span> <span class="nf">check_always_same</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check success rating on good moves and on bad moves.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_good</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">file_goodmoves</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -1247,7 +1413,7 @@
             <span class="p">)</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.check_difference"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.check_difference">[docs]</a>    <span class="k">def</span> <span class="nf">check_difference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.check_difference"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.check_difference">[docs]</a>    <span class="k">def</span> <span class="nf">check_difference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check success rate on good moves and on bad moves and return it.&quot;&quot;&quot;</span>
         <span class="n">file_goodmoves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_good</span>
         <span class="n">file_badmoves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_bad</span>
@@ -1278,7 +1444,7 @@
             <span class="o">-</span> <span class="p">(</span><span class="n">good_on_bad_moves</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_badmoves</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.array_to_csv"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.array_to_csv">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="NeuralNetwork.array_to_csv"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.array_to_csv">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">array_to_csv</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Write array in csv_path CSV file.&quot;&quot;&quot;</span>
         <span class="n">array</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
@@ -1288,7 +1454,7 @@
             <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="mi">0</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.save"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.save"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save Neural Network.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">array_to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight1</span><span class="p">,</span> <span class="s2">&quot;w1.csv&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">array_to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight2</span><span class="p">,</span> <span class="s2">&quot;w2.csv&quot;</span><span class="p">)</span>
@@ -1311,12 +1477,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">array_to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cb4</span><span class="p">,</span> <span class="s2">&quot;cb4.csv&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">array_to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cb5</span><span class="p">,</span> <span class="s2">&quot;cb5.csv&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.normalisation"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.normalisation">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="NeuralNetwork.normalisation"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.normalisation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">normalisation</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Normalisation.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.change_files"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.change_files">[docs]</a>    <span class="k">def</span> <span class="nf">change_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.change_files"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.change_files">[docs]</a>    <span class="k">def</span> <span class="nf">change_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Change files locations.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_good</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Good moves training file : &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">train_bad</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Bad moves training file : &quot;</span><span class="p">)</span>
@@ -1331,7 +1497,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">test_good</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_good</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">test_bad</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_bad</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.masters_check_train"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.masters_check_train">[docs]</a>    <span class="k">def</span> <span class="nf">masters_check_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.masters_check_train"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.masters_check_train">[docs]</a>    <span class="k">def</span> <span class="nf">masters_check_train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check NN on train dataset.&quot;&quot;&quot;</span>
         <span class="n">file_goodmoves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masters_train_good</span>
         <span class="n">file_badmoves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masters_train_bad</span>
@@ -1362,7 +1528,7 @@
             <span class="nb">len</span><span class="p">(</span><span class="n">file_badmoves</span><span class="p">),</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.masters_genetic_train"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.masters_genetic_train">[docs]</a>    <span class="k">def</span> <span class="nf">masters_genetic_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">masters_good_moves</span><span class="p">,</span> <span class="n">masters_bad_moves</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.masters_genetic_train"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.masters_genetic_train">[docs]</a>    <span class="k">def</span> <span class="nf">masters_genetic_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">masters_good_moves</span><span class="p">,</span> <span class="n">masters_bad_moves</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Genetic training algorithm.</span>
 
@@ -1712,7 +1878,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">array_to_csv</span><span class="p">(</span><span class="n">saved_results</span><span class="p">,</span> <span class="s2">&quot;nns/results.csv&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.masters_random"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.masters_random">[docs]</a>    <span class="k">def</span> <span class="nf">masters_random</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.masters_random"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.masters_random">[docs]</a>    <span class="k">def</span> <span class="nf">masters_random</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Random NNs for genetic masters training algorithm.&quot;&quot;&quot;</span>
         <span class="n">tests_weight1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">tests_weight2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -2102,36 +2268,36 @@
             <span class="n">saved_results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">element</span><span class="p">)])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">array_to_csv</span><span class="p">(</span><span class="n">saved_results</span><span class="p">,</span> <span class="s2">&quot;nns/results.csv&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span>
-    
-<div class="viewcode-block" id="NeuralNetwork.load_layers"><a class="viewcode-back" href="../../index.html#crocrodile.nn.NeuralNetwork.load_layers">[docs]</a>    <span class="k">def</span> <span class="nf">load_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nn</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="NeuralNetwork.load_layers"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.load_layers">[docs]</a>    <span class="k">def</span> <span class="nf">load_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nn</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load layers with a NN ID from nns/.</span>
-<span class="sd">        </span>
+
 <span class="sd">        :param int nn: NN to load (nns/&lt;nn&gt;-....csv)</span>
 <span class="sd">        :return: Nothing.</span>
 <span class="sd">        :rtype: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-w</span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-b</span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-w31.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-b31.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
-            <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
-            <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-wlast.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_bias</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-blast.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_bias</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
-            <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w_pawns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-wpawns-</span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-bpawns-</span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-wpieces-</span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-bpieces-</span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pawns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-wpanws-beforelast.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-bpawns-beforelast.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-wpieces-beforelast.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-bpieces-beforelast.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pawns_last</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-wpawns-last.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns_last</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-bpawns-last.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces_last</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-wpieces-last.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces_last</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;nns/</span><span class="si">{</span><span class="n">nn</span><span class="si">}</span><span class="s2">-bpieces-last.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pawns_last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_pawns_last</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces_last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_layer</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_pieces_last</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns_last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns_last</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces_last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces_last</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

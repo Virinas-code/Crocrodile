@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crocrodile.engine.evaluate &mdash; Documentation Crocrodile 3.0-dev</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Crocrodile
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Crocrodile Module</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.client</span></code> - Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../engine.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.engine</span></code> - Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../nn.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn</span></code> - Neural Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../uci.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.uci</span></code> - UCI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.cli</span></code> - CLI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Crocrodile</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Code du module</a> &raquo;</li>
+          <li><a href="../engine.html">crocrodile.engine</a> &raquo;</li>
+      <li>crocrodile.engine.evaluate</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de crocrodile.engine.evaluate</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Crocrodile Evaluation.</span>
+
+<span class="sd">Evaluation: Evaluate position.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">chess</span>
+
+<span class="n">BISHOPS_PAIR</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">PROTECTED_KING</span> <span class="o">=</span> <span class="mi">70</span>  <span class="c1"># TODO: Review</span>
+<span class="n">CENTER_BONUS</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">PAWN_SEVENTH_ROW</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">CENTRAL_SQUARES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">36</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">27</span><span class="p">]</span>
+<span class="n">ELARGED_SQUARES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">18</span><span class="p">]</span>
+<span class="n">SEVENTH_ROW</span> <span class="o">=</span> <span class="p">[</span><span class="mi">55</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">48</span><span class="p">]</span>
+<span class="n">EIGHT_ROW</span> <span class="o">=</span> <span class="p">[</span><span class="mi">56</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">61</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="mi">63</span><span class="p">]</span>
+<span class="n">SECOND_ROW</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="n">FIRST_ROW</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span>
+<span class="n">THIRD_ROW</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">]</span>
+<span class="n">COLUMN_A</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">56</span><span class="p">]</span>
+<span class="n">COLUMN_B</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">57</span><span class="p">]</span>
+<span class="n">COLUMN_C</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">58</span><span class="p">]</span>
+<span class="n">COLUMN_D</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">59</span><span class="p">]</span>
+<span class="n">COLUMN_E</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">60</span><span class="p">]</span>
+<span class="n">COLUMN_F</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">61</span><span class="p">]</span>
+<span class="n">COLUMN_G</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">62</span><span class="p">]</span>
+<span class="n">COLUMN_H</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">63</span><span class="p">]</span>
+<span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="n">COLUMN_A</span><span class="p">,</span> <span class="n">COLUMN_B</span><span class="p">,</span> <span class="n">COLUMN_C</span><span class="p">,</span> <span class="n">COLUMN_D</span><span class="p">,</span>
+           <span class="n">COLUMN_E</span><span class="p">,</span> <span class="n">COLUMN_F</span><span class="p">,</span> <span class="n">COLUMN_G</span><span class="p">,</span> <span class="n">COLUMN_H</span><span class="p">]</span>
+<span class="n">DOUBLED_PAWNS</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">TRIPLED_PAWNS</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">QUADRUPLED_PAWNS</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="n">ISOLATED_PAWN</span> <span class="o">=</span> <span class="mi">17</span>
+<span class="n">PASSED_PAWN</span> <span class="o">=</span> <span class="mi">22</span>
+
+
+<span class="k">def</span> <span class="nf">pawn_on_column</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">pawn</span><span class="p">,</span> <span class="n">piece_map</span><span class="p">):</span>
+    <span class="n">pawns_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">column</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">piece_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">square</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="n">pawn</span><span class="p">:</span>
+            <span class="n">pawns_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">pawns_count</span>
+
+
+<div class="viewcode-block" id="check_passed_pawns"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.check_passed_pawns">[docs]</a><span class="k">def</span> <span class="nf">check_passed_pawns</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Evaluation: Check paseed pawns.</span>
+
+<span class="sd">    :param chess.Board board: Board.</span>
+<span class="sd">    :param bool color: Color to add bonus (True is white).</span>
+<span class="sd">    :return: Bonus points.</span>
+<span class="sd">    :rtype: int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">piece_map</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+    <span class="n">pawn</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;P&quot;</span> <span class="k">if</span> <span class="n">color</span> <span class="k">else</span> <span class="s2">&quot;p&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">pawn_on_column_after_rank</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">pawn</span><span class="p">,</span> <span class="n">piece_map</span><span class="p">):</span>
+        <span class="n">pawns_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">column</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">square</span> <span class="o">&gt;</span> <span class="n">rank</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="n">pawn</span><span class="p">:</span>
+                        <span class="n">pawns_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">pawns_count</span>
+    <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="n">pawn</span><span class="p">:</span>
+            <span class="c1"># Get rank and column of square</span>
+            <span class="n">rank</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">square_rank</span><span class="p">(</span><span class="n">square</span><span class="p">)</span>
+            <span class="n">column</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">square_file</span><span class="p">(</span><span class="n">square</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pawn_on_column_after_rank</span><span class="p">(</span><span class="n">COLUMNS</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">rank</span><span class="p">,</span> <span class="n">pawn</span><span class="o">.</span><span class="n">swapcase</span><span class="p">(),</span> <span class="n">piece_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> \
+                    <span class="ow">and</span> <span class="n">pawn_on_column_after_rank</span><span class="p">(</span><span class="n">COLUMNS</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">column</span><span class="o">+</span><span class="mi">1</span><span class="p">)],</span> <span class="n">rank</span><span class="p">,</span> <span class="n">pawn</span><span class="o">.</span><span class="n">swapcase</span><span class="p">(),</span> <span class="n">piece_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> \
+                    <span class="ow">and</span> <span class="n">pawn_on_column_after_rank</span><span class="p">(</span><span class="n">COLUMNS</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">-</span><span class="mi">1</span><span class="p">)],</span> <span class="n">rank</span><span class="p">,</span> <span class="n">pawn</span><span class="o">.</span><span class="n">swapcase</span><span class="p">(),</span> <span class="n">piece_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">PASSED_PAWN</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="old_evaluate"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.old_evaluate">[docs]</a><span class="k">def</span> <span class="nf">old_evaluate</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Evaluate position.&quot;&quot;&quot;</span>
+    <span class="n">white_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">black_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">is_stalemate</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">is_checkmate</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">turn</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">10000</span>
+        <span class="k">return</span> <span class="mi">10000</span>
+    <span class="n">piece_map</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+    <span class="c1"># Counters for bishop pair</span>
+    <span class="n">white_bishops</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">black_bishops</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">piece_map</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
+            <span class="n">white_score</span> <span class="o">+=</span> <span class="n">PIECES_VALUES</span><span class="p">[</span><span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">CENTRAL_SQUARES</span><span class="p">:</span>
+                <span class="n">white_score</span> <span class="o">+=</span> <span class="n">CENTER_BONUS</span>
+            <span class="k">if</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">ELARGED_SQUARES</span><span class="p">:</span>
+                <span class="n">white_score</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">CENTER_BONUS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;P&#39;</span> <span class="ow">and</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">SEVENTH_ROW</span><span class="p">:</span>
+                <span class="n">white_score</span> <span class="o">+=</span> <span class="n">PAWN_SEVENTH_ROW</span>
+            <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;P&#39;</span> <span class="ow">and</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">EIGHT_ROW</span><span class="p">:</span>
+                <span class="n">white_score</span> <span class="o">+=</span> <span class="n">QUEEN_VALUE</span>
+            <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span>
+                <span class="n">white_bishops</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="sd">&quot;&quot;&quot;if piece_map[piece].symbol() == &#39;Q&#39; and piece in CENTRAL_SQUARES and len(piece_map) &gt; 20:</span>
+<span class="sd">                white_score -= 30&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;K&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">piece</span> <span class="o">+</span> <span class="mi">7</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span> <span class="o">+</span> <span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;P&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">piece_map</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
+                    <span class="n">white_score</span> <span class="o">+=</span> <span class="n">PROTECTED_KING</span>
+                <span class="k">if</span> <span class="n">piece</span> <span class="o">+</span> <span class="mi">8</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span> <span class="o">+</span> <span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;P&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">piece_map</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
+                    <span class="n">white_score</span> <span class="o">+=</span> <span class="n">PROTECTED_KING</span>
+                <span class="k">if</span> <span class="n">piece</span> <span class="o">+</span> <span class="mi">9</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span> <span class="o">+</span> <span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;P&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">piece_map</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
+                    <span class="n">white_score</span> <span class="o">+=</span> <span class="n">PROTECTED_KING</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">black_score</span> <span class="o">+=</span> <span class="n">PIECES_VALUES</span><span class="p">[</span><span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">CENTRAL_SQUARES</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;q&quot;</span><span class="p">:</span>
+                <span class="n">black_score</span> <span class="o">+=</span> <span class="mi">10</span>
+            <span class="k">if</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">ELARGED_SQUARES</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;q&quot;</span><span class="p">:</span>
+                <span class="n">black_score</span> <span class="o">+=</span> <span class="mi">5</span>
+            <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;p&#39;</span> <span class="ow">and</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">SECOND_ROW</span><span class="p">:</span>
+                <span class="n">black_score</span> <span class="o">+=</span> <span class="mi">20</span>
+            <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;p&#39;</span> <span class="ow">and</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">FIRST_ROW</span><span class="p">:</span>
+                <span class="n">black_score</span> <span class="o">+=</span> <span class="n">QUEEN_VALUE</span>
+            <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span>
+                <span class="n">black_bishops</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;k&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">piece</span> <span class="o">-</span> <span class="mi">7</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span> <span class="o">-</span> <span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;p&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">piece_map</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
+                    <span class="n">black_score</span> <span class="o">+=</span> <span class="n">PROTECTED_KING</span>
+                <span class="k">if</span> <span class="n">piece</span> <span class="o">-</span> <span class="mi">8</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span> <span class="o">-</span> <span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;p&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">piece_map</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
+                    <span class="n">black_score</span> <span class="o">+=</span> <span class="n">PROTECTED_KING</span>
+                <span class="k">if</span> <span class="n">piece</span> <span class="o">-</span> <span class="mi">9</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span> <span class="o">-</span> <span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;p&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">piece_map</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
+                    <span class="n">black_score</span> <span class="o">+=</span> <span class="n">PROTECTED_KING</span>
+            <span class="k">if</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">piece</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;q&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">piece_map</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">28</span><span class="p">:</span>
+                <span class="n">black_score</span> <span class="o">-=</span> <span class="mi">30</span>
+    <span class="k">if</span> <span class="n">white_bishops</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">white_score</span> <span class="o">+=</span> <span class="n">BISHOPS_PAIR</span>
+    <span class="k">if</span> <span class="n">black_bishops</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">black_score</span> <span class="o">+=</span> <span class="n">BISHOPS_PAIR</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_kingside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">):</span>
+        <span class="n">white_score</span> <span class="o">+=</span> <span class="mi">7</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_kingside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">BLACK</span><span class="p">):</span>
+        <span class="n">black_score</span> <span class="o">+=</span> <span class="mi">7</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_queenside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">):</span>
+        <span class="n">white_score</span> <span class="o">+=</span> <span class="mi">7</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">has_queenside_castling_rights</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">BLACK</span><span class="p">):</span>
+        <span class="n">black_score</span> <span class="o">+=</span> <span class="mi">7</span>
+    <span class="c1"># if board.peek().uci() in [&#39;e1g1&#39;, &#39;e1c1&#39;]:</span>
+        <span class="c1"># white_score += 101</span>
+        <span class="c1"># print(&quot;white castle !&quot;)</span>
+    <span class="c1"># if board.peek().uci() in [&#39;e8g8&#39;, &#39;e8c8&#39;]:</span>
+        <span class="c1"># black_score += 101</span>
+        <span class="c1"># print(&quot;black castle !&quot;)</span>
+    <span class="c1"># Check isolated pawns</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">COLUMNS</span><span class="p">):</span>
+        <span class="n">column_pawns</span> <span class="o">=</span> <span class="n">pawn_on_column</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">piece_map</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">column_pawns</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">white_score</span> <span class="o">-=</span> <span class="n">DOUBLED_PAWNS</span>
+        <span class="k">if</span> <span class="n">column_pawns</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">white_score</span> <span class="o">-=</span> <span class="n">TRIPLED_PAWNS</span>
+        <span class="k">if</span> <span class="n">column_pawns</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">white_score</span> <span class="o">-=</span> <span class="n">QUADRUPLED_PAWNS</span>
+        <span class="k">if</span> <span class="n">column_pawns</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="n">COLUMN_A</span> <span class="ow">and</span> <span class="n">pawn_on_column</span><span class="p">(</span><span class="n">COLUMN_B</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">piece_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">white_score</span> <span class="o">-=</span> <span class="n">ISOLATED_PAWN</span>
+            <span class="k">elif</span> <span class="n">column</span> <span class="o">==</span> <span class="n">COLUMN_H</span> <span class="ow">and</span> <span class="n">pawn_on_column</span><span class="p">(</span><span class="n">COLUMN_G</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">piece_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">white_score</span> <span class="o">-=</span> <span class="n">ISOLATED_PAWN</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pawn_on_column</span><span class="p">(</span><span class="n">COLUMNS</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">piece_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pawn_on_column</span><span class="p">(</span><span class="n">COLUMNS</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="n">piece_map</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">white_score</span> <span class="o">-=</span> <span class="n">ISOLATED_PAWN</span>
+    <span class="n">white_score</span> <span class="o">+=</span> <span class="n">check_passed_pawns</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">turn</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+        <span class="n">white_score</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">))</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="s2">&quot;0000&quot;</span><span class="p">))</span>
+        <span class="n">black_score</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">))</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">black_score</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">))</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="s2">&quot;0000&quot;</span><span class="p">))</span>
+        <span class="n">white_score</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">))</span>
+        <span class="n">board</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">white_score</span><span class="o">-</span><span class="n">black_score</span></div>
+
+
+<div class="viewcode-block" id="evaluate2"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.evaluate2">[docs]</a><span class="k">def</span> <span class="nf">evaluate2</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Evalutaion function number 2.</span>
+
+<span class="sd">    :param chess.Board board: Board to evaluate.</span>
+<span class="sd">    :return: Evaluation in centipawns.</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">piece_map</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Constants</span>
+    
+    <span class="c1"># Material advantage</span>
+    <span class="k">for</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">piece_map</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">+=</span> <span class="n">pieces_values</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">piece_type</span><span class="p">]</span>
+    <span class="c1"># King security</span>
+    <span class="n">king_position</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">piece_map</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="nb">list</span><span class="p">(</span><span class="n">piece_map</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">Piece</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">KING</span><span class="p">,</span>
+        <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">))]</span>
+    <span class="n">king_squares</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">king_position</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">king_position</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">king_position</span> <span class="o">-</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="n">king_position</span> <span class="o">-</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">king_position</span> <span class="o">-</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="n">king_position</span> <span class="o">+</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="n">king_position</span> <span class="o">+</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">king_position</span> <span class="o">+</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">king_protection</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">king_protected</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">king_squares</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="ow">in</span> <span class="n">bad_edges_pieces</span> \
+         <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+            <span class="n">king_protection</span> <span class="o">+=</span> <span class="n">king_protected</span>
+    <span class="c1"># Pieces developement and activity</span>
+    <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">knight_base</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">KNIGHT</span> \
+         <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">-=</span> <span class="n">knight_at_home</span>
+    <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">bishop_base</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">BISHOP</span> \
+         <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">-=</span> <span class="n">bishop_at_home</span>
+    <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">bad_edges</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="ow">in</span> <span class="n">bad_edges_pieces</span> \
+         <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">-=</span> <span class="n">bad_edges_malus</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">score</span></div>
+
+
+<span class="n">PAWN_VALUE</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">KNIGHT_VALUE</span> <span class="o">=</span> <span class="mi">290</span>
+<span class="n">BISHOP_VALUE</span> <span class="o">=</span> <span class="mi">310</span>
+<span class="n">ROOK_VALUE</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">QUEEN_VALUE</span> <span class="o">=</span> <span class="mi">900</span>
+<span class="n">PIECES_VALUES</span> <span class="o">=</span> <span class="p">{</span><span class="n">chess</span><span class="o">.</span><span class="n">PAWN</span><span class="p">:</span> <span class="n">PAWN_VALUE</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">KNIGHT</span><span class="p">:</span> <span class="n">KNIGHT_VALUE</span><span class="p">,</span>
+                  <span class="n">chess</span><span class="o">.</span><span class="n">BISHOP</span><span class="p">:</span> <span class="n">BISHOP_VALUE</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">ROOK</span><span class="p">:</span> <span class="n">ROOK_VALUE</span><span class="p">,</span>
+                  <span class="n">chess</span><span class="o">.</span><span class="n">QUEEN</span><span class="p">:</span> <span class="n">QUEEN_VALUE</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">KING</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="n">KING_PROTECTED</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">KNIGHT_BASE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="n">KNIGHT_AT_HOME</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">BISHOP_BASE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">BISHOP_AT_HOME</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">BAD_EDGES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">47</span><span class="p">]</span>
+<span class="n">BAD_EDGES_PIECES</span> <span class="o">=</span> <span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">KNIGHT</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">BISHOP</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">ROOK</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">QUEEN</span><span class="p">]</span>
+<span class="n">BAD_EDGES_MALUS</span> <span class="o">=</span> <span class="mi">20</span>
+
+
+<div class="viewcode-block" id="Evaluator"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator">[docs]</a><span class="k">class</span> <span class="nc">Evaluator</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Base class for evaluation (v2).&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Evaluator.evaluate"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">,</span> <span class="n">move</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">null</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Evaluate position and return white&#39;s advantage in centipans.</span>
+
+<span class="sd">        :param chess.Board position: Position to evaluate.</span>
+<span class="sd">        :param chess.Move move: Move who will be played.</span>
+<span class="sd">        :return: White&#39;s advantage as centipawns.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">white_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_position</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">white_score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_move</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">move</span><span class="p">)</span>
+        <span class="n">black_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_position</span><span class="p">(</span><span class="n">position</span><span class="o">.</span><span class="n">mirror</span><span class="p">())</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">white_score</span> <span class="o">-</span> <span class="n">black_score</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+<div class="viewcode-block" id="Evaluator.evaluate_position"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator.evaluate_position">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Wrapper for evaluating position.</span>
+
+<span class="sd">        :param chess.Board position: Position to evaluate.</span>
+<span class="sd">        :return: White&#39;s advantage as centipawns.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_material</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_king_protection</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_developpement</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+<div class="viewcode-block" id="Evaluator.eval_material"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator.eval_material">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eval_material</span><span class="p">(</span><span class="n">position</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Evaluate material advantage of White in the given position.</span>
+
+<span class="sd">        :param chess.Board position: Position to evaluate.</span>
+<span class="sd">        :return: White&#39;s material advantage as centipawns.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="n">PIECES_VALUES</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">piece_type</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+<div class="viewcode-block" id="Evaluator.eval_king_protection"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator.eval_king_protection">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eval_king_protection</span><span class="p">(</span><span class="n">position</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Evaluate king protection score of White in the given position.</span>
+
+<span class="sd">        :param chess.Board position: Position to evaluate.</span>
+<span class="sd">        :return: White&#39;s material advantage as centipawns.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">piece_map</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+        <span class="n">king_position</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">piece_map</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="nb">list</span><span class="p">(</span><span class="n">piece_map</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="o">.</span><span class="n">index</span><span class="p">(</span>
+            <span class="n">chess</span><span class="o">.</span><span class="n">Piece</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">KING</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">))]</span>
+        <span class="n">king_squares</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">king_position</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">king_position</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">king_position</span> <span class="o">-</span> <span class="mi">7</span><span class="p">,</span>
+            <span class="n">king_position</span> <span class="o">-</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="n">king_position</span> <span class="o">-</span> <span class="mi">9</span><span class="p">,</span>
+            <span class="n">king_position</span> <span class="o">+</span> <span class="mi">7</span><span class="p">,</span>
+            <span class="n">king_position</span> <span class="o">+</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="n">king_position</span> <span class="o">+</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">KING_PROTECTED</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">king_squares</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="n">KING_PROTECTED</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+<div class="viewcode-block" id="Evaluator.eval_developpement"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator.eval_developpement">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eval_developpement</span><span class="p">(</span><span class="n">position</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Evaluate pieces developpement and activity in the given position.</span>
+
+<span class="sd">        :param chess.Board position: Position to evaluate.</span>
+<span class="sd">        :return: White&#39;s material advantage as centipawns.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">piece_map</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">KNIGHT_BASE</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">KNIGHT</span> \
+             <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">-=</span> <span class="n">KNIGHT_AT_HOME</span>
+        <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">BISHOP_BASE</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">BISHOP</span> \
+             <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">-=</span> <span class="n">BISHOP_AT_HOME</span>
+        <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">BAD_EDGES</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="ow">in</span> <span class="n">BAD_EDGES_PIECES</span> \
+             <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">-=</span> <span class="n">BAD_EDGES_MALUS</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+<div class="viewcode-block" id="Evaluator.evaluate_move"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator.evaluate_move">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">,</span> <span class="n">move</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Wrapper for evaluating move.</span>
+
+<span class="sd">        :param chess.Board position: Position to evaluate.</span>
+<span class="sd">        :param chess.Move move: Move to evaluate.</span>
+<span class="sd">        :return: White&#39;s advantage as centipawns.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_castling</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">move</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+<div class="viewcode-block" id="Evaluator.eval_castling"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator.eval_castling">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eval_castling</span><span class="p">(</span><span class="n">position</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">,</span> <span class="n">move</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Evaluate castling in the given position.</span>
+
+<span class="sd">        :param chess.Board position: Position to evaluate.</span>
+<span class="sd">        :param chess.Move move: Move to evaluate.</span>
+<span class="sd">        :return: White&#39;s castling advantage as centipawns.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">move</span><span class="o">.</span><span class="n">from_square</span> <span class="ow">in</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span> \
+         <span class="ow">and</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()[</span><span class="n">move</span><span class="o">.</span><span class="n">from_square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">KING</span> \
+         <span class="ow">and</span> <span class="n">move</span><span class="o">.</span><span class="n">to_square</span> <span class="ow">in</span> <span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">G1</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">C1</span><span class="p">):</span>
+            <span class="n">score</span> <span class="o">+=</span> <span class="mi">70</span>
+        <span class="k">return</span> <span class="n">score</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Virinas-code.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

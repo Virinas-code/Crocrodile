@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crocrodile.engine - Engine &mdash; Documentation Crocrodile 3.0-dev</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="crocrodile.nn - Neural Network" href="nn.html" />
+    <link rel="prev" title="crocrodile.client - Client" href="client.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Crocrodile
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Crocrodile Module</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="client.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.client</span></code> - Client</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">crocrodile.engine</span></code> - Engine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-crocrodile.engine.evaluate"><code class="docutils literal notranslate"><span class="pre">crocrodile.engine.evaluate</span></code> - Evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn</span></code> - Neural Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uci.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.uci</span></code> - UCI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.cli</span></code> - CLI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Crocrodile</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><code class="docutils literal notranslate"><span class="pre">crocrodile.engine</span></code> - Engine</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/engine.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-crocrodile.engine">
+<span id="crocrodile-engine-engine"></span><h1><code class="docutils literal notranslate"><span class="pre">crocrodile.engine</span></code> - Engine<a class="headerlink" href="#module-crocrodile.engine" title="Lien permanent vers ce titre">¶</a></h1>
+<p>MyEngine Engine base.</p>
+<p>Base engine</p>
+<dl class="class">
+<dt id="crocrodile.engine.EngineBase">
+<em class="property">class </em><code class="sig-prename descclassname">crocrodile.engine.</code><code class="sig-name descname">EngineBase</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">author</em>, <em class="sig-param">board=Board('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Engine base.</p>
+<dl class="method">
+<dt id="crocrodile.engine.EngineBase.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">board</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase.evaluate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Evaluate position.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.EngineBase.minimax_nn">
+<code class="sig-name descname">minimax_nn</code><span class="sig-paren">(</span><em class="sig-param">board</em>, <em class="sig-param">depth</em>, <em class="sig-param">maximimize_white</em>, <em class="sig-param">limit_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase.minimax_nn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase.minimax_nn" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Minimax algorithm from Wikipedia with NN.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.EngineBase.minimax_std">
+<code class="sig-name descname">minimax_std</code><span class="sig-paren">(</span><em class="sig-param">board</em>, <em class="sig-param">depth</em>, <em class="sig-param">maximimize_white</em>, <em class="sig-param">limit_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase.minimax_std"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase.minimax_std" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Minimax algorithm from Wikipedia with NN.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.EngineBase.nn_select_best_moves">
+<code class="sig-name descname">nn_select_best_moves</code><span class="sig-paren">(</span><em class="sig-param">board</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase.nn_select_best_moves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase.nn_select_best_moves" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Select best moves in board.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.EngineBase.search">
+<code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param">depth</em>, <em class="sig-param">board</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase.search" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Search best move (Minimax from wikipedia).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="crocrodile.engine.printi">
+<code class="sig-prename descclassname">crocrodile.engine.</code><code class="sig-name descname">printi</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#printi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.printi" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Debug mode printer.</p>
+</dd></dl>
+
+<section id="module-crocrodile.engine.evaluate">
+<span id="crocrodile-engine-evaluate-evaluation"></span><h2><code class="docutils literal notranslate"><span class="pre">crocrodile.engine.evaluate</span></code> - Evaluation<a class="headerlink" href="#module-crocrodile.engine.evaluate" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Crocrodile Evaluation.</p>
+<p>Evaluation: Evaluate position.</p>
+<dl class="class">
+<dt id="crocrodile.engine.evaluate.Evaluator">
+<em class="property">class </em><code class="sig-prename descclassname">crocrodile.engine.evaluate.</code><code class="sig-name descname">Evaluator</code><a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#Evaluator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.Evaluator" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Base class for evaluation (v2).</p>
+<dl class="method">
+<dt id="crocrodile.engine.evaluate.Evaluator.eval_castling">
+<em class="property">static </em><code class="sig-name descname">eval_castling</code><span class="sig-paren">(</span><em class="sig-param">position: chess.Board</em>, <em class="sig-param">move: chess.Move</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#Evaluator.eval_castling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.Evaluator.eval_castling" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Evaluate castling in the given position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>chess.Board</em>) – Position to evaluate.</p></li>
+<li><p><strong>move</strong> (<em>chess.Move</em>) – Move to evaluate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>White’s castling advantage as centipawns.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.evaluate.Evaluator.eval_developpement">
+<em class="property">static </em><code class="sig-name descname">eval_developpement</code><span class="sig-paren">(</span><em class="sig-param">position: chess.Board</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#Evaluator.eval_developpement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.Evaluator.eval_developpement" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Evaluate pieces developpement and activity in the given position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>position</strong> (<em>chess.Board</em>) – Position to evaluate.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>White’s material advantage as centipawns.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.evaluate.Evaluator.eval_king_protection">
+<em class="property">static </em><code class="sig-name descname">eval_king_protection</code><span class="sig-paren">(</span><em class="sig-param">position: chess.Board</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#Evaluator.eval_king_protection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.Evaluator.eval_king_protection" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Evaluate king protection score of White in the given position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>position</strong> (<em>chess.Board</em>) – Position to evaluate.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>White’s material advantage as centipawns.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.evaluate.Evaluator.eval_material">
+<em class="property">static </em><code class="sig-name descname">eval_material</code><span class="sig-paren">(</span><em class="sig-param">position: chess.Board</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#Evaluator.eval_material"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.Evaluator.eval_material" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Evaluate material advantage of White in the given position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>position</strong> (<em>chess.Board</em>) – Position to evaluate.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>White’s material advantage as centipawns.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.evaluate.Evaluator.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">position: chess.Board</em>, <em class="sig-param">move: chess.Move = Move.from_uci('0000')</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#Evaluator.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.Evaluator.evaluate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Evaluate position and return white’s advantage in centipans.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>chess.Board</em>) – Position to evaluate.</p></li>
+<li><p><strong>move</strong> (<em>chess.Move</em>) – Move who will be played.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>White’s advantage as centipawns.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.evaluate.Evaluator.evaluate_move">
+<code class="sig-name descname">evaluate_move</code><span class="sig-paren">(</span><em class="sig-param">position: chess.Board</em>, <em class="sig-param">move: chess.Move</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#Evaluator.evaluate_move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.Evaluator.evaluate_move" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Wrapper for evaluating move.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>chess.Board</em>) – Position to evaluate.</p></li>
+<li><p><strong>move</strong> (<em>chess.Move</em>) – Move to evaluate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>White’s advantage as centipawns.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.evaluate.Evaluator.evaluate_position">
+<code class="sig-name descname">evaluate_position</code><span class="sig-paren">(</span><em class="sig-param">position: chess.Board</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#Evaluator.evaluate_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.Evaluator.evaluate_position" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Wrapper for evaluating position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>position</strong> (<em>chess.Board</em>) – Position to evaluate.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>White’s advantage as centipawns.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="crocrodile.engine.evaluate.check_passed_pawns">
+<code class="sig-prename descclassname">crocrodile.engine.evaluate.</code><code class="sig-name descname">check_passed_pawns</code><span class="sig-paren">(</span><em class="sig-param">board: chess.Board</em>, <em class="sig-param">color: bool</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#check_passed_pawns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.check_passed_pawns" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Evaluation: Check paseed pawns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>board</strong> (<em>chess.Board</em>) – Board.</p></li>
+<li><p><strong>color</strong> (<em>bool</em>) – Color to add bonus (True is white).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Bonus points.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="crocrodile.engine.evaluate.evaluate2">
+<code class="sig-prename descclassname">crocrodile.engine.evaluate.</code><code class="sig-name descname">evaluate2</code><span class="sig-paren">(</span><em class="sig-param">board: chess.Board</em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#evaluate2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.evaluate2" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Evalutaion function number 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>board</strong> (<em>chess.Board</em>) – Board to evaluate.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Evaluation in centipawns.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="crocrodile.engine.evaluate.old_evaluate">
+<code class="sig-prename descclassname">crocrodile.engine.evaluate.</code><code class="sig-name descname">old_evaluate</code><span class="sig-paren">(</span><em class="sig-param">board: chess.Board</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine/evaluate.html#old_evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.evaluate.old_evaluate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Evaluate position.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="client.html" class="btn btn-neutral float-left" title="crocrodile.client - Client" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nn.html" class="btn btn-neutral float-right" title="crocrodile.nn - Neural Network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Virinas-code.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

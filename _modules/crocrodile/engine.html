@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>crocrodile.engine &mdash; Documentation Crocrodile 3.0-dev</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Crocrodile
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Crocrodile Module</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../client.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.client</span></code> - Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../engine.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.engine</span></code> - Engine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nn.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn</span></code> - Neural Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../uci.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.uci</span></code> - UCI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.cli</span></code> - CLI</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Crocrodile</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Code du module</a> &raquo;</li>
+      <li>crocrodile.engine</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de crocrodile.engine</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">MyEngine Engine base.</span>
+
+<span class="sd">Base engine</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="c1"># import requests</span>
+<span class="c1"># import copy</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">chess</span>
+<span class="kn">import</span> <span class="nn">chess.polyglot</span>
+<span class="kn">import</span> <span class="nn">crocrodile.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">crocrodile.engine.evaluate</span> <span class="k">as</span> <span class="nn">evaluation</span>
+
+<span class="n">PAWN_VALUE</span> <span class="o">=</span> <span class="mi">130</span>
+<span class="n">KNIGHT_VALUE</span> <span class="o">=</span> <span class="mi">290</span>
+<span class="n">BISHOP_VALUE</span> <span class="o">=</span> <span class="mi">310</span>
+<span class="n">ROOK_VALUE</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">QUEEN_VALUE</span> <span class="o">=</span> <span class="mi">901</span>
+<span class="n">KING_VALUE</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Infinity is too complex</span>
+<span class="n">BISHOPS_PAIR</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">PROTECTED_KING</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">PIECES_VALUES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="n">PAWN_VALUE</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">KNIGHT_VALUE</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="n">BISHOP_VALUE</span><span class="p">,</span>
+                 <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="n">ROOK_VALUE</span><span class="p">,</span> <span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="n">QUEEN_VALUE</span><span class="p">,</span> <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="n">KING_VALUE</span><span class="p">}</span>
+<span class="n">CENTRAL_SQUARES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">36</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">27</span><span class="p">]</span>
+<span class="n">ELARGED_SQUARES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">18</span><span class="p">]</span>
+<span class="n">SEVENTH_ROW</span> <span class="o">=</span> <span class="p">[</span><span class="mi">55</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">48</span><span class="p">]</span>
+<span class="n">EIGHT_ROW</span> <span class="o">=</span> <span class="p">[</span><span class="mi">56</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">61</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="mi">63</span><span class="p">]</span>
+<span class="n">SECOND_ROW</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="n">FIRST_ROW</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span>
+<span class="n">VARIANTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;standard&#39;</span><span class="p">,</span> <span class="s1">&#39;chess960&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="printi"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.printi">[docs]</a><span class="k">def</span> <span class="nf">printi</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Debug mode printer.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;info string&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="EngineBase"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase">[docs]</a><span class="k">class</span> <span class="nc">EngineBase</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Engine base.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">board</span><span class="o">=</span><span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise engine.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">author</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="n">board</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tb</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tb_limit</span> <span class="o">=</span> <span class="mi">10000000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb_limit</span> <span class="o">=</span> <span class="mi">1000000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">NeuralNetwork</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">load_layers</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluator</span> <span class="o">=</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">Evaluator</span><span class="p">()</span>
+
+<div class="viewcode-block" id="EngineBase.evaluate"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Evaluate position.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluator</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">board</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EngineBase.search"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">board</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Search best move (Minimax from wikipedia).&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="EngineBase.minimax_std"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.minimax_std">[docs]</a>    <span class="k">def</span> <span class="nf">minimax_std</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">maximimize_white</span><span class="p">,</span> <span class="n">limit_time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Minimax algorithm from Wikipedia with NN.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">board</span><span class="o">.</span><span class="n">is_game_over</span><span class="p">():</span>
+            <span class="n">zobrist_hash</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">polyglot</span><span class="o">.</span><span class="n">zobrist_hash</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">zobrist_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">:</span>
+                <span class="c1"># if j&#39;ai du temps</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="n">zobrist_hash</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb_limit</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="c1"># else</span>
+                <span class="c1">#</span>
+            <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="n">zobrist_hash</span><span class="p">]</span>
+            <span class="c1"># evaluation = self.evaluate(board)</span>
+            <span class="n">attackers</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">attackers</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">turn</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span><span class="o">.</span><span class="n">to_square</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attackers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Quiescent</span>
+                <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">turn</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                    <span class="n">evaluation</span> <span class="o">+=</span> <span class="n">PIECES_VALUES</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+                                                <span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span><span class="o">.</span><span class="n">to_square</span><span class="p">]</span><span class="o">.</span>
+                                                <span class="n">symbol</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">evaluation</span> <span class="o">-=</span> <span class="n">PIECES_VALUES</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+                                                <span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span><span class="o">.</span><span class="n">to_square</span><span class="p">]</span><span class="o">.</span>
+                                                <span class="n">symbol</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+            <span class="k">return</span> <span class="n">evaluation</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="s2">&quot;0000&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">maximimize_white</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+            <span class="n">legal_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
+            <span class="n">list_best_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">legal_moves</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">legal_moves</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">limit_time</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">),</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="s2">&quot;0000&quot;</span><span class="p">)</span>
+                <span class="n">test_board</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="n">fen</span><span class="o">=</span><span class="n">board</span><span class="o">.</span><span class="n">fen</span><span class="p">())</span>
+                <span class="n">test_board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+                <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimax_std</span><span class="p">(</span>
+                    <span class="n">test_board</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">limit_time</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">evaluation</span><span class="p">:</span>
+                    <span class="n">list_best_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">evaluation</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">evaluation</span>
+                    <span class="n">list_best_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">move</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">list_best_moves</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># minimizing white</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+            <span class="n">legal_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
+            <span class="n">list_best_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">legal_moves</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">legal_moves</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">limit_time</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">),</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="s2">&quot;0000&quot;</span><span class="p">)</span>
+                <span class="n">test_board</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="n">fen</span><span class="o">=</span><span class="n">board</span><span class="o">.</span><span class="n">fen</span><span class="p">())</span>
+                <span class="n">test_board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+                <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimax_std</span><span class="p">(</span>
+                    <span class="n">test_board</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">limit_time</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">evaluation</span><span class="p">:</span>
+                    <span class="n">list_best_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">evaluation</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">evaluation</span>
+                    <span class="n">list_best_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">move</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">list_best_moves</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EngineBase.nn_select_best_moves"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.nn_select_best_moves">[docs]</a>    <span class="k">def</span> <span class="nf">nn_select_best_moves</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Select best moves in board.&quot;&quot;&quot;</span>
+        <span class="nb">hash</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">polyglot</span><span class="o">.</span><span class="n">zobrist_hash</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb_limit</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">good_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">check_move</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">fen</span><span class="p">(),</span> <span class="n">move</span><span class="o">.</span><span class="n">uci</span><span class="p">()):</span>
+                    <span class="n">good_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">good_moves</span>
+        <span class="n">good_moves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">good_moves</span><span class="p">:</span>
+            <span class="n">good_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">good_moves</span></div>
+
+    <span class="c1"># + param time + param best move depth-1 + param evaluation</span>
+<div class="viewcode-block" id="EngineBase.minimax_nn"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.minimax_nn">[docs]</a>    <span class="k">def</span> <span class="nf">minimax_nn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">maximimize_white</span><span class="p">,</span> <span class="n">limit_time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Minimax algorithm from Wikipedia with NN.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">board</span><span class="o">.</span><span class="n">is_game_over</span><span class="p">():</span>
+            <span class="n">zobrist_hash</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">polyglot</span><span class="o">.</span><span class="n">zobrist_hash</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">zobrist_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">:</span>
+                <span class="c1"># if j&#39;ai du temps</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="n">zobrist_hash</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb_limit</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="c1"># else</span>
+                <span class="c1">#</span>
+            <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="n">zobrist_hash</span><span class="p">]</span>
+            <span class="c1"># evaluation = self.evaluate(board)</span>
+            <span class="n">attackers</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">attackers</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">turn</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span><span class="o">.</span><span class="n">to_square</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attackers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Quiescent</span>
+                <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">turn</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                    <span class="n">evaluation</span> <span class="o">+=</span> <span class="n">PIECES_VALUES</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+                                                <span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span><span class="o">.</span><span class="n">to_square</span><span class="p">]</span><span class="o">.</span>
+                                                <span class="n">symbol</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">evaluation</span> <span class="o">-=</span> <span class="n">PIECES_VALUES</span><span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+                                                <span class="p">[</span><span class="n">board</span><span class="o">.</span><span class="n">peek</span><span class="p">()</span><span class="o">.</span><span class="n">to_square</span><span class="p">]</span><span class="o">.</span>
+                                                <span class="n">symbol</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+            <span class="k">return</span> <span class="n">evaluation</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="s2">&quot;0000&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">maximimize_white</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+            <span class="n">legal_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
+            <span class="n">list_best_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">legal_moves</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_select_best_moves</span><span class="p">(</span><span class="n">board</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">limit_time</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">),</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="s2">&quot;0000&quot;</span><span class="p">)</span>
+                <span class="n">test_board</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="n">fen</span><span class="o">=</span><span class="n">board</span><span class="o">.</span><span class="n">fen</span><span class="p">())</span>
+                <span class="n">test_board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+                <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimax_nn</span><span class="p">(</span>
+                    <span class="n">test_board</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">limit_time</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">evaluation</span><span class="p">:</span>
+                    <span class="n">list_best_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">evaluation</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">evaluation</span>
+                    <span class="n">list_best_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">move</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">list_best_moves</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># minimizing white</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+            <span class="n">legal_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
+            <span class="n">list_best_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">legal_moves</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_select_best_moves</span><span class="p">(</span><span class="n">board</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">limit_time</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">),</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="s2">&quot;0000&quot;</span><span class="p">)</span>
+                <span class="n">test_board</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="n">fen</span><span class="o">=</span><span class="n">board</span><span class="o">.</span><span class="n">fen</span><span class="p">())</span>
+                <span class="n">test_board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+                <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimax_nn</span><span class="p">(</span>
+                    <span class="n">test_board</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">limit_time</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">evaluation</span><span class="p">:</span>
+                    <span class="n">list_best_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">evaluation</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">evaluation</span>
+                    <span class="n">list_best_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">move</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">list_best_moves</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Virinas-code.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
