@@ -21,7 +21,7 @@ from crocrodile.cli import Progress
 NoneType = type(None)
 
 LAYERS_COUNT = 31
-MAX_ITERS = 30
+MAX_ITERS = 2000
 
 
 class BasicsTrain:

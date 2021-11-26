@@ -8,14 +8,17 @@ Welcome to Crocrodile's documentation!
 
 .. toctree::
    :maxdepth: 2
-
-   uci
-   train
    scripts
-.. automodule:: crocrodile
-   :members:
-.. automodule:: crocrodile.nn
-   :members:
+
+.. toctree::
+   :caption: Crocrodile Module
+
+   client
+   engine
+   nn
+   uci
+   cli
+
 
 
 Indices and tables

@@ -5,9 +5,11 @@ Crocrodile Neural Network.
 
 Base class for Crocrodile NN.
 """
+from __future__ import annotations
 import csv
 import heapq
 import json
+import multiprocessing
 import os  # Path problems
 import random
 import sys
@@ -81,6 +83,13 @@ class NeuralNetwork:
         self.bias: list[numpy.ndarray] = list()  # Multiple layers
         self.last_layer: Optional[numpy.ndarray] = None
         self.last_bias: Optional[numpy.ndarray] = None
+        # Multiprocesses global results
+        self.multiprocesses_result: list[int] = [0, 0]
+
+        # Pawns and pieces
+        self.w_pawns: list[numpy.ndarray] = list()
+        self.w_pieces: list[numpy.ndarray] = list()
+        self.b: list[numpy.ndarray] = list()
 
     def load_networks(self) -> None:
         """
@@ -139,75 +148,168 @@ class NeuralNetwork:
         :return: None
         :rtype: None
         """
+        def board_to_matrix(board: chess.Board) -> numpy.ndarray:
+            """Convert chess board to matrix."""
+            # Base values
+            inputs_values: dict[str, float] = {
+                "": 0.0,
+                "P": 0.1,
+                "N": 0.2,
+                "B": 0.3,
+                "R": 0.5,
+                "Q": 0.9,
+                "K": 1,
+                "p": -0.1,
+                "n": -0.2,
+                "b": -0.3,
+                "r": -0.5,
+                "q": -0.9,
+                "k": -1,
+            }
+
+            # Castling rights
+            castling_bonus: dict[str, float] = {
+                "k": 0.05,
+                "q": 0.10,
+            }
+            if board.has_kingside_castling_rights(chess.WHITE):
+                inputs_values["K"] += castling_bonus["k"]
+            if board.has_queenside_castling_rights(chess.WHITE):
+                inputs_values["K"] += castling_bonus["q"]
+            if board.has_kingside_castling_rights(chess.BLACK):
+                inputs_values["k"] -= castling_bonus["k"]
+            if board.has_queenside_castling_rights(chess.BLACK):
+                inputs_values["k"] -= castling_bonus["q"]
+
+            # Generate board
+            result: numpy.ndarray = numpy.zeros((8, 8))
+            piece_map = board.piece_map()
+            for rank in range(8):
+                for file in range(8):
+                    square: int = rank * 8 + file
+                    piece: chess.Piece | bool = piece_map.get(square, False)
+                    if piece:
+                        result[rank][file] = inputs_values[piece.symbol()]
+                    else:
+                        result[rank][file] = inputs_values[""]
+
+            # En passant
+            if board.has_legal_en_passant():
+                ep_square: chess.Square = board.ep_square
+                result[chess.square_rank(ep_square)][chess.square_file(ep_square)] = 0.01
+
+            # Return
+            return result
+
+        # Mirror board
+        def flip_rank(rank: str) -> str:
+            ranks = list("12345678")
+            reversed_ranks = list(reversed(ranks))
+            return reversed_ranks[ranks.index(rank)]
+
+
+        def flip_move_vertical(uci: str) -> str:
+            """
+            Flip move vertically.
+
+            :param str uci: UCI representation of move
+            :return: UCI representation of flipped move
+            :rtype: str
+            """
+            from_square = list(uci[0:2])
+            to_square = list(uci[2:4])
+            if len(uci) == 5:  # Promotion
+                promotion = uci[4]
+            else:
+                promotion = ""
+            from_square[1] = flip_rank(from_square[1])
+            to_square[1] = flip_rank(to_square[1])
+            return "".join(from_square) + "".join(to_square) + promotion
+
         board: chess.Board = chess.Board(board)
         if board.turn == chess.BLACK:
             board: chess.Board = board.mirror()
-        pieces: dict[int, chess.Piece] = board.piece_map()
-        inputs: list[list[float]] = []
-        inputs_values: dict[str, float] = {
-            "": 0.0,
-            "P": 0.1,
-            "N": 0.2,
-            "B": 0.3,
-            "R": 0.5,
-            "Q": 0.9,
-            "K": 1,
-            "p": -0.1,
-            "n": -0.2,
-            "b": -0.3,
-            "r": -0.5,
-            "q": -0.9,
-            "k": -1,
-        }
-        for rank in chess.RANK_NAMES:
-            inputs.append([])
-            for file in chess.FILE_NAMES:
-                square: int = chess.parse_square(file + rank)
-                if pieces.get(square, False):
-                    inputs[chess.RANK_NAMES.index(rank)].append(
-                        inputs_values[pieces[square].symbol()]
-                    )
-                else:
-                    inputs[chess.RANK_NAMES.index(rank)].append(
-                        inputs_values[""])
-        if board.has_legal_en_passant():
-            inputs[chess.square_rank(board.ep_square)][
-                chess.square_file(board.ep_square)
-            ] = -0.05
-        move: chess.Move = chess.Move.from_uci(move)
-        from_square: chess.Square = move.from_square
-        to_square: chess.Square = move.to_square
-        move_inputs: list[float] = [float()] * 4
-        move_inputs[0]: float = chess.square_file(from_square) / 10
-        move_inputs[1]: float = chess.square_rank(from_square) / 10
-        move_inputs[2]: float = chess.square_file(to_square) / 10
-        move_inputs[3]: float = chess.square_rank(to_square) / 10
-        castling_inputs: list[float] = []
-        if board.has_kingside_castling_rights(chess.WHITE):
-            castling_inputs.append(1)
-        else:
-            castling_inputs.append(0)
-        if board.has_queenside_castling_rights(chess.WHITE):
-            castling_inputs.append(1)
-        else:
-            castling_inputs.append(0)
-        if board.has_kingside_castling_rights(chess.BLACK):
-            castling_inputs.append(1)
-        else:
-            castling_inputs.append(0)
-        if board.has_queenside_castling_rights(chess.BLACK):
-            castling_inputs.append(1)
-        else:
-            castling_inputs.append(0)
-        en_passant_input: float = 0.0
-        if board.has_legal_en_passant():
-            en_passant_input: float = (
-                chess.square_file(board.ep_square) + 1) / 10
-        inputs.append(move_inputs + castling_inputs + [en_passant_input])
-        for indice in range(4):
-            inputs[indice].append(move_inputs[indice])
-            inputs[indice + 4].append(castling_inputs[indice])
-        self.input_layer: numpy.array = numpy.array(inputs)
+            move = flip_move_vertical(move)
+
+        # First board
+        board1: numpy.ndarray = board_to_matrix(board)
+
+        # Second board
+        board.push(chess.Move.from_uci(move))
+        board2: numpy.ndarray = board_to_matrix(board)
+
+        # Result
+        zeros = numpy.zeros((8, 8))
+        return numpy.block([[board1, zeros], [zeros, board2]])
+
+        # Old code
+        #
+        # pieces: dict[int, chess.Piece] = board.piece_map()
+        # inputs: list[list[float]] = []
+        # inputs_values: dict[str, float] = {
+        #     "": 0.0,
+        #     "P": 0.1,
+        #     "N": 0.2,
+        #     "B": 0.3,
+        #     "R": 0.5,
+        #     "Q": 0.9,
+        #     "K": 1,
+        #     "p": -0.1,
+        #     "n": -0.2,
+        #     "b": -0.3,
+        #     "r": -0.5,
+        #     "q": -0.9,
+        #     "k": -1,
+        # }
+        # for rank in chess.RANK_NAMES:
+        #     inputs.append([])
+        #     for file in chess.FILE_NAMES:
+        #         square: int = chess.parse_square(file + rank)
+        #         if pieces.get(square, False):
+        #             inputs[chess.RANK_NAMES.index(rank)].append(
+        #                 inputs_values[pieces[square].symbol()]
+        #             )
+        #         else:
+        #             inputs[chess.RANK_NAMES.index(rank)].append(
+        #                 inputs_values[""])
+        # if board.has_legal_en_passant():
+        #     inputs[chess.square_rank(board.ep_square)][
+        #         chess.square_file(board.ep_square)
+        #     ] = -0.05
+        # move: chess.Move = chess.Move.from_uci(move)
+        # from_square: chess.Square = move.from_square
+        # to_square: chess.Square = move.to_square
+        # move_inputs: list[float] = [float()] * 4
+        # move_inputs[0]: float = chess.square_file(from_square) / 10
+        # move_inputs[1]: float = chess.square_rank(from_square) / 10
+        # move_inputs[2]: float = chess.square_file(to_square) / 10
+        # move_inputs[3]: float = chess.square_rank(to_square) / 10
+        # castling_inputs: list[float] = []
+        # if board.has_kingside_castling_rights(chess.WHITE):
+        #     castling_inputs.append(1)
+        # else:
+        #     castling_inputs.append(0)
+        # if board.has_queenside_castling_rights(chess.WHITE):
+        #     castling_inputs.append(1)
+        # else:
+        #     castling_inputs.append(0)
+        # if board.has_kingside_castling_rights(chess.BLACK):
+        #     castling_inputs.append(1)
+        # else:
+        #     castling_inputs.append(0)
+        # if board.has_queenside_castling_rights(chess.BLACK):
+        #     castling_inputs.append(1)
+        # else:
+        #     castling_inputs.append(0)
+        # en_passant_input: float = 0.0
+        # if board.has_legal_en_passant():
+        #     en_passant_input: float = (
+        #         chess.square_file(board.ep_square) + 1) / 10
+        # inputs.append(move_inputs + castling_inputs + [en_passant_input])
+        # for indice in range(4):
+        #     inputs[indice].append(move_inputs[indice])
+        #     inputs[indice + 4].append(castling_inputs[indice])
+        # self.input_layer: numpy.array = numpy.array(inputs)
 
     @staticmethod
     def csv_to_array(csv_path):
@@ -337,7 +439,59 @@ class NeuralNetwork:
             len(file_badmoves),
         )
 
-    def test_full(self, list_good_moves: list, list_bad_moves: list) -> Tuple[int, int]:
+    def test_full_multiprocesses(self, list_good_moves: list,
+                                 list_bad_moves: list) -> Tuple[int, int]:
+        """
+        Test neural network on full files with multi-processing.
+        Lists list_good_moves and list_bad_moves can be obtained from training
+        files with open("<path>").read().split("\\n\\n").
+        Standard format is ["<FEN>\\n<move>", "<FEN>\\n<move>"]
+
+        :param list_good_moves: List of good moves at standard format
+        :type list_good_moves: list
+        :param list_bad_moves: List of bad moves at standard format
+        :type list_bad_moves: list
+        :return: Number of correct answers on good moves, on bad moves
+        :rtype: Tuple[int, int]
+        """
+        ## print(f"DEBUG: {list_good_moves=} {list_bad_moves=}")
+        # Make 2 sub-lists
+        list_good_moves1 = list_good_moves[:len(list_good_moves)//2]
+        list_good_moves2 = list_good_moves[len(list_good_moves)//2:]
+        list_bad_moves1 = list_bad_moves[:len(list_bad_moves)//2]
+        list_bad_moves2 = list_bad_moves[len(list_bad_moves)//2:]
+        ## print(f"DEBUG: {list_good_moves1=} {list_good_moves2=}")
+        ## print(f"DEBUG: {list_bad_moves1=} {list_bad_moves2=}")
+        # Create shared variables
+        good_moves_data = multiprocessing.Value('i', 0)
+        bad_moves_data = multiprocessing.Value('i', 0)
+        # Create processes
+        process1 = multiprocessing.Process(target=self.test_full, args=(list_good_moves1,
+                                                                        list_bad_moves1, True,
+                                                                        good_moves_data,
+                                                                        bad_moves_data))
+        process2 = multiprocessing.Process(target=self.test_full, args=(list_good_moves2,
+                                                                        list_bad_moves2, True,
+                                                                        good_moves_data,
+                                                                        bad_moves_data))
+        # Start them
+        self.multiprocesses_result: list[int] = [0, 0]
+        process1.start()
+        process2.start()
+        # Get results
+        process1.join()
+        process2.join()
+        good_moves_result = good_moves_data.value
+        bad_moves_result = bad_moves_data.value
+        # Old results
+        self.old_good_moves_result = good_moves_result
+        self.old_bad_moves_result = bad_moves_result
+        # Return
+        return good_moves_result, bad_moves_result
+
+
+    def test_full(self, list_good_moves: list, list_bad_moves: list, sub=False,
+                  good_moves_data=0, bad_moves_data=0) -> Tuple[int, int]:
         """
         Test neural network on full files.
         Lists list_good_moves and list_bad_moves can be obtained from training
@@ -351,6 +505,8 @@ class NeuralNetwork:
         :return: Number of correct answers on good moves, on bad moves
         :rtype: Tuple[int, int]
         """
+        if len(list_good_moves) > 2 and not sub:
+            return self.test_full_multiprocesses(list_good_moves, list_bad_moves)
         good_moves_result = 0
         bad_moves_result = 0
         for position_and_move in list_good_moves:
@@ -363,8 +519,10 @@ class NeuralNetwork:
             move = position_and_move.split("\n")[1]
             if not self.check_move(position, move):
                 bad_moves_result += 1
-        self.old_good_moves_result = good_moves_result
-        self.old_bad_moves_result = bad_moves_result
+        ## print(f"DEBUG: crocrodile.nn.NeuralNetwork.test_full: {good_moves_result=} {bad_moves_result=}")
+        good_moves_data.value = good_moves_data.value + good_moves_result
+        bad_moves_data.value = bad_moves_data.value + bad_moves_result
+        ## print(f"DEBUG: crocrodile.nn.NeuralNetwork.test_full: {self.multiprocesses_result=}")
         return good_moves_result, bad_moves_result
 
     def test_new(self, new_good_move: str, new_bad_moves: list) -> Tuple[int, int]:

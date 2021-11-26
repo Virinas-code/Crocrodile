@@ -1,1 +1,1 @@
-{"iterations_done": 1258, "good_moves": "training_files/crocro-supertraining+ouvertures+prises_avec_roi-rand", "mutation_rate": 0.02, "mutation_change": 2, "min_bad_moves": 90}
+{"iterations_done": 1742, "good_moves": "training_files/crocro-supertraining+ouvertures+prises_avec_roi-rand", "mutation_rate": 0.1, "mutation_change": 0.1, "min_bad_moves": 90}

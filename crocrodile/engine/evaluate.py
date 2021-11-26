@@ -7,18 +7,10 @@ Evaluation: Evaluate position.
 """
 import chess
 
-PAWN_VALUE = 100
-KNIGHT_VALUE = 290
-BISHOP_VALUE = 310
-ROOK_VALUE = 500
-QUEEN_VALUE = 901
-KING_VALUE = 0  # Infinity is too complex
 BISHOPS_PAIR = 50
 PROTECTED_KING = 70  # TODO: Review
 CENTER_BONUS = 20
 PAWN_SEVENTH_ROW = 50
-PIECES_VALUES = {"p": PAWN_VALUE, "n": KNIGHT_VALUE, "b": BISHOP_VALUE,
-                 "r": ROOK_VALUE, "q": QUEEN_VALUE, "k": KING_VALUE}
 CENTRAL_SQUARES = [36, 35, 28, 27]
 ELARGED_SQUARES = [45, 44, 43, 42, 37, 34, 29, 26, 21, 20, 19, 18]
 SEVENTH_ROW = [55, 54, 53, 52, 51, 50, 49, 48]
@@ -84,7 +76,7 @@ def check_passed_pawns(board: chess.Board, color: bool) -> int:
     return result
 
 
-def evaluate(board: chess.Board):
+def old_evaluate(board: chess.Board):
     """Evaluate position."""
     white_score = 0
     black_score = 0
@@ -188,3 +180,196 @@ def evaluate(board: chess.Board):
         white_score += len(list(board.legal_moves))
         board.pop()
     return white_score-black_score
+
+
+def evaluate2(board: chess.Board) -> int:
+    """Evalutaion function number 2.
+
+    :param chess.Board board: Board to evaluate.
+    :return: Evaluation in centipawns.
+    :rtype: int
+    """
+    piece_map = board.piece_map()
+    score = 0
+    # Constants
+    
+    # Material advantage
+    for piece in piece_map.values():
+        if piece.color == chess.WHITE:
+            score += pieces_values[piece.piece_type]
+    # King security
+    king_position = list(piece_map.keys())[list(piece_map.values()).index(chess.Piece(chess.KING,
+        chess.WHITE))]
+    king_squares = [
+        king_position - 1,
+        king_position + 1,
+        king_position - 7,
+        king_position - 8,
+        king_position - 9,
+        king_position + 7,
+        king_position + 8,
+        king_position + 9,
+    ]
+    king_protection = - (2 * king_protected)
+    for square in king_squares:
+        if square in piece_map and piece_map[square].piece_type in bad_edges_pieces \
+         and piece_map[square].color == chess.WHITE:
+            king_protection += king_protected
+    # Pieces developement and activity
+    for square in knight_base:
+        if square in piece_map and piece_map[square].piece_type == chess.KNIGHT \
+         and piece_map[square].color == chess.WHITE:
+            score -= knight_at_home
+    for square in bishop_base:
+        if square in piece_map and piece_map[square].piece_type == chess.BISHOP \
+         and piece_map[square].color == chess.WHITE:
+            score -= bishop_at_home
+    for square in bad_edges:
+        if square in piece_map and piece_map[square].piece_type in bad_edges_pieces \
+         and piece_map[square].color == chess.WHITE:
+            score -= bad_edges_malus
+    # Return
+    return score
+
+
+PAWN_VALUE = 100
+KNIGHT_VALUE = 290
+BISHOP_VALUE = 310
+ROOK_VALUE = 500
+QUEEN_VALUE = 900
+PIECES_VALUES = {chess.PAWN: PAWN_VALUE, chess.KNIGHT: KNIGHT_VALUE,
+                  chess.BISHOP: BISHOP_VALUE, chess.ROOK: ROOK_VALUE,
+                  chess.QUEEN: QUEEN_VALUE, chess.KING: 0}
+KING_PROTECTED = 25
+KNIGHT_BASE = [1, 6]
+KNIGHT_AT_HOME = 15
+BISHOP_BASE = [2, 5]
+BISHOP_AT_HOME = 10
+BAD_EDGES = [8, 16, 24, 32, 40, 15, 23, 31, 39, 47]
+BAD_EDGES_PIECES = [chess.KNIGHT, chess.BISHOP, chess.ROOK, chess.QUEEN]
+BAD_EDGES_MALUS = 20
+
+
+class Evaluator():
+    """Base class for evaluation (v2)."""
+
+    def evaluate(self, position: chess.Board, move: chess.Move = chess.Move.null()) -> int:
+        """Evaluate position and return white's advantage in centipans.
+
+        :param chess.Board position: Position to evaluate.
+        :param chess.Move move: Move who will be played.
+        :return: White's advantage as centipawns.
+        :rtype: int
+        """
+        score = 0
+        white_score = self.evaluate_position(position)
+        white_score += self.evaluate_move(position, move)
+        black_score = self.evaluate_position(position.mirror())
+        score = white_score - black_score
+        return score
+
+    def evaluate_position(self, position: chess.Board) -> int:
+        """Wrapper for evaluating position.
+
+        :param chess.Board position: Position to evaluate.
+        :return: White's advantage as centipawns.
+        :rtype: int
+        """
+        score = 0
+        score += self.eval_material(position)
+        score += self.eval_king_protection(position)
+        score += self.eval_developpement(position)
+        return score
+
+    @staticmethod
+    def eval_material(position: chess.Board) -> int:
+        """Evaluate material advantage of White in the given position.
+
+        :param chess.Board position: Position to evaluate.
+        :return: White's material advantage as centipawns.
+        :rtype: int
+        """
+        score = 0
+        for piece in position.piece_map().values():
+            if piece.color == chess.WHITE:
+                score += PIECES_VALUES[piece.piece_type]
+        return score
+
+    @staticmethod
+    def eval_king_protection(position: chess.Board) -> int:
+        """Evaluate king protection score of White in the given position.
+
+        :param chess.Board position: Position to evaluate.
+        :return: White's material advantage as centipawns.
+        :rtype: int
+        """
+        piece_map = position.piece_map()
+        king_position = list(piece_map.keys())[list(piece_map.values()).index(
+            chess.Piece(chess.KING, chess.WHITE))]
+        king_squares = [
+            king_position - 1,
+            king_position + 1,
+            king_position - 7,
+            king_position - 8,
+            king_position - 9,
+            king_position + 7,
+            king_position + 8,
+            king_position + 9,
+        ]
+        score = - (2 * KING_PROTECTED)
+        for square in king_squares:
+            if square in piece_map and piece_map[square].color == chess.WHITE:
+                score += KING_PROTECTED
+        return score
+
+    @staticmethod
+    def eval_developpement(position: chess.Board):
+        """Evaluate pieces developpement and activity in the given position.
+
+        :param chess.Board position: Position to evaluate.
+        :return: White's material advantage as centipawns.
+        :rtype: int
+        """
+        piece_map = position.piece_map()
+        score = 0
+        for square in KNIGHT_BASE:
+            if square in piece_map and piece_map[square].piece_type == chess.KNIGHT \
+             and piece_map[square].color == chess.WHITE:
+                score -= KNIGHT_AT_HOME
+        for square in BISHOP_BASE:
+            if square in piece_map and piece_map[square].piece_type == chess.BISHOP \
+             and piece_map[square].color == chess.WHITE:
+                score -= BISHOP_AT_HOME
+        for square in BAD_EDGES:
+            if square in piece_map and piece_map[square].piece_type in BAD_EDGES_PIECES \
+             and piece_map[square].color == chess.WHITE:
+                score -= BAD_EDGES_MALUS
+        return score
+
+    def evaluate_move(self, position: chess.Board, move: chess.Move) -> int:
+        """Wrapper for evaluating move.
+
+        :param chess.Board position: Position to evaluate.
+        :param chess.Move move: Move to evaluate.
+        :return: White's advantage as centipawns.
+        :rtype: int
+        """
+        score = 0
+        score += self.eval_castling(position, move)
+        return score
+
+    @staticmethod
+    def eval_castling(position: chess.Board, move: chess.Move) -> int:
+        """Evaluate castling in the given position.
+
+        :param chess.Board position: Position to evaluate.
+        :param chess.Move move: Move to evaluate.
+        :return: White's castling advantage as centipawns.
+        :rtype: int
+        """
+        score = 0
+        if move.from_square in position.piece_map() \
+         and position.piece_map()[move.from_square].piece_type == chess.KING \
+         and move.to_square in (chess.G1, chess.C1):
+            score += 70
+        return score
