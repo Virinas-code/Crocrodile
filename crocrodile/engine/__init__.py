@@ -56,6 +56,7 @@ class EngineBase:
         self.nn = nn.NeuralNetwork()
         self.nn.load_layers(0)
         self.evaluator = evaluation.Evaluator()
+        self.nn.load_layers(0)
 
     def evaluate(self, board):
         """Evaluate position."""
