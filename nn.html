@@ -143,6 +143,12 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.clear" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Clear layers.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="crocrodile.nn.NeuralNetwork.csv_to_array">
 <em class="property">static </em><code class="sig-name descname">csv_to_array</code><span class="sig-paren">(</span><em class="sig-param">csv_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.csv_to_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.csv_to_array" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Read CSV file and return array.</p>
@@ -155,8 +161,14 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.generate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Generate new matrixes.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="crocrodile.nn.NeuralNetwork.generate_inputs">
-<code class="sig-name descname">generate_inputs</code><span class="sig-paren">(</span><em class="sig-param">board: str</em>, <em class="sig-param">move: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.generate_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.generate_inputs" title="Lien permanent vers cette définition">¶</a></dt>
+<code class="sig-name descname">generate_inputs</code><span class="sig-paren">(</span><em class="sig-param">board: str</em>, <em class="sig-param">move: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.generate_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.generate_inputs" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Generate inputs for move move in board.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Paramètres</dt>
@@ -166,10 +178,10 @@
 </ul>
 </dd>
 <dt class="field-even">Renvoie</dt>
-<dd class="field-even"><p>None</p>
+<dd class="field-even"><p>False if this is a check, True else.</p>
 </dd>
 <dt class="field-odd">Type renvoyé</dt>
-<dd class="field-odd"><p>None</p>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -265,12 +277,6 @@
 <dt id="crocrodile.nn.NeuralNetwork.output">
 <code class="sig-name descname">output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.output" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Return NN output.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="crocrodile.nn.NeuralNetwork.save">
-<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.save" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><p>Save Neural Network.</p>
 </dd></dl>
 
 <dl class="method">
