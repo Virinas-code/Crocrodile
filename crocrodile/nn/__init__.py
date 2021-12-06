@@ -18,8 +18,6 @@ from typing import Optional, Tuple
 import chess
 import numpy
 
-import crocrodile.nn.basics_train
-
 # ====== IDLE ======
 # import os
 # os.chdir("../")
@@ -91,10 +89,8 @@ class NeuralNetwork:
         self.w_pieces: list[numpy.ndarray] = list()
         self.b_pawns: list[numpy.ndarray] = list()
         self.b_pieces: list[numpy.ndarray] = list()
-        self.w_pawns_last: numpy.ndarray = list()
-        self.w_pieces_last: numpy.ndarray = list()
-        self.b_pawns_last: numpy.ndarray = list()
-        self.b_pieces_last: numpy.ndarray = list()
+        self.w_last: numpy.ndarray = list()
+        self.b_last: numpy.ndarray = list()
 
     def load_networks(self) -> None:
         """
@@ -144,14 +140,14 @@ class NeuralNetwork:
                 return True
             return False
 
-    def generate_inputs(self, board: str, move: str) -> None:
+    def generate_inputs(self, board: str, move: str) -> bool:
         """
         Generate inputs for move move in board.
 
         :param str board: FEN of the board.
         :param str move: UCI notation of the move to check.
-        :return: None
-        :rtype: None
+        :return: False if this is a check, True else.
+        :rtype: bool
         """
         def board_to_matrix(board: chess.Board) -> numpy.ndarray:
             """Convert chess board to matrix."""
@@ -241,11 +237,15 @@ class NeuralNetwork:
 
         # Second board
         board.push(chess.Move.from_uci(move))
+        if board.is_check():
+            return False
         board2: numpy.ndarray = board_to_matrix(board)
 
         # Result
         zeros = numpy.zeros((8, 8))
-        return numpy.block([[board1, zeros], [zeros, board2]])
+        final = numpy.block([[board1, zeros], [zeros, board2]])
+        self.input_layer = final
+        return True
 
         # Old code
         #
@@ -372,23 +372,37 @@ class NeuralNetwork:
         :return: Output layer.
         :rtype: numpy.ndarray
         """
-        def relu(matrix: numpy.ndarray) -> numpy.ndarray:
-            return numpy.maximum(0, matrix)
-        
         hidden_layer: numpy.ndarray = self.input_layer
-
-        for layer_index, layer in enumerate(self.layers):
-            hidden_layer = relu(layer @ hidden_layer + self.bias[layer_index])
-
-        self.output_layer: numpy.ndarray = hidden_layer @ self.last_layer + self.last_bias
+        mask_false = 16 * [16 * [False]]
+        for layer_index in range(16):
+            mask_pawns = numpy.ma.masked_outside(abs(hidden_layer), 0.08, 0.1699).mask
+            mask_pieces = numpy.ma.masked_outside(abs(hidden_layer), 0.17, 1.16).mask
+            hidden_layer = (numpy.ma.array(hidden_layer, mask=mask_pawns) @ self.w_pawns[layer_index] \
+                           + numpy.ma.array(self.b_pawns[layer_index], mask=mask_pawns)) + \
+                           (numpy.ma.array(hidden_layer, mask=mask_pieces) @ self.w_pieces[layer_index] \
+                           + numpy.ma.array(self.b_pieces[layer_index], mask=mask_pieces))
+            hidden_layer.mask = mask_false
+        print(repr(hidden_layer))  # DEBUG
+        print(f"{self.w_pawns[-1]=}")
+        print(f"{self.w_pieces[-1]=}")
+        print(f"{self.b_pawns[-1]=}")
+        print(f"{self.b_pieces[-1]=}")
+        print(f"{self.w_last=}")
+        column_mask = 16 * [[False]]
+        line_mask = [16 * [False]]
+        hidden_layer = (hidden_layer @ numpy.ma.array(self.w_pawns[-1], mask=column_mask) + self.b_pawns[-1]) + \
+                       (hidden_layer @ numpy.ma.array(self.w_pieces[-1], mask=column_mask) + self.b_pieces[-1])
+        self.output_layer = numpy.ma.array(self.w_last, mask=line_mask) @ hidden_layer + self.b_last
 
         return self.output_layer
 
     def check_move(self, board, move):
         """Generate inputs, calculate and return output."""
-        self.generate_inputs(board, move)
-        self.calculate()
-        return self.output()
+        if self.generate_inputs(board, move):
+            self.calculate()
+            return self.output()
+        else:
+            return True
 
     def check_test(self):
         """Check NN on test dataset."""
@@ -2198,6 +2212,19 @@ class NeuralNetwork:
             saved_results.append([float(element)])
         self.array_to_csv(saved_results, "nns/results.csv")
         print("Done.")
+    
+    def save(self, nn: int) -> None:
+        for layer in range(16):
+            numpy.savetxt(f"nns/{nn}-wpawns-{layer}.csv", self.w_pawns[layer], delimiter=",")
+            numpy.savetxt(f"nns/{nn}-wpieces-{layer}.csv", self.w_pieces[layer], delimiter=",")
+            numpy.savetxt(f"nns/{nn}-bpawns-{layer}.csv", self.b_pawns[layer], delimiter=",")
+            numpy.savetxt(f"nns/{nn}-bpieces-{layer}.csv", self.b_pieces[layer], delimiter=",")
+        numpy.savetxt(f"nns/{nn}-wpawns-beforelast.csv", self.w_pawns[-1], delimiter=",")
+        numpy.savetxt(f"nns/{nn}-wpieces-beforelast.csv", self.w_pieces[-1], delimiter=",")
+        numpy.savetxt(f"nns/{nn}-bpawns-beforelast.csv", self.b_pawns[-1], delimiter=",")
+        numpy.savetxt(f"nns/{nn}-bpieces-beforelast.csv", self.b_pieces[-1], delimiter=",")
+        numpy.savetxt(f"nns/{nn}-w-last.csv", self.w_last, delimiter=",")
+        numpy.savetxt(f"nns/{nn}-b-last.csv", self.b_last, delimiter=",")
 
     def load_layers(self, nn: int) -> None:
         """
@@ -2212,22 +2239,57 @@ class NeuralNetwork:
             self.b_pawns.append(numpy.genfromtxt(f"nns/{nn}-bpawns-{layer}.csv", delimiter=","))
             self.w_pieces.append(numpy.genfromtxt(f"nns/{nn}-wpieces-{layer}.csv", delimiter=","))
             self.b_pieces.append(numpy.genfromtxt(f"nns/{nn}-bpieces-{layer}.csv", delimiter=","))
-        self.w_pawns.append(numpy.genfromtxt(f"nns/{nn}-wpanws-beforelast.csv", delimiter=","))
+        self.w_pawns.append(numpy.genfromtxt(f"nns/{nn}-wpawns-beforelast.csv", delimiter=","))
         self.b_pawns.append(numpy.genfromtxt(f"nns/{nn}-bpawns-beforelast.csv", delimiter=","))
         self.w_pieces.append(numpy.genfromtxt(f"nns/{nn}-wpieces-beforelast.csv", delimiter=","))
         self.b_pieces.append(numpy.genfromtxt(f"nns/{nn}-bpieces-beforelast.csv", delimiter=","))
-        self.w_pawns[-1] = self.w_pawns[-1].reshape(1, self.w_pawns[-1].size)
-        self.b_pawns[-1] = self.b_pawns[-1].reshape(1, self.b_pawns[-1].size)
-        self.w_pieces[-1] = self.w_pieces[-1].reshape(1, self.w_pieces[-1].size)
-        self.b_pieces[-1] = self.b_pieces[-1].reshape(1, self.b_pieces[-1].size)
-        self.w_pawns_last = numpy.genfromtxt(f"nns/{nn}-wpawns-last.csv", delimiter=",")
-        self.b_pawns_last = numpy.genfromtxt(f"nns/{nn}-bpawns-last.csv", delimiter=",")
-        self.w_pieces_last = numpy.genfromtxt(f"nns/{nn}-wpieces-last.csv", delimiter=",")
-        self.b_pieces_last = numpy.genfromtxt(f"nns/{nn}-bpieces-last.csv", delimiter=",")
-        self.w_pawns_last = self.last_layer.reshape(self.w_pawns_last.size, 1)
-        self.w_pieces_last = self.last_layer.reshape(self.w_pieces_last.size, 1)
-        self.b_pawns_last = self.b_pawns_last.reshape(1, 1)
-        self.b_pieces_last = self.b_pieces_last.reshape(1, 1)
+        self.w_pawns[-1] = self.w_pawns[-1].reshape(16, 1)
+        self.b_pawns[-1] = self.b_pawns[-1].reshape(16, 1)
+        self.w_pieces[-1] = self.w_pieces[-1].reshape(16, 1)
+        self.b_pieces[-1] = self.b_pieces[-1].reshape(16, 1)
+        self.w_last = numpy.genfromtxt(f"nns/{nn}-w-last.csv", delimiter=",")
+        self.b_last = numpy.genfromtxt(f"nns/{nn}-b-last.csv", delimiter=",")
+        self.w_last = self.w_last.reshape(1, 16)
+        self.b_last = self.b_last.reshape(1, 1)
+
+    def clear(self) -> None:
+        """Clear layers."""
+        zero: numpy.ndarray = numpy.zeros((1, 1))
+        self.w_pawns.clear()
+        self.w_pieces.clear()
+        self.b_pawns.clear()
+        self.b_pieces.clear()
+        for layer in range(17):
+            self.w_pawns.append(zero)
+            self.w_pieces.append(zero)
+            self.b_pawns.append(zero)
+            self.b_pieces.append(zero)
+        self.w_last = zero
+        self.b_last = zero
+
+    def generate(self) -> None:
+        """Generate new matrixes."""
+        identity: numpy.ndarray = numpy.identity(16)
+        zeros: numpy.ndarray = numpy.zeros((16, 16))
+        column_ones: numpy.ndarray = numpy.ones((8, 1))
+        column_zeros: numpy.ndarray = numpy.zeros((16, 1))
+        column_negative_ones: numpy.ndarray = numpy.empty((8, 1))
+        column_negative_ones.fill(-1)
+        column_matrix: numpy.ndarray = numpy.block([[column_ones], [column_negative_ones]])
+        line_ones: numpy.ndarray = numpy.ones((1, 16))
+        zero: numpy.ndarray = numpy.zeros((1, 1))
+        self.clear()
+        for layer in range(16):
+            self.w_pawns[layer] = identity
+            self.w_pieces[layer] = identity
+            self.b_pawns[layer] = zeros
+            self.b_pieces[layer] = zeros
+        self.w_pawns[-1] = column_matrix
+        self.w_pieces[-1] = column_matrix
+        self.b_pawns[-1] = column_zeros
+        self.b_pieces[-1] = column_zeros
+        self.w_last: numpy.ndarray = line_ones
+        self.b_last: numpy.ndarray = zero
 
     def __str__(self):
         """
@@ -2250,3 +2312,6 @@ class NeuralNetwork:
 
 if __name__ == "__main__":
     test = NeuralNetwork()
+    test.generate()
+    print(test.check_move(chess.STARTING_FEN, "e2e4"))
+    print(test.output_layer.data)
