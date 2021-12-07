@@ -224,15 +224,22 @@ class BasicsTrain:
         :return: Nothing.
         :rtype: None.
         """
-        for layer_indice, layer in enumerate(self.neural_networks[network1].layers):
-            self.neural_networks[worst_network].layers[layer_indice] = self.couple(
-                layer, self.neural_networks[network2].layers[layer_indice]
+        for layer_indice, layer in enumerate(self.neural_networks[network1].w_pawns):
+            self.neural_networks[worst_network].w_pawns[layer_indice] = self.couple(
+                layer, self.neural_networks[network2].w_pawns[layer_indice]
             )
-            self.neural_networks[worst_network].bias[layer_indice] = self.couple(
-                self.neural_networks[network1].bias[layer_indice], self.neural_networks[network2].bias[layer_indice]
+            self.neural_networks[worst_network].b_pawns[layer_indice] = self.couple(
+                self.neural_networks[network1].b_pawns[layer_indice], self.neural_networks[network2].b_pawns[layer_indice]
             )
-        self.neural_networks[worst_network].last_layer = self.couple(self.neural_networks[network1].last_layer, self.neural_networks[network2].last_layer)
-        self.neural_networks[worst_network].last_bias = self.couple(self.neural_networks[network1].last_bias, self.neural_networks[network2].last_bias)
+        for layer_indice, layer in enumerate(self.neural_networks[network1].w_pieces):
+            self.neural_networks[worst_network].w_pieces[layer_indice] = self.couple(
+                layer, self.neural_networks[network2].w_pieces[layer_indice]
+            )
+            self.neural_networks[worst_network].b_pieces[layer_indice] = self.couple(
+                self.neural_networks[network1].b_pieces[layer_indice], self.neural_networks[network2].b_pieces[layer_indice]
+            )
+        self.neural_networks[worst_network].w_last = self.couple(self.neural_networks[network1].w_last, self.neural_networks[network2].w_last)
+        self.neural_networks[worst_network].b_last = self.couple(self.neural_networks[network1].b_last, self.neural_networks[network2].b_last)
 
     def train(self, new_good_move: str, new_bad_moves: str, param_good_moves: list, param_bad_moves: list) -> float:
         """
