@@ -149,3 +149,6 @@ setup-*/
 crocrodile.zip
 .virtual_documents/Untitled.ipynb.py
 node_modules
+
+# IDE Confiqurations
+.vscode/
