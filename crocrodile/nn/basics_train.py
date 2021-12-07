@@ -21,7 +21,24 @@ from crocrodile.cli import Progress
 NoneType = type(None)
 
 LAYERS_COUNT = 31
-MAX_ITERS = 2000
+MAX_ITERS = 5
+SYMETRY_MATRIX = numpy.array([[0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0.],
+                            [0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                            [0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                            [0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                            [0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                            [0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                            [0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                            [1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1.],
+                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0.],
+                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0.],
+                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.],
+                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0.],
+                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],
+                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.],
+                            [0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0.]])
+LAYERS = 5
 
 
 class BasicsTrain:
@@ -174,6 +191,90 @@ class BasicsTrain:
         for indice in range(len(self.neural_networks)):
             self.neural_networks[indice].indice = indice
 
+    def couple_pawns(self, matrix1: numpy.ndarray, matrix2: numpy.ndarray) -> numpy.ndarray:
+        """
+        Couple two pawn matrixes.
+
+        :param numpy.ndarray matrix1: First matrix to couple.
+        :param numpy.ndarray matrix2: Second matrix to couple.
+        :return: A new matrix.
+        :rtype: numpy.ndarray
+        """
+        mutation_change = self.config["mutation_change"]
+        inverse_rate = 100 / self.config["mutation_rate"]
+        choose_matrix: numpy.ndarray = numpy.zeros(matrix1.shape)
+        direction: bool = bool(random.getrandbits(1))
+        choose: bool = bool(random.getrandbits(1))
+        try:
+            len2 = len(choose_matrix[0])
+        except TypeError:
+            matrix1 = numpy.array([matrix1])
+            matrix2 = numpy.array([matrix2])
+            choose_matrix: numpy.ndarray = numpy.zeros(matrix1.shape)
+            len2 = len(choose_matrix[0])
+        except IndexError:
+            matrix1 = numpy.array([[matrix1]])
+            matrix2 = numpy.array([[matrix2]])
+            choose_matrix: numpy.ndarray = numpy.zeros(matrix1.shape)
+            len2 = len(choose_matrix[0])
+        for line in range(len(choose_matrix)):
+            for column in range(len2):
+                if random.random() < 0.001:
+                    choose: bool = not choose
+                fill: int = int(choose)
+                if direction:
+                    choose_matrix[line][column] = fill
+                else:
+                    try:
+                        choose_matrix[column][line] = fill
+                    except IndexError:
+                        choose_matrix[line][column] = fill
+        result = (matrix1 * choose_matrix + matrix2 * (1 - choose_matrix)) + (
+                    numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change) * numpy.heaviside(numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0)
+        return 0.5 * (result + result @ SYMETRY_MATRIX)
+
+    def couple_pieces(self, matrix1: numpy.ndarray, matrix2: numpy.ndarray) -> numpy.ndarray:
+        """
+        Couple two pieces matrixes.
+
+        :param numpy.ndarray matrix1: First matrix to couple.
+        :param numpy.ndarray matrix2: Second matrix to couple.
+        :return: A new matrix.
+        :rtype: numpy.ndarray
+        """
+        mutation_change = self.config["mutation_change"]
+        inverse_rate = 100 / self.config["mutation_rate"]
+        choose_matrix: numpy.ndarray = numpy.zeros(matrix1.shape)
+        direction: bool = bool(random.getrandbits(1))
+        choose: bool = bool(random.getrandbits(1))
+        try:
+            len2 = len(choose_matrix[0])
+        except TypeError:
+            matrix1 = numpy.array([matrix1])
+            matrix2 = numpy.array([matrix2])
+            choose_matrix: numpy.ndarray = numpy.zeros(matrix1.shape)
+            len2 = len(choose_matrix[0])
+        except IndexError:
+            matrix1 = numpy.array([[matrix1]])
+            matrix2 = numpy.array([[matrix2]])
+            choose_matrix: numpy.ndarray = numpy.zeros(matrix1.shape)
+            len2 = len(choose_matrix[0])
+        for line in range(len(choose_matrix)):
+            for column in range(len2):
+                if random.random() < 0.001:
+                    choose: bool = not choose
+                fill: int = int(choose)
+                if direction:
+                    choose_matrix[line][column] = fill
+                else:
+                    try:
+                        choose_matrix[column][line] = fill
+                    except IndexError:
+                        choose_matrix[line][column] = fill
+        result = (matrix1 * choose_matrix + matrix2 * (1 - choose_matrix)) + (
+                    numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change) * numpy.heaviside(numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0)
+        return 0.25 * (result + result @ SYMETRY_MATRIX + SYMETRY_MATRIX @ result + SYMETRY_MATRIX @ result @ SYMETRY_MATRIX)
+    
     def couple(self, matrix1: numpy.ndarray, matrix2: numpy.ndarray) -> numpy.ndarray:
         """
         Couple two matrixes.
@@ -215,6 +316,7 @@ class BasicsTrain:
         return (matrix1 * choose_matrix + matrix2 * (1 - choose_matrix)) + (
                     numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change) * numpy.heaviside(numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0)
 
+
     def couple_networks(self, worst_network: int, network1: int, network2: int) -> None:
         """
         Couple two networks.
@@ -224,20 +326,25 @@ class BasicsTrain:
         :return: Nothing.
         :rtype: None.
         """
-        for layer_indice, layer in enumerate(self.neural_networks[network1].w_pawns):
-            self.neural_networks[worst_network].w_pawns[layer_indice] = self.couple(
-                layer, self.neural_networks[network2].w_pawns[layer_indice]
+        for layer_indice in range(LAYERS):
+            self.neural_networks[worst_network].w_pawns[layer_indice] = self.couple_pawns(
+                self.neural_networks[network1].w_pawns[layer_indice], self.neural_networks[network2].w_pawns[layer_indice]
             )
-            self.neural_networks[worst_network].b_pawns[layer_indice] = self.couple(
+            self.neural_networks[worst_network].b_pawns[layer_indice] = self.couple_pawns(
                 self.neural_networks[network1].b_pawns[layer_indice], self.neural_networks[network2].b_pawns[layer_indice]
             )
-        for layer_indice, layer in enumerate(self.neural_networks[network1].w_pieces):
-            self.neural_networks[worst_network].w_pieces[layer_indice] = self.couple(
-                layer, self.neural_networks[network2].w_pieces[layer_indice]
+            self.neural_networks[worst_network].w_pieces[layer_indice] = self.couple_pieces(
+                self.neural_networks[network1].w_pieces[layer_indice], self.neural_networks[network2].w_pieces[layer_indice]
             )
-            self.neural_networks[worst_network].b_pieces[layer_indice] = self.couple(
+            self.neural_networks[worst_network].b_pieces[layer_indice] = self.couple_pieces(
                 self.neural_networks[network1].b_pieces[layer_indice], self.neural_networks[network2].b_pieces[layer_indice]
             )
+        self.neural_networks[worst_network].w_pawns[-1] = self.couple(
+            self.neural_networks[network1].w_pawns[-1], self.neural_networks[network2].w_pawns[-1]
+        )
+        self.neural_networks[worst_network].b_pawns[-1] = self.couple(
+            self.neural_networks[network1].b_pawns[-1], self.neural_networks[network2].b_pawns[-1]
+        )
         self.neural_networks[worst_network].w_last = self.couple(self.neural_networks[network1].w_last, self.neural_networks[network2].w_last)
         self.neural_networks[worst_network].b_last = self.couple(self.neural_networks[network1].b_last, self.neural_networks[network2].b_last)
 
@@ -377,6 +484,7 @@ class BasicsTrain:
         good_moves_list = self.parse_good_moves(good_moves_file)
         good_moves_train = list()
         bad_moves_list = list()
+        bad_moves_train: list = []
         if "-n" in argv or "--new-networks" in argv:
             self.generate()
             sys.exit(0)
@@ -384,14 +492,19 @@ class BasicsTrain:
             self.load()
         first_train = True
         for good_move in good_moves_list:
+            if len(good_moves_train) > 1000:
+                random.shuffle(good_moves_train)
+                good_moves_train.pop()
             good_moves_train.append(good_move)
             print(f"########## Session #{len(good_moves_train)} ##########")
             new_bad_moves = self.generate_bad_moves(good_move, good_moves_list, bad_moves_list)
-            bad_moves_list.extend(
-                new_bad_moves
-            )
+            while len(bad_moves_train) > 1000:
+                random.shuffle(bad_moves_train)
+                bad_moves_train.pop()
+            bad_moves_list.extend(new_bad_moves)
+            bad_moves_train.extend(new_bad_moves)
             print(
-                f"Bad moves: {len(bad_moves_list)} / Good moves: {len(good_moves_train)}"
+                f"Bad moves: {len(bad_moves_train)} / Good moves: {len(good_moves_train)}"
             )
             print("Training...", end="\r")
             if len(good_moves_train) > self.config["iterations_done"]:
@@ -401,11 +514,11 @@ class BasicsTrain:
                     progress.total = len(self.neural_networks)
                     for network_indice in range(len(self.neural_networks)):
                         progress.update(network_indice)
-                        self.neural_networks[network_indice].test_full(good_moves_train, bad_moves_list)
+                        self.neural_networks[network_indice].test_full(good_moves_train, bad_moves_train)
                     progress.done()
                     first_train = False
                 with open(performance_output_file, "a") as file:
-                    file.write(str(self.train(good_move, new_bad_moves, good_moves_train, bad_moves_list)) + "\n")
+                    file.write(str(self.train(good_move, new_bad_moves, good_moves_train, bad_moves_train)) + "\n")
                 if len(good_moves_train) % 10 == 0:
                     self.save()
                 self.config["iterations_done"] = len(good_moves_train)
