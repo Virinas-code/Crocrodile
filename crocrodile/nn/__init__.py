@@ -132,11 +132,11 @@ class NeuralNetwork:
     def output(self):
         """Return NN output."""
         try:
-            if self.output_layer > 0.5:
+            if self.output_layer < 0:
                 return True
             return False
         except ValueError:
-            if self.output_layer[0] > 0.5:
+            if self.output_layer[0] < 0:
                 return True
             return False
 
@@ -232,12 +232,31 @@ class NeuralNetwork:
             board: chess.Board = board.mirror()
             move = flip_move_vertical(move)
 
+        pieces_values = {
+            "k": 1000,
+            "q": 9,
+            "r": 5,
+            "b": 3,
+            "n": 3,
+            "p": 1,
+        }
+        piece_map = board.piece_map()
+        piece_from = piece_map[chess.Move.from_uci(move).from_square].symbol().lower()
+        try:
+            piece_to = piece_map[chess.Move.from_uci(move).to_square].symbol().lower()
+        except KeyError:
+            pass
+        else:
+            if pieces_values[piece_to] > pieces_values[piece_from]:
+                return False
+
+
         # First board
         board1: numpy.ndarray = board_to_matrix(board)
 
         # Second board
         board.push(chess.Move.from_uci(move))
-        if board.is_check():
+        if board.is_check():  # Check is always a good move
             return False
         board2: numpy.ndarray = board_to_matrix(board)
 
@@ -382,18 +401,12 @@ class NeuralNetwork:
                            (numpy.ma.array(hidden_layer, mask=mask_pieces) @ self.w_pieces[layer_index] \
                            + numpy.ma.array(self.b_pieces[layer_index], mask=mask_pieces))
             hidden_layer.mask = mask_false
-        print(repr(hidden_layer))  # DEBUG
-        print(f"{self.w_pawns[-1]=}")
-        print(f"{self.w_pieces[-1]=}")
-        print(f"{self.b_pawns[-1]=}")
-        print(f"{self.b_pieces[-1]=}")
-        print(f"{self.w_last=}")
         column_mask = 16 * [[False]]
         line_mask = [16 * [False]]
         hidden_layer = (hidden_layer @ numpy.ma.array(self.w_pawns[-1], mask=column_mask) + self.b_pawns[-1]) + \
                        (hidden_layer @ numpy.ma.array(self.w_pieces[-1], mask=column_mask) + self.b_pieces[-1])
         self.output_layer = numpy.ma.array(self.w_last, mask=line_mask) @ hidden_layer + self.b_last
-
+        print(self.output_layer)  # DEBUG
         return self.output_layer
 
     def check_move(self, board, move):
