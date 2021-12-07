@@ -38,7 +38,7 @@ class BasicsTrain:
         :param self: Current BasicsTrain object.
         """
         self.config: dict = json.loads(open("basics_train.json").read())
-        self.neural_networks: list[crocrodile.nn.NeuralNetwork] = list()
+        self.neural_networks: list[crocrodile.nn.NeuralNetwork] = []
 
     @staticmethod
     def array_to_csv(array, csv_path):
@@ -112,7 +112,7 @@ class BasicsTrain:
 
     def generate(self) -> None:
         """
-        Generate random networks and save them.
+        Generate empty networks and save them.
 
         :return: None
         :rtype: None
@@ -127,16 +127,10 @@ class BasicsTrain:
             progress.update(loop)
             self.neural_networks.append(crocrodile.nn.NeuralNetwork())
         progress.done()
-        progress.text = "Generating identity matrixes"
+        progress.text = "Generating empty matrixes"
         for loop in range(number):
             progress.update(loop)
-            for layer in range(LAYERS_COUNT):
-                self.neural_networks[loop].layers.append(numpy.identity(9))
-                self.neural_networks[loop].bias.append(numpy.zeros((9, 9)))
-            self.neural_networks[loop].layers[-1] = numpy.random.rand(1, 9) * 2 - 1
-            self.neural_networks[loop].bias[-1] = numpy.random.rand(1, 9) * 2 - 1
-            self.neural_networks[loop].last_layer = numpy.random.rand(9, 1) * 2 - 1
-            self.neural_networks[loop].last_bias = numpy.random.rand(1, 1) * 2 - 1
+            self.neural_networks[loop].generate()
         progress.done()
         self.config["iterations_done"] = 0
         open("basics_train.json", "w").write(json.dumps(self.config))
@@ -153,13 +147,7 @@ class BasicsTrain:
         progress.text = "Saving networks"
         for loop in range(len(self.neural_networks)):
             progress.update(loop)
-            for layer in range(LAYERS_COUNT):
-                numpy.savetxt(f"nns/{loop}-w{layer}.csv", self.neural_networks[loop].layers[layer], delimiter=",")
-                numpy.savetxt(f"nns/{loop}-b{layer}.csv", self.neural_networks[loop].bias[layer], delimiter=",")
-            numpy.savetxt(f"nns/{loop}-w31.csv", self.neural_networks[loop].layers[-1], delimiter=",")
-            numpy.savetxt(f"nns/{loop}-b31.csv", self.neural_networks[loop].bias[-1], delimiter=",")
-            numpy.savetxt(f"nns/{loop}-wlast.csv", self.neural_networks[loop].last_layer, delimiter=",")
-            numpy.savetxt(f"nns/{loop}-blast.csv", self.neural_networks[loop].last_bias, delimiter=",")
+            self.neural_networks[loop].save(loop)
         progress.done()
 
     def load(self) -> None:
@@ -181,25 +169,7 @@ class BasicsTrain:
         progress.text = "Loading networks"
         for loop in range(number):
             progress.update(loop)
-            for layer in range(LAYERS_COUNT):
-                self.neural_networks[loop].layers.append(numpy.genfromtxt(f"nns/{loop}-w{layer}.csv", delimiter=","))
-                self.neural_networks[loop].bias.append(numpy.genfromtxt(f"nns/{loop}-b{layer}.csv", delimiter=","))
-            self.neural_networks[loop].layers.append(
-                numpy.genfromtxt(f"nns/{loop}-w31.csv", delimiter=","))
-            self.neural_networks[loop].bias.append(
-                numpy.genfromtxt(f"nns/{loop}-b31.csv", delimiter=","))
-            self.neural_networks[loop].layers[-1] = self.neural_networks[loop].layers[-1].reshape(
-                1, self.neural_networks[loop].layers[-1].size
-            )
-            self.neural_networks[loop].bias[-1] = self.neural_networks[loop].bias[-1].reshape(
-                1, self.neural_networks[loop].bias[-1].size
-            )
-            self.neural_networks[loop].last_layer = numpy.genfromtxt(f"nns/{loop}-wlast.csv", delimiter=",")
-            self.neural_networks[loop].last_layer = self.neural_networks[loop].last_layer.reshape(
-                self.neural_networks[loop].last_layer.size, 1)
-            self.neural_networks[loop].last_bias = numpy.genfromtxt(f"nns/{loop}-blast.csv", delimiter=",")
-            self.neural_networks[loop].last_bias = self.neural_networks[loop].last_bias.reshape(
-                1, 1)
+            self.neural_networks[loop].load_layers(loop)
         progress.done()
         for indice in range(len(self.neural_networks)):
             self.neural_networks[indice].indice = indice
@@ -304,7 +274,7 @@ class BasicsTrain:
             )
             sprint("Training #{0}".format(iters))
             print("Selecting best networks...", end=" ", flush=True)
-            self.neural_networks: list = sorted(
+            self.neural_networks: list[crocrodile.nn.NeuralNetwork] = sorted(
                 self.neural_networks, key=lambda sub: sub.result, reverse=True
             )
             for indice in range(len(self.neural_networks)):
@@ -363,7 +333,7 @@ class BasicsTrain:
             for loop in range(population):
                 perf_sum += self.neural_networks[loop].result
             print(f"Mean performance : {(perf_sum / population)}")
-            self.neural_networks: list = sorted(
+            self.neural_networks: list[crocrodile.nn.NeuralNetwork] = sorted(
                 self.neural_networks, key=lambda sub: sub.result, reverse=True
             )
             for indice in range(len(self.neural_networks)):
