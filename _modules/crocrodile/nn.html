@@ -202,11 +202,11 @@
 <div class="viewcode-block" id="NeuralNetwork.output"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return NN output.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
@@ -302,12 +302,31 @@
             <span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
             <span class="n">move</span> <span class="o">=</span> <span class="n">flip_move_vertical</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
 
+        <span class="n">pieces_values</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="s2">&quot;q&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+            <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">piece_map</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
+        <span class="n">piece_from</span> <span class="o">=</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="n">move</span><span class="p">)</span><span class="o">.</span><span class="n">from_square</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">piece_to</span> <span class="o">=</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="n">move</span><span class="p">)</span><span class="o">.</span><span class="n">to_square</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pieces_values</span><span class="p">[</span><span class="n">piece_to</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">pieces_values</span><span class="p">[</span><span class="n">piece_from</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+
         <span class="c1"># First board</span>
         <span class="n">board1</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">board_to_matrix</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
 
         <span class="c1"># Second board</span>
         <span class="n">board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="o">.</span><span class="n">from_uci</span><span class="p">(</span><span class="n">move</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">is_check</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">is_check</span><span class="p">():</span>  <span class="c1"># Check is always a good move</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">board2</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">board_to_matrix</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
 
@@ -452,18 +471,12 @@
                            <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">hidden_layer</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask_pieces</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_pieces</span><span class="p">[</span><span class="n">layer_index</span><span class="p">]</span> \
                            <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b_pieces</span><span class="p">[</span><span class="n">layer_index</span><span class="p">],</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask_pieces</span><span class="p">))</span>
             <span class="n">hidden_layer</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask_false</span>
-        <span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">hidden_layer</span><span class="p">))</span>  <span class="c1"># DEBUG</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">w_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">w_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">b_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">b_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">w_last</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">column_mask</span> <span class="o">=</span> <span class="mi">16</span> <span class="o">*</span> <span class="p">[[</span><span class="kc">False</span><span class="p">]]</span>
         <span class="n">line_mask</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span> <span class="o">*</span> <span class="p">[</span><span class="kc">False</span><span class="p">]]</span>
         <span class="n">hidden_layer</span> <span class="o">=</span> <span class="p">(</span><span class="n">hidden_layer</span> <span class="o">@</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">mask</span><span class="o">=</span><span class="n">column_mask</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_pawns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> \
                        <span class="p">(</span><span class="n">hidden_layer</span> <span class="o">@</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">mask</span><span class="o">=</span><span class="n">column_mask</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_pieces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_last</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">line_mask</span><span class="p">)</span> <span class="o">@</span> <span class="n">hidden_layer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_last</span>
-
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span><span class="p">)</span>  <span class="c1"># DEBUG</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span></div>
 
 <div class="viewcode-block" id="NeuralNetwork.check_move"><a class="viewcode-back" href="../../nn.html#crocrodile.nn.NeuralNetwork.check_move">[docs]</a>    <span class="k">def</span> <span class="nf">check_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">move</span><span class="p">):</span>
