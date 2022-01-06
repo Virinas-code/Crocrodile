@@ -1,0 +1,19 @@
+[Event "Import"]
+[Site "https://lichess.org/lr2Utwb6"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:03:52"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "D00"]
+[Opening "Queen's Pawn Game: Levitsky Attack"]
+[Termination "Unterminated"]
+
+1. d4 d5 2. Bg5 h6 3. Bh4 c6 4. e3 Qb6 5. Qc1 e5 6. Nf3 e4 7. Nfd2 Ne7 8. c4 Nf5 9. Bg3 Nxg3 10. hxg3 Be6 *
+
+

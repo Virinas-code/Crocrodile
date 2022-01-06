@@ -1,0 +1,21 @@
+[Event "TCEC Season 21 - Superfinal"]
+[Site "https://tcec-chess.com"]
+[Date "2021.07.28"]
+[Round "44.1"]
+[White "Stockfish 14_202107131735"]
+[Black "LCZero 0.28-dev+_69626"]
+[Result "1/2-1/2"]
+[WhiteElo "3639"]
+[BlackElo "3623"]
+[TimeControl "7200+10"]
+[Termination "adjudication"]
+[UTCDate "2022.01.01"]
+[UTCTime "12:24:22"]
+[Variant "Standard"]
+[ECO "D15"]
+[Opening "Slav Defense: Chameleon Variation, Advance System"]
+[Annotator "https://lichess.org/@/Virinas-code"]
+
+1. d4 d5 2. c4 c6 3. Nc3 Nf6 4. Nf3 a6 5. c5 Bg4 6. Ne5 Be6 7. Qb3 Ra7 8. e3 g6 9. Bd2 Nbd7 10. Nxd7 Nxd7 11. Bd3 b6 12. cxb6 Nxb6 13. O-O Bg7 14. Na4 Nxa4 15. Qxa4 Bd7 16. Qa3 a5 17. Bb4 Bf6 18. Bc5 Ra8 19. Qc3 O-O 20. a4 Bc8 21. Rfb1 Ba6 22. b4 Bxd3 23. Qxd3 axb4 24. Rxb4 Re8 25. Bb6 Qc8 26. a5 e5 27. h3 Qa6 28. Qc3 Qc8 29. Rba4 exd4 30. exd4 Bd8 31. Bxd8 Qxd8 32. Qxc6 Re6 33. Qc5 Rea6 34. g3 h5 35. R4a3 Kg7 36. Kg2 R8a7 37. R1a2 Rb7 38. Re3 Qb8 39. Rf3 Qd8 40. Re3 Qb8 41. Rf3 Qd8 42. h4 Rb1 43. Ra4 Ra8 44. a6 Qd7 45. Ra5 Ra7 46. Rfa3 Qg4 47. Rf3 Qd7 48. Rc3 Re1 49. Rc1 Re6 50. Rca1 Rf6 51. R1a2 Qf5 52. R5a3 Qd7 53. Qc1 Qe8 54. Kg1 Rb6 55. Kh2 Qe6 56. Qe3 Qf6 57. Qd3 Rb4 58. Kg2 Qxd4 59. Qxd4+ Rxd4 60. Rb2 Rc4 61. Rb6 d4 62. Ra1 d3 63. Rd6 d2 64. Rxd2 Rc6 65. Rda2 Rf6 66. f3 Kh7 67. Ra4 Kg7 68. R4a3 Kh6 69. Kg1 Kh7 70. f4 Re6 71. Kh2 f5 72. Kg2 Kg7 73. Kh3 Rb6 74. Kg2 Re6 75. Ra5 Kg8 76. Kh1 Kh8 77. Kg1 Kg8 78. R1a3 Kg7 79. Kf2 1/2-1/2
+
+

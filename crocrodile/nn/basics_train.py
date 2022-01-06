@@ -7,37 +7,315 @@ Back to basics.
 
 :author: Virinas-code and ZeBox
 """
-import sys
-import json
 import csv
-import random
 import datetime
+import json
+import random
+import sys
+
 import chess
-import numpy
 import crocrodile
 import crocrodile.nn
+import matplotlib.pyplot as plt
+import numpy
 from crocrodile.cli import Progress
 
 NoneType = type(None)
 
 LAYERS_COUNT = 31
-MAX_ITERS = 5
-SYMETRY_MATRIX = numpy.array([[0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0.],
-                            [0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                            [0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                            [0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                            [0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                            [0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                            [0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                            [1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1.],
-                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0.],
-                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0.],
-                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0.],
-                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0.],
-                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.],
-                            [0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.],
-                            [0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0.]])
+MAX_ITERS = 50000
+SYMETRY_MATRIX = numpy.array(
+    [
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+        ],
+    ]
+)
 LAYERS = 5
 
 
@@ -191,7 +469,9 @@ class BasicsTrain:
         for indice in range(len(self.neural_networks)):
             self.neural_networks[indice].indice = indice
 
-    def couple_pawns(self, matrix1: numpy.ndarray, matrix2: numpy.ndarray) -> numpy.ndarray:
+    def couple_pawns(
+        self, matrix1: numpy.ndarray, matrix2: numpy.ndarray
+    ) -> numpy.ndarray:
         """
         Couple two pawn matrixes.
 
@@ -230,10 +510,15 @@ class BasicsTrain:
                     except IndexError:
                         choose_matrix[line][column] = fill
         result = (matrix1 * choose_matrix + matrix2 * (1 - choose_matrix)) + (
-                    numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change) * numpy.heaviside(numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0)
+            numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change
+        ) * numpy.heaviside(
+            numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0
+        )
         return 0.5 * (result + result @ SYMETRY_MATRIX)
 
-    def couple_pieces(self, matrix1: numpy.ndarray, matrix2: numpy.ndarray) -> numpy.ndarray:
+    def couple_pieces(
+        self, matrix1: numpy.ndarray, matrix2: numpy.ndarray
+    ) -> numpy.ndarray:
         """
         Couple two pieces matrixes.
 
@@ -272,9 +557,17 @@ class BasicsTrain:
                     except IndexError:
                         choose_matrix[line][column] = fill
         result = (matrix1 * choose_matrix + matrix2 * (1 - choose_matrix)) + (
-                    numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change) * numpy.heaviside(numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0)
-        return 0.25 * (result + result @ SYMETRY_MATRIX + SYMETRY_MATRIX @ result + SYMETRY_MATRIX @ result @ SYMETRY_MATRIX)
-    
+            numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change
+        ) * numpy.heaviside(
+            numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0
+        )
+        return 0.25 * (
+            result
+            + result @ SYMETRY_MATRIX
+            + SYMETRY_MATRIX @ result
+            + SYMETRY_MATRIX @ result @ SYMETRY_MATRIX
+        )
+
     def couple(self, matrix1: numpy.ndarray, matrix2: numpy.ndarray) -> numpy.ndarray:
         """
         Couple two matrixes.
@@ -314,8 +607,10 @@ class BasicsTrain:
                     except IndexError:
                         choose_matrix[line][column] = fill
         return (matrix1 * choose_matrix + matrix2 * (1 - choose_matrix)) + (
-                    numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change) * numpy.heaviside(numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0)
-
+            numpy.random.rand(*matrix1.shape) * (2 * mutation_change) - mutation_change
+        ) * numpy.heaviside(
+            numpy.random.rand(*matrix1.shape) * inverse_rate + (1 - inverse_rate), 0
+        )
 
     def couple_networks(self, worst_network: int, network1: int, network2: int) -> None:
         """
@@ -327,34 +622,62 @@ class BasicsTrain:
         :rtype: None.
         """
         for layer_indice in range(LAYERS):
-            self.neural_networks[worst_network].w_pawns[layer_indice] = self.couple_pawns(
-                self.neural_networks[network1].w_pawns[layer_indice], self.neural_networks[network2].w_pawns[layer_indice]
+            self.neural_networks[worst_network].w_pawns[
+                layer_indice
+            ] = self.couple_pawns(
+                self.neural_networks[network1].w_pawns[layer_indice],
+                self.neural_networks[network2].w_pawns[layer_indice],
             )
-            self.neural_networks[worst_network].b_pawns[layer_indice] = self.couple_pawns(
-                self.neural_networks[network1].b_pawns[layer_indice], self.neural_networks[network2].b_pawns[layer_indice]
+            self.neural_networks[worst_network].b_pawns[
+                layer_indice
+            ] = self.couple_pawns(
+                self.neural_networks[network1].b_pawns[layer_indice],
+                self.neural_networks[network2].b_pawns[layer_indice],
             )
-            self.neural_networks[worst_network].w_pieces[layer_indice] = self.couple_pieces(
-                self.neural_networks[network1].w_pieces[layer_indice], self.neural_networks[network2].w_pieces[layer_indice]
+            self.neural_networks[worst_network].w_pieces[
+                layer_indice
+            ] = self.couple_pieces(
+                self.neural_networks[network1].w_pieces[layer_indice],
+                self.neural_networks[network2].w_pieces[layer_indice],
             )
-            self.neural_networks[worst_network].b_pieces[layer_indice] = self.couple_pieces(
-                self.neural_networks[network1].b_pieces[layer_indice], self.neural_networks[network2].b_pieces[layer_indice]
+            self.neural_networks[worst_network].b_pieces[
+                layer_indice
+            ] = self.couple_pieces(
+                self.neural_networks[network1].b_pieces[layer_indice],
+                self.neural_networks[network2].b_pieces[layer_indice],
             )
         self.neural_networks[worst_network].w_pawns[-1] = self.couple(
-            self.neural_networks[network1].w_pawns[-1], self.neural_networks[network2].w_pawns[-1]
+            self.neural_networks[network1].w_pawns[-1],
+            self.neural_networks[network2].w_pawns[-1],
         )
         self.neural_networks[worst_network].b_pawns[-1] = self.couple(
-            self.neural_networks[network1].b_pawns[-1], self.neural_networks[network2].b_pawns[-1]
+            self.neural_networks[network1].b_pawns[-1],
+            self.neural_networks[network2].b_pawns[-1],
         )
-        self.neural_networks[worst_network].w_last = self.couple(self.neural_networks[network1].w_last, self.neural_networks[network2].w_last)
-        self.neural_networks[worst_network].b_last = self.couple(self.neural_networks[network1].b_last, self.neural_networks[network2].b_last)
+        self.neural_networks[worst_network].w_last = self.couple(
+            self.neural_networks[network1].w_last, self.neural_networks[network2].w_last
+        )
+        self.neural_networks[worst_network].b_last = self.couple(
+            self.neural_networks[network1].b_last, self.neural_networks[network2].b_last
+        )
 
-    def train(self, new_good_move: str, new_bad_moves: str, param_good_moves: list, param_bad_moves: list) -> float:
+    def train(
+        self,
+        new_good_move: str,
+        new_bad_moves: str,
+        param_good_moves: list,
+        param_bad_moves: list,
+    ) -> float:
         """
         Train neural networks.
 
         :return: Mean performance at end.
         :rtype: float
         """
+        perf_graph = []
+        dist_graph = []
+        best_graph = []
+        worst_graph = []
 
         def sprint(value):
             centered = value.center(18)
@@ -366,15 +689,20 @@ class BasicsTrain:
         iters = 0
         tests_results = list()
         population = len(self.neural_networks)
+        # First original testing.
         for loop in range(population):
             print(f"Testing networks... ({loop}/{population})", end="\r", flush=True)
-            on_good_moves, on_bad_moves = self.neural_networks[loop].test_new(
-                new_good_move, new_bad_moves
-            )
+            on_good_moves, on_bad_moves = self.neural_networks[
+                loop
+            ].test_full_multiprocesses(param_good_moves, param_bad_moves)
             success = (
-                ((on_good_moves / len(param_good_moves)) ** 4)
-                * (on_bad_moves / len(param_bad_moves))
-            ) * 100
+                (
+                    (on_good_moves / len(param_good_moves))
+                    - (1 - (on_bad_moves / len(param_bad_moves)))
+                )
+                * (on_good_moves / len(param_good_moves))
+                * 100
+            )
             self.neural_networks[loop].result = success
             self.neural_networks[loop].perfs = (on_good_moves, on_bad_moves)
         print("Testing networks... Done.          ")
@@ -421,7 +749,11 @@ class BasicsTrain:
                     end="\r",
                     flush=True,
                 )
-                self.couple_networks(minis_indices[network_indice], second_network, maxis_indices[network_indice])
+                self.couple_networks(
+                    minis_indices[network_indice],
+                    second_network,
+                    maxis_indices[network_indice],
+                )
                 print(
                     f"Coupling network #{network_indice + 1}... (testing)                    ",
                     end="\r",
@@ -431,9 +763,13 @@ class BasicsTrain:
                     minis_indices[network_indice]
                 ].test_full(param_good_moves, param_bad_moves)
                 success = (
-                    ((on_good_moves / len(param_good_moves)) ** 4)
-                    * (on_bad_moves / len(param_bad_moves))
-                ) * 100
+                    (
+                        (on_good_moves / len(param_good_moves))
+                        - (1 - (on_bad_moves / len(param_bad_moves)))
+                    )
+                    * (on_good_moves / len(param_good_moves))
+                    * 100
+                )
                 self.neural_networks[loop].result = success
                 self.neural_networks[loop].perfs = (on_good_moves, on_bad_moves)
                 # print(f"New result: {self.neural_networks[minis_indices[network_indice]]}")
@@ -453,7 +789,8 @@ class BasicsTrain:
             for indice in range(len(self.neural_networks)):
                 self.neural_networks[indice].indice = indice
             print(f"perf: {self.neural_networks[4].perfs}")
-            print(f"gdmvs: {self.neural_networks[4].perfs[0] / len(param_good_moves)}")  # patch-003
+            # patch-003
+            print(f"gdmvs: {self.neural_networks[4].perfs[0] / len(param_good_moves)}")
             print(
                 f"bdmvs: {(self.neural_networks[4].perfs[1] / len(param_bad_moves)) * 100}"
             )  # patch-003
@@ -465,6 +802,35 @@ class BasicsTrain:
                 break  # :)
             if iters >= MAX_ITERS:
                 break  # Prevent complex moves
+            if iters % 10 == 0:
+                self.save()
+            best_graph.append(self.neural_networks[0].result)
+            worst_graph.append(self.neural_networks[-2].result)
+            perf_graph.append(perf_sum / population)
+            dist_graph.append(
+                self.neural_networks[0].result - self.neural_networks[-2].result
+            )
+            l = range(iters)
+            fig, axs = plt.subplots(2, 2)
+            axs[0, 0].plot(l, perf_graph)
+            axs[0, 0].set_title("Mean performance")
+            axs[0, 1].plot(l, best_graph)
+            axs[0, 1].set_title("Best network")
+            axs[1, 0].plot(l, worst_graph)
+            axs[1, 0].set_title("Worst network")
+            axs[1, 1].plot(l, dist_graph)
+            axs[1, 1].set_title("Difference")
+
+            for ax in axs.flat:
+                ax.set(xlabel="Iteration", ylabel="Performance")
+
+            # Hide x labels and tick labels for top plots and y ticks for right plots.
+            for ax in axs.flat:
+                ax.label_outer()
+
+            fig.savefig("nns/graph.png")
+            del fig
+            del axs
         print("Saving tests result...", end=" ", flush=True)
         saved_results = list()
         for element in tests_results:
@@ -474,6 +840,10 @@ class BasicsTrain:
         perf_sum = 0
         for loop in range(population):
             perf_sum += self.neural_networks[loop].result
+        best_graph.close()
+        worst_graph.close()
+        perf_graph.close()
+        dist_graph.close()
         return perf_sum / population
 
     def main(self, argv):
@@ -492,15 +862,11 @@ class BasicsTrain:
             self.load()
         first_train = True
         for good_move in good_moves_list:
-            if len(good_moves_train) > 1000:
-                random.shuffle(good_moves_train)
-                good_moves_train.pop()
             good_moves_train.append(good_move)
             print(f"########## Session #{len(good_moves_train)} ##########")
-            new_bad_moves = self.generate_bad_moves(good_move, good_moves_list, bad_moves_list)
-            while len(bad_moves_train) > 1000:
-                random.shuffle(bad_moves_train)
-                bad_moves_train.pop()
+            new_bad_moves = self.generate_bad_moves(
+                good_move, good_moves_list, bad_moves_list
+            )
             bad_moves_list.extend(new_bad_moves)
             bad_moves_train.extend(new_bad_moves)
             print(
@@ -509,16 +875,32 @@ class BasicsTrain:
             print("Training...", end="\r")
             if len(good_moves_train) > self.config["iterations_done"]:
                 if first_train:
-                    progress = Progress()
+                    random.shuffle(bad_moves_train)
+                    while len(bad_moves_train) > self.config["max_bad_moves"]:
+                        bad_moves_train.pop()
+                    random.shuffle(good_moves_train)
+                    while len(good_moves_train) > self.config["max_good_moves"]:
+                        good_moves_train.pop()
+                    """progress = Progress()
                     progress.text = "Testing networks"
                     progress.total = len(self.neural_networks)
                     for network_indice in range(len(self.neural_networks)):
                         progress.update(network_indice)
                         self.neural_networks[network_indice].test_full(good_moves_train, bad_moves_train)
-                    progress.done()
+                    progress.done()"""
                     first_train = False
                 with open(performance_output_file, "a") as file:
-                    file.write(str(self.train(good_move, new_bad_moves, good_moves_train, bad_moves_train)) + "\n")
+                    file.write(
+                        str(
+                            self.train(
+                                good_move,
+                                new_bad_moves,
+                                good_moves_train,
+                                bad_moves_train,
+                            )
+                        )
+                        + "\n"
+                    )
                 if len(good_moves_train) % 10 == 0:
                     self.save()
                 self.config["iterations_done"] = len(good_moves_train)

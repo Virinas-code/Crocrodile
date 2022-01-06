@@ -69,7 +69,8 @@ def _lerr(id, *args, **kwargs):
     error_log.write(" ".join(str(arg) for arg in args) + "\n")
     try:
         client.bots.post_message(id, "ERROR: " + " ".join(args))
-        client.bots.post_message(id, "ERROR: " + " ".join(args), spectator=True)
+        client.bots.post_message(
+            id, "ERROR: " + " ".join(args), spectator=True)
     except:
         pass
     print(
@@ -131,18 +132,19 @@ def limit_time(total_time: float, increment: int) -> float:
 
 def start_depth(total_time: float) -> int:
     if total_time > 600:
-        return 4
-    elif total_time > 300:
         return 3
-    else:
+    elif total_time > 300:
         return 2
+    else:
+        return 1
 
 
 class Game(threading.Thread):
     def __init__(self, client, game_id, color, fen, **kwargs):
         super().__init__(**kwargs)
         lok(game_id, "Starting... (FEN", fen + ")")
-        self.engine =  crocrodile.engine.EngineBase("Crocrodile", "Virinas-code")
+        self.engine = crocrodile.engine.EngineBase(
+            "Crocrodile", "Virinas-code")
         self.game_id = game_id
         self.initial_fen = fen
         self.client = client
@@ -221,32 +223,13 @@ class Game(threading.Thread):
                     )
                     + ")",
                 )
-                lok(
-                    self.game_id,
-                    "Depth " + str(depth) + ": Calculating...",
-                    end="\r",
-                )
-                last_score, last_best_move = self.engine.minimax_nn(
+                last_score, last_best_move = self.engine.search(
                     board, depth, board.turn, float("inf")
-                )
-                lok(
-                    self.game_id,
-                    "Depth "
-                    + str(depth)
-                    + ": Score "
-                    + str(last_score)
-                    + " (best move "
-                    + last_best_move.uci()
-                    + ")",
                 )
                 while True:
                     depth += 1
-                    lok(
-                        self.game_id,
-                        "Depth " + str(depth) + ": Calculating...",
-                        end="\r",
-                    )
-                    score, best_move = self.engine.minimax_nn(board, depth, board.turn, limit)
+                    score, best_move = self.engine.search(
+                        board, depth, board.turn, limit)
                     if score == float("inf"):
                         score = last_score
                         best_move = last_best_move
@@ -258,16 +241,6 @@ class Game(threading.Thread):
                     elif score == 10000 or score == -10000:
                         break
                     else:
-                        lok(
-                            self.game_id,
-                            "Depth "
-                            + str(depth)
-                            + ": Score "
-                            + str(score)
-                            + " (best move "
-                            + best_move.uci()
-                            + ")",
-                        )
                         last_score, last_best_move = (
                             copy.deepcopy(score),
                             copy.deepcopy(best_move),
@@ -363,7 +336,7 @@ def main(argv: list) -> None:
                 if arg in ("-a", "--auto"):
                     AUTO_CHALLENGE = True
                 if arg in ("-n", "--neural-network"):
-                    minimax = yukoo.minimax_nn
+                    minimax = yukoo.search
                 if arg in ("-u", "--upgrade"):
                     client.account.upgrade_to_bot()
                 if arg in ("-d", "--dev"):
@@ -427,7 +400,8 @@ def main(argv: list) -> None:
                 ):  # patch-002
                     client.bots.accept_challenge(event["challenge"]["id"])
                     lok(event["challenge"]["id"], "Accepted")
-                    colors[event["challenge"]["id"]] = event["challenge"]["color"]
+                    colors[event["challenge"]["id"]
+                           ] = event["challenge"]["color"]
                     if event["challenge"]["variant"]["key"] == "fromPosition":
                         fens[event["challenge"]["id"]
                              ] = event["challenge"]["initialFen"]
@@ -471,7 +445,8 @@ def main(argv: list) -> None:
                         lok(
                             event["challenge"]["id"],
                             "Challenging " +
-                            show_user_description(event["challenge"]["destUser"]),
+                            show_user_description(
+                                event["challenge"]["destUser"]),
                         )
             elif event["type"] == "gameStart":
                 game = Game(
@@ -500,7 +475,8 @@ def main(argv: list) -> None:
                 if event["challenge"]["challenger"]["id"] == "crocrodile":
                     lok(
                         event["challenge"]["id"],
-                        "Declined by " + show_user_description(event["challenge"]["destUser"]),
+                        "Declined by " +
+                        show_user_description(event["challenge"]["destUser"]),
                     )
                 else:
                     lok(event["challenge"]["id"], "Declined")

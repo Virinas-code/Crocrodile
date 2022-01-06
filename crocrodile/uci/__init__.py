@@ -5,9 +5,12 @@ Crocrodile UCI.
 
 Created by @Virinas-code.
 """
+import sys
 from typing import Optional
+
 import chess
 import crocrodile
+
 # ====== IDLE ======
 # import os
 # os.chdir("../")
@@ -147,10 +150,25 @@ class UCI:
         Start calculating.
         """
         depth: Optional[int] = None
+        wtime: Optional[int] = None
+        btime: Optional[int] = None
         for indice, element in enumerate(args):
             if element == "depth":
-                depth = int(args[indice + 1])
-        print("In developpement.")
+                try:
+                    depth = int(args[indice + 1])
+                except ValueError:
+                    print("Invalid depth.", file=sys.stderr)
+            if element == "wtime":
+                try:
+                    wtime = int(args[indice + 1])
+                except ValueError:
+                    print("Invalid wtime.", file=sys.stderr)
+            if element == "btime":
+                try:
+                    btime = int(args[indice + 1])
+                except ValueError:
+                    print("Invalid btime.", file=sys.stderr)
+        self.info(depth)
 
     def position(self, args: list) -> None:
         """

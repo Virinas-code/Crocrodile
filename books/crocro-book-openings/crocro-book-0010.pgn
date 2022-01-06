@@ -1,0 +1,19 @@
+[Event "Import"]
+[Site "https://lichess.org/SQqDWnto"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:03:19"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "E15"]
+[Opening "Queen's Indian Defense: Fianchetto Variation, Check Variation, Intermezzo Line"]
+[Termination "Unterminated"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 b6 4. g3 Ba6 5. b3 Bb4+ 6. Bd2 Be7 7. Bg2 c6 8. Bc3 d5 9. Ne5 Nfd7 10. Nxd7 Nxd7 11. Nd2 O-O 12. O-O Rc8 13. e4 b5 14. Re1 dxc4 15. bxc4 bxc4 *
+
+

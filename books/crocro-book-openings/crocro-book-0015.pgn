@@ -1,0 +1,19 @@
+[Event "Import"]
+[Site "https://lichess.org/SWenONI4"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:04:29"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "B19"]
+[Opening "Caro-Kann Defense: Classical Variation, Lobron System"]
+[Termination "Unterminated"]
+
+1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. Nxe4 Bf5 5. Ng3 Bg6 6. h4 h6 7. Nf3 Nd7 8. h5 Bh7 9. Bd3 Bxd3 10. Qxd3 e6 11. Bd2 Ngf6 12. O-O-O Be7 13. Kb1 O-O 14. Ne4 Nxe4 15. Qxe4 Nf6 *
+
+

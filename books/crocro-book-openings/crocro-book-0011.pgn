@@ -1,0 +1,19 @@
+[Event "Import"]
+[Site "https://lichess.org/YNSICW0s"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:03:39"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "D43"]
+[Opening "Semi-Slav Defense: Anti-Moscow Gambit"]
+[Termination "Unterminated"]
+
+1. d4 d5 2. c4 c6 3. Nf3 Nf6 4. Nc3 e6 5. Bg5 h6 6. Bh4 dxc4 7. e4 g5 8. Bg3 b5 9. Be2 Bb7 10. O-O Nbd7 11. Ne5 Bg7 12. Nxd7 Nxd7 13. Bd6 a6 14. a4 b4 15. Bxb4 Qb6 *
+
+

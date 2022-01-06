@@ -1,0 +1,19 @@
+[Event "Import"]
+[Site "https://lichess.org/9XtmChVU"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "17:58:36"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "C55"]
+[Opening "Italian Game: Two Knights Defense, Modern Bishop's Opening"]
+[Termination "Unterminated"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. d3 Be7 5. O-O O-O 6. Re1 d6 7. a4 Na5 8. Ba2 c5 9. c3 Nc6 10. Na3 h6 11. Bd2 a6 12. h3 Rb8 13. Nc4 Be6 14. b4 cxb4 15. cxb4 d5 *
+
+

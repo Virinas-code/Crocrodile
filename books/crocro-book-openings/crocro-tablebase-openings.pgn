@@ -1,0 +1,304 @@
+[Event "Import"]
+[Site "https://lichess.org/KQoaqvJa"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:04:41"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "B09"]
+[Opening "Pirc Defense: Austrian Attack, Weiss Variation"]
+[Termination "Unterminated"]
+
+1. e4 d6 2. d4 Nf6 3. Nc3 g6 4. f4 Bg7 5. Nf3 O-O 6. Bd3 Na6 7. O-O c5 8. d5 Bg4 9. Bc4 Nc7 10. h3 Bxf3 11. Qxf3 a6 12. a4 b6 13. Qd3 e6 14. dxe6 fxe6 15. Rd1 d5 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/SWenONI4"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:04:29"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "B19"]
+[Opening "Caro-Kann Defense: Classical Variation, Lobron System"]
+[Termination "Unterminated"]
+
+1. e4 c6 2. d4 d5 3. Nc3 dxe4 4. Nxe4 Bf5 5. Ng3 Bg6 6. h4 h6 7. Nf3 Nd7 8. h5 Bh7 9. Bd3 Bxd3 10. Qxd3 e6 11. Bd2 Ngf6 12. O-O-O Be7 13. Kb1 O-O 14. Ne4 Nxe4 15. Qxe4 Nf6 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/zS6TXzFA"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:04:15"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "C19"]
+[Opening "French Defense: Winawer Variation, Poisoned Pawn Variation"]
+[Termination "Unterminated"]
+
+1. e4 e6 2. d4 d5 3. Nc3 Bb4 4. e5 c5 5. a3 Bxc3+ 6. bxc3 Ne7 7. Qg4 O-O 8. Bd3 Nbc6 9. Qh5 Ng6 10. Nf3 Qc7 11. Be3 c4 12. Bxg6 fxg6 13. Qg4 Qf7 14. Ng5 Qe8 15. h4 h6 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/3fz0LxOe"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:04:03"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "B12"]
+[Opening "Caro-Kann Defense: Advance Variation, Short Variation"]
+[Termination "Unterminated"]
+
+1. e4 c6 2. d4 d5 3. e5 Bf5 4. Nf3 e6 5. Be2 Nd7 6. O-O Ne7 7. Nbd2 h6 8. Nb3 g5 9. Ne1 Qc7 10. Nd3 b6 11. Be3 Bg7 12. f4 c5 13. dxc5 gxf4 14. cxb6 axb6 15. Bxf4 Ng6 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/lr2Utwb6"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:03:52"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "D00"]
+[Opening "Queen's Pawn Game: Levitsky Attack"]
+[Termination "Unterminated"]
+
+1. d4 d5 2. Bg5 h6 3. Bh4 c6 4. e3 Qb6 5. Qc1 e5 6. Nf3 e4 7. Nfd2 Ne7 8. c4 Nf5 9. Bg3 Nxg3 10. hxg3 Be6 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/YNSICW0s"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:03:39"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "D43"]
+[Opening "Semi-Slav Defense: Anti-Moscow Gambit"]
+[Termination "Unterminated"]
+
+1. d4 d5 2. c4 c6 3. Nf3 Nf6 4. Nc3 e6 5. Bg5 h6 6. Bh4 dxc4 7. e4 g5 8. Bg3 b5 9. Be2 Bb7 10. O-O Nbd7 11. Ne5 Bg7 12. Nxd7 Nxd7 13. Bd6 a6 14. a4 b4 15. Bxb4 Qb6 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/SQqDWnto"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "18:03:19"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "E15"]
+[Opening "Queen's Indian Defense: Fianchetto Variation, Check Variation, Intermezzo Line"]
+[Termination "Unterminated"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 b6 4. g3 Ba6 5. b3 Bb4+ 6. Bd2 Be7 7. Bg2 c6 8. Bc3 d5 9. Ne5 Nfd7 10. Nxd7 Nxd7 11. Nd2 O-O 12. O-O Rc8 13. e4 b5 14. Re1 dxc4 15. bxc4 bxc4 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/tVtF1nXa"]
+[Date "2017.10.16"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2017.10.16"]
+[UTCTime "23:16:41"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "B33"]
+[Opening "Sicilian Defense: Lasker-Pelikan Variation, Sveshnikov Variation, Chelyabinsk Variation"]
+[Termination "Unterminated"]
+
+1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 e5 6. Ndb5 d6 7. Bg5 a6 8. Na3 b5 9. Nd5 Be7 10. Bxf6 Bxf6 11. c3 O-O 12. Nc2 Bg5 13. a4 bxa4 14. Rxa4 a5 15. Bc4 Rb8 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/tVtF1nXa"]
+[Date "2017.10.16"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2017.10.16"]
+[UTCTime "23:16:41"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "B33"]
+[Opening "Sicilian Defense: Lasker-Pelikan Variation, Sveshnikov Variation, Chelyabinsk Variation"]
+[Termination "Unterminated"]
+
+1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 e5 6. Ndb5 d6 7. Bg5 a6 8. Na3 b5 9. Nd5 Be7 10. Bxf6 Bxf6 11. c3 O-O 12. Nc2 Bg5 13. a4 bxa4 14. Rxa4 a5 15. Bc4 Rb8 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/qqTYYd8j"]
+[Date "2019.06.17"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2019.06.17"]
+[UTCTime "19:39:40"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "B90"]
+[Opening "Sicilian Defense: Najdorf Variation, English Attack"]
+[Termination "Unterminated"]
+
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 e5 7. Nb3 Be6 8. f3 Be7 9. Qd2 O-O 10. O-O-O Nbd7 11. g4 b5 12. g5 b4 13. Ne2 Ne8 14. f4 a5 15. f5 a4 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/HsiYSOeu"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "17:59:56"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "C42"]
+[Opening "Russian Game: Classical Attack, Chigorin Variation, Main Line"]
+[Termination "Unterminated"]
+
+1. e4 e5 2. Nf3 Nf6 3. Nxe5 d6 4. Nf3 Nxe4 5. d4 d5 6. Bd3 Nc6 7. O-O Be7 8. c4 Nb4 9. Be2 O-O 10. Nc3 Bf5 11. a3 Nxc3 12. bxc3 Nc6 13. Re1 Re8 14. cxd5 Qxd5 15. Bf4 Rac8 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/wmM4bwZ7"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "17:59:41"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "C67"]
+[Opening "Ruy Lopez: Berlin Defense, l'Hermet Variation, Berlin Wall Defense"]
+[Termination "Unterminated"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6 4. O-O Nxe4 5. d4 Nd6 6. Bxc6 dxc6 7. dxe5 Nf5 8. Qxd8+ Kxd8 9. Nc3 Ke8 10. h3 h5 11. Bf4 Be7 12. Rad1 Be6 13. Ng5 Rh6 14. Rfe1 Bb4 15. g4 hxg4 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/kwN0A4E2"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "17:59:26"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "C99"]
+[Opening "Ruy Lopez: Morphy Defense, Chigorin Defense, Panov System"]
+[Termination "Unterminated"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Na5 10. Bc2 c5 11. d4 Qc7 12. Nbd2 cxd4 13. cxd4 Nc6 14. Nb3 a5 15. Be3 a4 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/Fmt4vCLw"]
+[Date "2020.12.16"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2020.12.16"]
+[UTCTime "19:31:07"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "C53"]
+[Opening "Italian Game: Classical Variation, Center Attack"]
+[Termination "Unterminated"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. c3 Nf6 5. d4 exd4 6. b4 Bb6 7. e5 Ne4 8. Bd5 Nxc3 9. Nxc3 dxc3 10. Bg5 Ne7 11. O-O h6 12. Bh4 O-O 13. Re1 Qe8 14. Bb3 a5 15. Bf6 a4 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/9XtmChVU"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "17:58:36"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "C55"]
+[Opening "Italian Game: Two Knights Defense, Modern Bishop's Opening"]
+[Termination "Unterminated"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. d3 Be7 5. O-O O-O 6. Re1 d6 7. a4 Na5 8. Ba2 c5 9. c3 Nc6 10. Na3 h6 11. Bd2 a6 12. h3 Rb8 13. Nc4 Be6 14. b4 cxb4 15. cxb4 d5 *
+
+
+[Event "Import"]
+[Site "https://lichess.org/jraJLYll"]
+[Date "2022.01.03"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+[UTCDate "2022.01.03"]
+[UTCTime "17:57:37"]
+[WhiteElo "?"]
+[BlackElo "?"]
+[Variant "Standard"]
+[TimeControl "-"]
+[ECO "C53"]
+[Opening "Italian Game: Classical Variation, Giuoco Pianissimo"]
+[Termination "Unterminated"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. c3 Nf6 5. d3 d6 6. O-O a6 7. Bb3 Ba7 8. Nbd2 O-O 9. h3 h6 10. Re1 Nh5 11. Nf1 Qf6 12. Be3 Nf4 13. Ng3 g6 14. d4 h5 15. a4 Re8 *
+
+

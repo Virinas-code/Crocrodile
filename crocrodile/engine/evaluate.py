@@ -192,14 +192,14 @@ def evaluate2(board: chess.Board) -> int:
     piece_map = board.piece_map()
     score = 0
     # Constants
-    
+
     # Material advantage
     for piece in piece_map.values():
         if piece.color == chess.WHITE:
             score += pieces_values[piece.piece_type]
     # King security
     king_position = list(piece_map.keys())[list(piece_map.values()).index(chess.Piece(chess.KING,
-        chess.WHITE))]
+                                                                                      chess.WHITE))]
     king_squares = [
         king_position - 1,
         king_position + 1,
@@ -213,20 +213,20 @@ def evaluate2(board: chess.Board) -> int:
     king_protection = - (2 * king_protected)
     for square in king_squares:
         if square in piece_map and piece_map[square].piece_type in bad_edges_pieces \
-         and piece_map[square].color == chess.WHITE:
+                and piece_map[square].color == chess.WHITE:
             king_protection += king_protected
     # Pieces developement and activity
     for square in knight_base:
         if square in piece_map and piece_map[square].piece_type == chess.KNIGHT \
-         and piece_map[square].color == chess.WHITE:
+                and piece_map[square].color == chess.WHITE:
             score -= knight_at_home
     for square in bishop_base:
         if square in piece_map and piece_map[square].piece_type == chess.BISHOP \
-         and piece_map[square].color == chess.WHITE:
+                and piece_map[square].color == chess.WHITE:
             score -= bishop_at_home
     for square in bad_edges:
         if square in piece_map and piece_map[square].piece_type in bad_edges_pieces \
-         and piece_map[square].color == chess.WHITE:
+                and piece_map[square].color == chess.WHITE:
             score -= bad_edges_malus
     # Return
     return score
@@ -238,9 +238,9 @@ BISHOP_VALUE = 310
 ROOK_VALUE = 500
 QUEEN_VALUE = 900
 PIECES_VALUES = {chess.PAWN: PAWN_VALUE, chess.KNIGHT: KNIGHT_VALUE,
-                  chess.BISHOP: BISHOP_VALUE, chess.ROOK: ROOK_VALUE,
-                  chess.QUEEN: QUEEN_VALUE, chess.KING: 0}
-KING_PROTECTED = 25
+                 chess.BISHOP: BISHOP_VALUE, chess.ROOK: ROOK_VALUE,
+                 chess.QUEEN: QUEEN_VALUE, chess.KING: 0}
+KING_PROTECTED = 5
 KNIGHT_BASE = [1, 6]
 KNIGHT_AT_HOME = 15
 BISHOP_BASE = [2, 5]
@@ -262,6 +262,10 @@ class Evaluator():
         :rtype: int
         """
         score = 0
+        if position.is_checkmate():
+            if position.turn == chess.WHITE:
+                return -10000
+            return 10000
         white_score = self.evaluate_position(position)
         white_score += self.evaluate_move(position, move)
         black_score = self.evaluate_position(position.mirror())
@@ -334,15 +338,15 @@ class Evaluator():
         score = 0
         for square in KNIGHT_BASE:
             if square in piece_map and piece_map[square].piece_type == chess.KNIGHT \
-             and piece_map[square].color == chess.WHITE:
+                    and piece_map[square].color == chess.WHITE:
                 score -= KNIGHT_AT_HOME
         for square in BISHOP_BASE:
             if square in piece_map and piece_map[square].piece_type == chess.BISHOP \
-             and piece_map[square].color == chess.WHITE:
+                    and piece_map[square].color == chess.WHITE:
                 score -= BISHOP_AT_HOME
         for square in BAD_EDGES:
             if square in piece_map and piece_map[square].piece_type in BAD_EDGES_PIECES \
-             and piece_map[square].color == chess.WHITE:
+                    and piece_map[square].color == chess.WHITE:
                 score -= BAD_EDGES_MALUS
         return score
 
@@ -369,7 +373,7 @@ class Evaluator():
         """
         score = 0
         if move.from_square in position.piece_map() \
-         and position.piece_map()[move.from_square].piece_type == chess.KING \
-         and move.to_square in (chess.G1, chess.C1):
+                and position.piece_map()[move.from_square].piece_type == chess.KING \
+                and move.to_square in (chess.G1, chess.C1):
             score += 70
         return score

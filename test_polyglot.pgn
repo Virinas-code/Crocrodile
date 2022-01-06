@@ -1,0 +1,14 @@
+[Event "Événement local"]
+[Site "Site local"]
+[Date "2022.01.03"]
+[Round "1"]
+[White "Alexei"]
+[Black "Invité"]
+[Result "*"]
+[PlyCount "3"]
+[Termination "unterminated"]
+[ECO "C40"]
+[Opening "Début ouvert"]
+
+1. e4 e5 ( 1... d5 2. exd5 ) 2. Nf3 *
+

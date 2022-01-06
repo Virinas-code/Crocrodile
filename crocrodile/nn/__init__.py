@@ -16,6 +16,7 @@ import sys
 from typing import Optional, Tuple
 
 import chess
+import chess.polyglot
 import numpy
 
 # ====== IDLE ======
@@ -24,6 +25,7 @@ import numpy
 # ==== END IDLE ====
 
 NoneType = type(None)
+LAYERS = 5
 
 
 class NeuralNetwork:
@@ -91,6 +93,7 @@ class NeuralNetwork:
         self.b_pieces: list[numpy.ndarray] = list()
         self.w_last: numpy.ndarray = list()
         self.b_last: numpy.ndarray = list()
+        self.transpositions: dict[str, dict[str, bool]] = {}
 
     def load_networks(self) -> None:
         """
@@ -197,7 +200,8 @@ class NeuralNetwork:
             # En passant
             if board.has_legal_en_passant():
                 ep_square: chess.Square = board.ep_square
-                result[chess.square_rank(ep_square)][chess.square_file(ep_square)] = 0.01
+                result[chess.square_rank(
+                    ep_square)][chess.square_file(ep_square)] = 0.01
 
             # Return
             return result
@@ -207,7 +211,6 @@ class NeuralNetwork:
             ranks = list("12345678")
             reversed_ranks = list(reversed(ranks))
             return reversed_ranks[ranks.index(rank)]
-
 
         def flip_move_vertical(uci: str) -> str:
             """
@@ -241,16 +244,19 @@ class NeuralNetwork:
             "p": 1,
         }
         piece_map = board.piece_map()
-        piece_from = piece_map[chess.Move.from_uci(move).from_square].symbol().lower()
         try:
-            piece_to = piece_map[chess.Move.from_uci(move).to_square].symbol().lower()
+            piece_from = piece_map[chess.Move.from_uci(
+                move).from_square].symbol().lower()
+            try:
+                piece_to = piece_map[chess.Move.from_uci(
+                    move).to_square].symbol().lower()
+            except KeyError:
+                pass
+            else:
+                if pieces_values[piece_to] > pieces_values[piece_from]:
+                    return False
         except KeyError:
             pass
-        else:
-            if pieces_values[piece_to] > pieces_values[piece_from]:
-                return False
-
-
         # First board
         board1: numpy.ndarray = board_to_matrix(board)
 
@@ -393,21 +399,58 @@ class NeuralNetwork:
         """
         hidden_layer: numpy.ndarray = self.input_layer
         mask_false = 16 * [16 * [False]]
-        for layer_index in range(16):
-            mask_pawns = numpy.ma.masked_outside(abs(hidden_layer), 0.08, 0.1699).mask
-            mask_pieces = numpy.ma.masked_outside(abs(hidden_layer), 0.17, 1.16).mask
-            hidden_layer = (numpy.ma.array(hidden_layer, mask=mask_pawns) @ self.w_pawns[layer_index] \
-                           + numpy.ma.array(self.b_pawns[layer_index], mask=mask_pawns)) + \
-                           (numpy.ma.array(hidden_layer, mask=mask_pieces) @ self.w_pieces[layer_index] \
-                           + numpy.ma.array(self.b_pieces[layer_index], mask=mask_pieces))
+        for layer_index in range(LAYERS):
+            mask_pawns = numpy.ma.masked_outside(
+                abs(hidden_layer), 0.08, 0.1699).mask
+            mask_pieces = numpy.ma.masked_outside(
+                abs(hidden_layer), 0.17, 1.16).mask
+            hidden_layer = (numpy.ma.array(hidden_layer, mask=mask_pawns) @ self.w_pawns[layer_index]
+                            + numpy.ma.array(self.b_pawns[layer_index], mask=mask_pawns)) + \
+                           (numpy.ma.array(hidden_layer, mask=mask_pieces) @ self.w_pieces[layer_index]
+                            + numpy.ma.array(self.b_pieces[layer_index], mask=mask_pieces))
             hidden_layer.mask = mask_false
         column_mask = 16 * [[False]]
         line_mask = [16 * [False]]
         hidden_layer = (hidden_layer @ numpy.ma.array(self.w_pawns[-1], mask=column_mask) + self.b_pawns[-1]) + \
-                       (hidden_layer @ numpy.ma.array(self.w_pieces[-1], mask=column_mask) + self.b_pieces[-1])
-        self.output_layer = numpy.ma.array(self.w_last, mask=line_mask) @ hidden_layer + self.b_last
-        print(self.output_layer)  # DEBUG
+                       (hidden_layer @
+                        numpy.ma.array(self.w_pieces[-1], mask=column_mask) + self.b_pieces[-1])
+        self.output_layer = numpy.ma.array(
+            self.w_last, mask=line_mask) @ hidden_layer + self.b_last
         return self.output_layer
+
+    def check_move_with_transpos(self, board: str, move: str) -> bool:
+        """Check a move with transposition.
+
+        Generate inputs, calculate and return output.
+
+        :param board: FEN of the board to check.
+        :type board: str
+        :param move: Move who will be played.
+        :type move: str
+        :return: Wether if move is interesting or not.
+        :rtype: bool
+        """
+        zobrist: str = chess.polyglot.zobrist_hash(chess.Board(board))
+        transpos_result: bool | None = self.transpositions.get(
+            zobrist, None).get(move, None)
+        if transpos_result is None:
+            if self.generate_inputs(board, move):
+                self.calculate()
+                output = self.output()
+                try:
+                    self.transpositions[zobrist][move] = output
+                except KeyError:
+                    self.transpositions[zobrist] = {move: output}
+                return output
+            else:
+                try:
+                    self.transpositions[zobrist][move] = True
+                except KeyError:
+                    self.transpositions[zobrist] = {move: True}
+                return True
+        else:
+            # if len(transpos_result)
+            return transpos_result
 
     def check_move(self, board, move):
         """Generate inputs, calculate and return output."""
@@ -521,7 +564,6 @@ class NeuralNetwork:
         # Return
         return good_moves_result, bad_moves_result
 
-
     def test_full(self, list_good_moves: list, list_bad_moves: list, sub=False,
                   good_moves_data=0, bad_moves_data=0) -> Tuple[int, int]:
         """
@@ -552,8 +594,13 @@ class NeuralNetwork:
             if not self.check_move(position, move):
                 bad_moves_result += 1
         ## print(f"DEBUG: crocrodile.nn.NeuralNetwork.test_full: {good_moves_result=} {bad_moves_result=}")
-        good_moves_data.value = good_moves_data.value + good_moves_result
-        bad_moves_data.value = bad_moves_data.value + bad_moves_result
+        try:
+            good_moves_data.value = good_moves_data.value + good_moves_result
+            bad_moves_data.value = bad_moves_data.value + bad_moves_result
+        except:
+            pass
+        self.old_good_moves_result = good_moves_result
+        self.old_bad_moves_result = bad_moves_result
         ## print(f"DEBUG: crocrodile.nn.NeuralNetwork.test_full: {self.multiprocesses_result=}")
         return good_moves_result, bad_moves_result
 
@@ -2225,17 +2272,25 @@ class NeuralNetwork:
             saved_results.append([float(element)])
         self.array_to_csv(saved_results, "nns/results.csv")
         print("Done.")
-    
+
     def save(self, nn: int) -> None:
-        for layer in range(16):
-            numpy.savetxt(f"nns/{nn}-wpawns-{layer}.csv", self.w_pawns[layer], delimiter=",")
-            numpy.savetxt(f"nns/{nn}-wpieces-{layer}.csv", self.w_pieces[layer], delimiter=",")
-            numpy.savetxt(f"nns/{nn}-bpawns-{layer}.csv", self.b_pawns[layer], delimiter=",")
-            numpy.savetxt(f"nns/{nn}-bpieces-{layer}.csv", self.b_pieces[layer], delimiter=",")
-        numpy.savetxt(f"nns/{nn}-wpawns-beforelast.csv", self.w_pawns[-1], delimiter=",")
-        numpy.savetxt(f"nns/{nn}-wpieces-beforelast.csv", self.w_pieces[-1], delimiter=",")
-        numpy.savetxt(f"nns/{nn}-bpawns-beforelast.csv", self.b_pawns[-1], delimiter=",")
-        numpy.savetxt(f"nns/{nn}-bpieces-beforelast.csv", self.b_pieces[-1], delimiter=",")
+        for layer in range(LAYERS):
+            numpy.savetxt(f"nns/{nn}-wpawns-{layer}.csv",
+                          self.w_pawns[layer], delimiter=",")
+            numpy.savetxt(f"nns/{nn}-wpieces-{layer}.csv",
+                          self.w_pieces[layer], delimiter=",")
+            numpy.savetxt(f"nns/{nn}-bpawns-{layer}.csv",
+                          self.b_pawns[layer], delimiter=",")
+            numpy.savetxt(f"nns/{nn}-bpieces-{layer}.csv",
+                          self.b_pieces[layer], delimiter=",")
+        numpy.savetxt(f"nns/{nn}-wpawns-beforelast.csv",
+                      self.w_pawns[-1], delimiter=",")
+        numpy.savetxt(f"nns/{nn}-wpieces-beforelast.csv",
+                      self.w_pieces[-1], delimiter=",")
+        numpy.savetxt(f"nns/{nn}-bpawns-beforelast.csv",
+                      self.b_pawns[-1], delimiter=",")
+        numpy.savetxt(f"nns/{nn}-bpieces-beforelast.csv",
+                      self.b_pieces[-1], delimiter=",")
         numpy.savetxt(f"nns/{nn}-w-last.csv", self.w_last, delimiter=",")
         numpy.savetxt(f"nns/{nn}-b-last.csv", self.b_last, delimiter=",")
 
@@ -2247,15 +2302,23 @@ class NeuralNetwork:
         :return: Nothing.
         :rtype: None
         """
-        for layer in range(16):
-            self.w_pawns.append(numpy.genfromtxt(f"nns/{nn}-wpawns-{layer}.csv", delimiter=","))
-            self.b_pawns.append(numpy.genfromtxt(f"nns/{nn}-bpawns-{layer}.csv", delimiter=","))
-            self.w_pieces.append(numpy.genfromtxt(f"nns/{nn}-wpieces-{layer}.csv", delimiter=","))
-            self.b_pieces.append(numpy.genfromtxt(f"nns/{nn}-bpieces-{layer}.csv", delimiter=","))
-        self.w_pawns.append(numpy.genfromtxt(f"nns/{nn}-wpawns-beforelast.csv", delimiter=","))
-        self.b_pawns.append(numpy.genfromtxt(f"nns/{nn}-bpawns-beforelast.csv", delimiter=","))
-        self.w_pieces.append(numpy.genfromtxt(f"nns/{nn}-wpieces-beforelast.csv", delimiter=","))
-        self.b_pieces.append(numpy.genfromtxt(f"nns/{nn}-bpieces-beforelast.csv", delimiter=","))
+        for layer in range(LAYERS):
+            self.w_pawns.append(numpy.genfromtxt(
+                f"nns/{nn}-wpawns-{layer}.csv", delimiter=","))
+            self.b_pawns.append(numpy.genfromtxt(
+                f"nns/{nn}-bpawns-{layer}.csv", delimiter=","))
+            self.w_pieces.append(numpy.genfromtxt(
+                f"nns/{nn}-wpieces-{layer}.csv", delimiter=","))
+            self.b_pieces.append(numpy.genfromtxt(
+                f"nns/{nn}-bpieces-{layer}.csv", delimiter=","))
+        self.w_pawns.append(numpy.genfromtxt(
+            f"nns/{nn}-wpawns-beforelast.csv", delimiter=","))
+        self.b_pawns.append(numpy.genfromtxt(
+            f"nns/{nn}-bpawns-beforelast.csv", delimiter=","))
+        self.w_pieces.append(numpy.genfromtxt(
+            f"nns/{nn}-wpieces-beforelast.csv", delimiter=","))
+        self.b_pieces.append(numpy.genfromtxt(
+            f"nns/{nn}-bpieces-beforelast.csv", delimiter=","))
         self.w_pawns[-1] = self.w_pawns[-1].reshape(16, 1)
         self.b_pawns[-1] = self.b_pawns[-1].reshape(16, 1)
         self.w_pieces[-1] = self.w_pieces[-1].reshape(16, 1)
@@ -2272,7 +2335,7 @@ class NeuralNetwork:
         self.w_pieces.clear()
         self.b_pawns.clear()
         self.b_pieces.clear()
-        for layer in range(17):
+        for layer in range(LAYERS + 1):
             self.w_pawns.append(zero)
             self.w_pieces.append(zero)
             self.b_pawns.append(zero)
@@ -2288,11 +2351,12 @@ class NeuralNetwork:
         column_zeros: numpy.ndarray = numpy.zeros((16, 1))
         column_negative_ones: numpy.ndarray = numpy.empty((8, 1))
         column_negative_ones.fill(-1)
-        column_matrix: numpy.ndarray = numpy.block([[column_ones], [column_negative_ones]])
+        column_matrix: numpy.ndarray = numpy.block(
+            [[column_ones], [column_negative_ones]])
         line_ones: numpy.ndarray = numpy.ones((1, 16))
         zero: numpy.ndarray = numpy.zeros((1, 1))
         self.clear()
-        for layer in range(16):
+        for layer in range(LAYERS):
             self.w_pawns[layer] = identity
             self.w_pieces[layer] = identity
             self.b_pawns[layer] = zeros

@@ -1,0 +1,21 @@
+[Event "TCEC Season 21 - Superfinal"]
+[Site "https://tcec-chess.com"]
+[Date "2021.07.20"]
+[Round "1.1"]
+[White "LCZero 0.28-dev+_69626"]
+[Black "Stockfish 14_202107131735"]
+[Result "1/2-1/2"]
+[WhiteElo "3623"]
+[BlackElo "3639"]
+[TimeControl "7200+10"]
+[Termination "adjudication"]
+[UTCDate "2022.01.01"]
+[UTCTime "12:24:22"]
+[Variant "Standard"]
+[ECO "B67"]
+[Opening "Sicilian Defense: Richter-Rauzer Variation, Neo-Modern Variation"]
+[Annotator "https://lichess.org/@/Virinas-code"]
+
+1. e4 { [%eval 0.0] } 1... c5 { [%eval 0.32] } 2. Nf3 { [%eval 0.0] } 2... d6 { [%eval 0.0] } 3. d4 { [%eval 0.15] } 3... cxd4 { [%eval 0.13] } 4. Nxd4 { [%eval 0.29] } 4... Nf6 { [%eval 0.31] } 5. Nc3 { [%eval 0.18] } 5... Nc6 { [%eval 0.47] } 6. Bg5 { [%eval 0.0] } 6... e6 { [%eval 0.23] } 7. Qd2 { [%eval 0.09] } 7... a6 { [%eval 0.29] } 8. O-O-O { [%eval 0.48] } 8... Bd7 { [%eval 0.79] } 9. f3 { [%eval 0.59] } 9... h6 { [%eval 0.62] } 10. Be3 { [%eval 0.48] } 10... b5 { [%eval 0.69] } 11. g4 { [%eval 0.69] } 11... Ne5?! { [%eval 1.23] } { Inaccuracy. Nxd4 was best. } (11... Nxd4 12. Qxd4) 12. a3 { [%eval 1.22] } 12... Qb8 { [%eval 1.13] } 13. h4 { [%eval 0.93] } 13... b4 { [%eval 0.96] } 14. axb4 { [%eval 0.68] } 14... Qxb4 { [%eval 0.85] } 15. Qf2 { [%eval 1.12] } 15... Rb8 { [%eval 1.05] } 16. Nb3 { [%eval 0.7] } 16... a5 { [%eval 1.15] } 17. Be2 { [%eval 1.64] } 17... Nc6 { [%eval 1.23] } 18. Bd2 { [%eval 1.1] } 18... Qb7 { [%eval 1.08] } 19. g5 { [%eval 0.37] } 19... Ng8?! { [%eval 1.06] } { Inaccuracy. Nb4 was best. } (19... Nb4) 20. gxh6 { [%eval 1.03] } 20... Nxh6 { [%eval 0.75] } 21. Be3 { [%eval 0.65] } 21... Ng8?! { [%eval 1.29] } { Inaccuracy. Qb4 was best. } (21... Qb4) 22. h5 { [%eval 1.15] } 22... Nf6 { [%eval 1.29] } 23. h6 { [%eval 1.06] } 23... Rxh6 { [%eval 0.85] } 24. Bxh6 { [%eval 1.11] } 24... gxh6 { [%eval 1.22] } 25. Bb5 { [%eval 0.78] } 25... Nb4 { [%eval 1.05] } 26. Nd4 { [%eval 0.92] } 26... e5 { [%eval 0.69] } 27. Bxd7+ { [%eval 0.7] } 27... Nxd7 { [%eval 0.73] } 28. Nf5 { [%eval 0.61] } 28... d5 { [%eval 0.78] } 29. exd5 { [%eval 1.02] } 29... Na2+ { [%eval 0.73] } 30. Nxa2 { [%eval 0.99] } 30... Qxb2+ { [%eval 0.89] } 31. Kd2 { [%eval 0.8] } 31... Rc8 { [%eval 0.68] } 32. Ne3 { [%eval 0.68] } 32... Qxa2 { [%eval 0.68] } 33. Ke1 { [%eval 0.75] } 33... f5 { [%eval 1.03] } 34. Rh2 { [%eval 0.67] } 34... f4 { [%eval 0.67] } 35. Nf5 { [%eval 0.66] } 35... Rc5 { [%eval 0.36] } 36. Qe2 { [%eval 0.32] } 36... Rxd5 { [%eval 0.17] } 37. Nxh6 { [%eval 0.16] } 37... Rxd1+ { [%eval 0.5] } 38. Qxd1 { [%eval 0.55] } 38... a4 { [%eval 0.72] } 39. Ng4 { [%eval 0.4] } 39... e4 { [%eval 0.71] } 40. Rh7 { [%eval 0.25] } 40... Be7 { [%eval 0.74] } 41. Rh8+ { [%eval 0.82] } 41... Bf8 { [%eval 0.51] } 42. fxe4 { [%eval 0.36] } 42... Qe6 { [%eval 0.22] } 43. Qf3 { [%eval 0.41] } 43... a3 { [%eval 0.03] } 44. e5 { [%eval 0.19] } 44... Kd8 { [%eval 0.73] } 45. Qa8+?! { [%eval 0.0] } { Inaccuracy. Kd2 was best. } (45. Kd2 Kc7 46. Qc3+ Bc5 47. Qa5+ Qb6 48. Qxb6+ Nxb6 49. Kc3 Kd7 50. Rh6 f3 51. Kb3 a2) 45... Kc7 { [%eval 0.13] } 46. Qa7+ { [%eval 0.0] } 46... Kc8 { [%eval 0.09] } 47. Qxa3 { [%eval 0.0] } 47... Qxg4 { [%eval 0.05] } 48. Rxf8+ { [%eval 0.0] } 48... Nxf8 { [%eval 0.0] } 49. Qxf8+ { [%eval 0.0] } 49... Kd7 { [%eval 0.0] } 50. Qf7+ { [%eval 0.0] } 50... Kd8 { [%eval 0.06] } 51. Qd5+ { [%eval 0.0] } 51... Ke7 { [%eval 0.0] } 52. Qb7+ { [%eval 0.16] } 52... Kf8 { [%eval 0.03] } 53. Qb4+ { [%eval 0.0] } 53... Kf7 { [%eval 0.0] } 54. Qc4+ { [%eval 0.0] } 1/2-1/2
+
+

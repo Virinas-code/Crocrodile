@@ -7,6 +7,8 @@ Starts Crocrodile.
 """
 import sys
 import crocrodile
+import crocrodile.nn
+import crocrodile.nn.basics_train
 
 print(sys.argv)
 
