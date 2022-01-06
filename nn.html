@@ -131,6 +131,27 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="crocrodile.nn.NeuralNetwork.check_move_with_transpos">
+<code class="sig-name descname">check_move_with_transpos</code><span class="sig-paren">(</span><em class="sig-param">board: str</em>, <em class="sig-param">move: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.check_move_with_transpos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.check_move_with_transpos" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Check a move with transposition.</p>
+<p>Generate inputs, calculate and return output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>board</strong> (<em>str</em>) – FEN of the board to check.</p></li>
+<li><p><strong>move</strong> (<em>str</em>) – Move who will be played.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Wether if move is interesting or not.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="crocrodile.nn.NeuralNetwork.check_test">
 <code class="sig-name descname">check_test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.check_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.check_test" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Check NN on test dataset.</p>

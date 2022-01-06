@@ -263,14 +263,14 @@
     <span class="n">piece_map</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span>
     <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="c1"># Constants</span>
-    
+
     <span class="c1"># Material advantage</span>
     <span class="k">for</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">piece_map</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
             <span class="n">score</span> <span class="o">+=</span> <span class="n">pieces_values</span><span class="p">[</span><span class="n">piece</span><span class="o">.</span><span class="n">piece_type</span><span class="p">]</span>
     <span class="c1"># King security</span>
     <span class="n">king_position</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">piece_map</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="nb">list</span><span class="p">(</span><span class="n">piece_map</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">Piece</span><span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">KING</span><span class="p">,</span>
-        <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">))]</span>
+                                                                                      <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">))]</span>
     <span class="n">king_squares</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">king_position</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">king_position</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
@@ -284,20 +284,20 @@
     <span class="n">king_protection</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">king_protected</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">king_squares</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="ow">in</span> <span class="n">bad_edges_pieces</span> \
-         <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
             <span class="n">king_protection</span> <span class="o">+=</span> <span class="n">king_protected</span>
     <span class="c1"># Pieces developement and activity</span>
     <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">knight_base</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">KNIGHT</span> \
-         <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
             <span class="n">score</span> <span class="o">-=</span> <span class="n">knight_at_home</span>
     <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">bishop_base</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">BISHOP</span> \
-         <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
             <span class="n">score</span> <span class="o">-=</span> <span class="n">bishop_at_home</span>
     <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">bad_edges</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="ow">in</span> <span class="n">bad_edges_pieces</span> \
-         <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
             <span class="n">score</span> <span class="o">-=</span> <span class="n">bad_edges_malus</span>
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">score</span></div>
@@ -309,9 +309,9 @@
 <span class="n">ROOK_VALUE</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">QUEEN_VALUE</span> <span class="o">=</span> <span class="mi">900</span>
 <span class="n">PIECES_VALUES</span> <span class="o">=</span> <span class="p">{</span><span class="n">chess</span><span class="o">.</span><span class="n">PAWN</span><span class="p">:</span> <span class="n">PAWN_VALUE</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">KNIGHT</span><span class="p">:</span> <span class="n">KNIGHT_VALUE</span><span class="p">,</span>
-                  <span class="n">chess</span><span class="o">.</span><span class="n">BISHOP</span><span class="p">:</span> <span class="n">BISHOP_VALUE</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">ROOK</span><span class="p">:</span> <span class="n">ROOK_VALUE</span><span class="p">,</span>
-                  <span class="n">chess</span><span class="o">.</span><span class="n">QUEEN</span><span class="p">:</span> <span class="n">QUEEN_VALUE</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">KING</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
-<span class="n">KING_PROTECTED</span> <span class="o">=</span> <span class="mi">25</span>
+                 <span class="n">chess</span><span class="o">.</span><span class="n">BISHOP</span><span class="p">:</span> <span class="n">BISHOP_VALUE</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">ROOK</span><span class="p">:</span> <span class="n">ROOK_VALUE</span><span class="p">,</span>
+                 <span class="n">chess</span><span class="o">.</span><span class="n">QUEEN</span><span class="p">:</span> <span class="n">QUEEN_VALUE</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">KING</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="n">KING_PROTECTED</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">KNIGHT_BASE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
 <span class="n">KNIGHT_AT_HOME</span> <span class="o">=</span> <span class="mi">15</span>
 <span class="n">BISHOP_BASE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
@@ -333,6 +333,10 @@
 <span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">position</span><span class="o">.</span><span class="n">is_checkmate</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">position</span><span class="o">.</span><span class="n">turn</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">10000</span>
+            <span class="k">return</span> <span class="mi">10000</span>
         <span class="n">white_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_position</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="n">white_score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_move</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">move</span><span class="p">)</span>
         <span class="n">black_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_position</span><span class="p">(</span><span class="n">position</span><span class="o">.</span><span class="n">mirror</span><span class="p">())</span>
@@ -405,15 +409,15 @@
         <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">KNIGHT_BASE</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">KNIGHT</span> \
-             <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                    <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
                 <span class="n">score</span> <span class="o">-=</span> <span class="n">KNIGHT_AT_HOME</span>
         <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">BISHOP_BASE</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">BISHOP</span> \
-             <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                    <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
                 <span class="n">score</span> <span class="o">-=</span> <span class="n">BISHOP_AT_HOME</span>
         <span class="k">for</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">BAD_EDGES</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">piece_map</span> <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="ow">in</span> <span class="n">BAD_EDGES_PIECES</span> \
-             <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
+                    <span class="ow">and</span> <span class="n">piece_map</span><span class="p">[</span><span class="n">square</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">WHITE</span><span class="p">:</span>
                 <span class="n">score</span> <span class="o">-=</span> <span class="n">BAD_EDGES_MALUS</span>
         <span class="k">return</span> <span class="n">score</span></div>
 
@@ -440,8 +444,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">move</span><span class="o">.</span><span class="n">from_square</span> <span class="ow">in</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span> \
-         <span class="ow">and</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()[</span><span class="n">move</span><span class="o">.</span><span class="n">from_square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">KING</span> \
-         <span class="ow">and</span> <span class="n">move</span><span class="o">.</span><span class="n">to_square</span> <span class="ow">in</span> <span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">G1</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">C1</span><span class="p">):</span>
+                <span class="ow">and</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()[</span><span class="n">move</span><span class="o">.</span><span class="n">from_square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">KING</span> \
+                <span class="ow">and</span> <span class="n">move</span><span class="o">.</span><span class="n">to_square</span> <span class="ow">in</span> <span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">G1</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">C1</span><span class="p">):</span>
             <span class="n">score</span> <span class="o">+=</span> <span class="mi">70</span>
         <span class="k">return</span> <span class="n">score</span></div></div>
 </pre></div>
