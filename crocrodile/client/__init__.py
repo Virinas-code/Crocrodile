@@ -14,6 +14,7 @@ import time
 import berserk
 import chess
 import colorama
+
 # from Crocrodile.main import yukoo
 import crocrodile
 import crocrodile.engine
@@ -69,8 +70,7 @@ def _lerr(id, *args, **kwargs):
     error_log.write(" ".join(str(arg) for arg in args) + "\n")
     try:
         client.bots.post_message(id, "ERROR: " + " ".join(args))
-        client.bots.post_message(
-            id, "ERROR: " + " ".join(args), spectator=True)
+        client.bots.post_message(id, "ERROR: " + " ".join(args), spectator=True)
     except:
         pass
     print(
@@ -143,8 +143,7 @@ class Game(threading.Thread):
     def __init__(self, client, game_id, color, fen, **kwargs):
         super().__init__(**kwargs)
         lok(game_id, "Starting... (FEN", fen + ")")
-        self.engine = crocrodile.engine.EngineBase(
-            "Crocrodile", "Virinas-code")
+        self.engine = crocrodile.engine.EngineBase("Crocrodile", "Virinas-code")
         self.game_id = game_id
         self.initial_fen = fen
         self.client = client
@@ -217,11 +216,7 @@ class Game(threading.Thread):
                     len(list(board.legal_moves)),
                     "/ Selected moves :",
                     len(self.engine.nn_select_best_moves(board)),
-                    "("
-                    + ", ".join(
-                        nn_moves
-                    )
-                    + ")",
+                    "(" + ", ".join(nn_moves) + ")",
                 )
                 last_score, last_best_move = self.engine.search(
                     board, depth, board.turn, float("inf")
@@ -229,7 +224,8 @@ class Game(threading.Thread):
                 while True:
                     depth += 1
                     score, best_move = self.engine.search(
-                        board, depth, board.turn, limit)
+                        board, depth, board.turn, limit
+                    )
                     if score == float("inf"):
                         score = last_score
                         best_move = last_best_move
@@ -239,6 +235,8 @@ class Game(threading.Thread):
                         )
                         break
                     elif score == 10000 or score == -10000:
+                        break
+                    elif depth > 10:
                         break
                     else:
                         last_score, last_best_move = (
@@ -400,11 +398,11 @@ def main(argv: list) -> None:
                 ):  # patch-002
                     client.bots.accept_challenge(event["challenge"]["id"])
                     lok(event["challenge"]["id"], "Accepted")
-                    colors[event["challenge"]["id"]
-                           ] = event["challenge"]["color"]
+                    colors[event["challenge"]["id"]] = event["challenge"]["color"]
                     if event["challenge"]["variant"]["key"] == "fromPosition":
-                        fens[event["challenge"]["id"]
-                             ] = event["challenge"]["initialFen"]
+                        fens[event["challenge"]["id"]] = event["challenge"][
+                            "initialFen"
+                        ]
                     else:
                         fens[event["challenge"]["id"]] = chess.STARTING_FEN
                 else:
@@ -444,9 +442,8 @@ def main(argv: list) -> None:
                     else:
                         lok(
                             event["challenge"]["id"],
-                            "Challenging " +
-                            show_user_description(
-                                event["challenge"]["destUser"]),
+                            "Challenging "
+                            + show_user_description(event["challenge"]["destUser"]),
                         )
             elif event["type"] == "gameStart":
                 game = Game(
@@ -475,8 +472,8 @@ def main(argv: list) -> None:
                 if event["challenge"]["challenger"]["id"] == "crocrodile":
                     lok(
                         event["challenge"]["id"],
-                        "Declined by " +
-                        show_user_description(event["challenge"]["destUser"]),
+                        "Declined by "
+                        + show_user_description(event["challenge"]["destUser"]),
                     )
                 else:
                     lok(event["challenge"]["id"], "Declined")
