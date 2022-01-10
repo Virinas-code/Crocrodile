@@ -5,16 +5,23 @@ Crocrodile UCI.
 
 Created by @Virinas-code.
 """
+import copy
+import os
 import sys
+import time
 from typing import Optional
 
 import chess
-import crocrodile
+import crocrodile.engine
+from crocrodile.engine import evaluate
 
 # ====== IDLE ======
 # import os
 # os.chdir("../")
 # ==== END IDLE ====
+
+print(os.getcwd())
+print(sys.path)
 
 NoneType = type(None)
 
@@ -28,10 +35,11 @@ class UCI:
         self.author = "Created by Virinas-code / Co-developed by ZeBox / "
         self.author += "Tested by PerleShetland"
         # default true when NN complete
-        self.options = {"Hash": "77", "NeuralNetwork": "false"}
+        self.options: dict[str, str] = {"Hash": "16", "NeuralNetwork": "true", "OwnBook": "false"}
         self.debug_mode = False
         self.board = chess.Board()
         self.positionned = False
+        self.engine = crocrodile.engine.EngineBase(self.name, self.author)
         print(self.name, self.author.lower())
 
     def run(self):
@@ -108,9 +116,9 @@ class UCI:
         print("id name {0}".format(self.name))
         print("id author {0}".format(self.author))
         print()
-        print("option name Hash type spin default 77")
-        # default true when NN complete
-        print("option name NeuralNetwork type check default false")
+        print("option name Hash type spin default 16 min 0 max 65536")
+        print("option name NeuralNetwork type check default true")
+        print("option name OwnBook type check default false")
         print("uciok")
 
     def debug(self, boolean: str) -> NoneType:
@@ -137,7 +145,16 @@ class UCI:
         """
         if len(args) > 3 and args[0] == "name" and args[2] == "value":
             if args[1] in self.options:
-                self.options[args[1]] = args[3:]
+                self.options[args[1]] = " ".join(args[3:])
+                self.engine.hashlimit = int(self.options["Hash"])
+                if self.options["NeuralNetwork"] == "true":
+                    self.engine.use_nn = True
+                else:
+                    self.engine.use_nn = False
+                if self.options["OwnBook"] == "true":
+                    self.engine.own_book = True
+                else:
+                    self.engine.own_book = False
             else:
                 print("Unknow option:", args[1])
         else:
@@ -149,9 +166,10 @@ class UCI:
 
         Start calculating.
         """
-        depth: Optional[int] = None
+        depth: Optional[int] = 256
         wtime: Optional[int] = None
         btime: Optional[int] = None
+        movetime: bool | int = False
         for indice, element in enumerate(args):
             if element == "depth":
                 try:
@@ -168,7 +186,28 @@ class UCI:
                     btime = int(args[indice + 1])
                 except ValueError:
                     print("Invalid btime.", file=sys.stderr)
-        self.info(depth)
+            if element == "movetime":
+                try:
+                    movetime = int(args[indice + 1])
+                except ValueError:
+                    print("Invalid movetime.", file=sys.stderr)
+        if self.board.turn and wtime:
+            limit = ((wtime / 1000) / 40) + time.time()
+        elif (not self.board.turn) and btime:
+            limit = ((btime / 1000) / 40) + time.time()
+        elif movetime:
+            limit = movetime / 1000
+        else:
+            limit = float("inf")
+        for search_depth in range(1, depth + 1):
+            evaluation, best_move = self.engine.search(
+                self.board, search_depth, self.board.turn, limit
+            )
+            if evaluation == float("inf"):
+                break
+            else:
+                last_best_move = copy.copy(best_move.uci())
+        print(f"bestmove {last_best_move}")
 
     def position(self, args: list) -> None:
         """
@@ -189,8 +228,8 @@ class UCI:
             print("Unknow syntax: position", " ".join(args))
         if next_arg and len(args) > next_arg + 1:
             self.info(args[next_arg])
-            self.info(args[next_arg + 1:])
-            for uci_move in args[next_arg + 1:]:
+            self.info(args[next_arg + 1 :])
+            for uci_move in args[next_arg + 1 :]:
                 try:
                     self.board.push(chess.Move.from_uci(uci_move))
                 except ValueError:
@@ -201,6 +240,6 @@ class UCI:
         self.positionned = False
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     uci = UCI()
     uci.run()

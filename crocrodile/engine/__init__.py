@@ -7,9 +7,9 @@ Base engine
 from __future__ import print_function
 
 import copy
-import csv
 import math
 import random
+import sys
 import time
 from typing import Optional
 
@@ -70,6 +70,10 @@ class EngineBase:
         self.opening_book = chess.polyglot.open_reader("./book.bin")
         self.obhits: int = 0
         self.tbhits: int = 0
+        self.hashlimit: int = 16  # Megabytes (Hash)
+        self.use_nn: bool = True  # Used to disable NN (NeuralNetwork)
+        self.hashfull: int = 0  # info hashfull
+        self.own_book: bool = False  # Use own book (OwnBook)
 
     def evaluate(self, board):
         """Evaluate position."""
@@ -80,12 +84,14 @@ class EngineBase:
         self.nodes = 0
         self.obhits: int = 0
         self.tbhits: int = 0
+        self.hashfull: int = 0
         start_time: float = time.time()
         eval, move = self.minimax_nn(board, depth, maximize_white, limit_time)
         calc_time: float = time.time() - start_time
-        print(
-            f"info depth {depth} nodes {self.nodes} score cp {eval} pv {move} tbhits {self.tbhits} time {int(calc_time * 1000)} nps {int(self.nodes / calc_time)} string obhits:{self.obhits}"
-        )
+        if eval != float("inf"):
+            print(
+                f"info depth {depth} nodes {self.nodes} score cp {eval} pv {move} tbhits {self.tbhits} time {int(calc_time * 1000)} nps {int(self.nodes / calc_time)} hashfull {self.hashfull} string obhits:{self.obhits}"
+            )
         return eval, move
 
     def minimax_std(self, board, depth, maximimize_white, limit_time):
@@ -151,20 +157,24 @@ class EngineBase:
                     list_best_moves = [move]
             return value, random.choice(list_best_moves)
 
-    def nn_select_best_moves(self, board):
+    def nn_select_best_moves(self, board: chess.Board):
         """Select best moves in board."""
         hash = chess.polyglot.zobrist_hash(board)
         if hash not in self.nn_tb:
-            if len(self.nn_tb) > self.nn_tb_limit:
-                del self.nn_tb[list(self.nn_tb.keys())[0]]
-            good_moves = list()
-            for move in board.legal_moves:
-                if self.nn.check_move(board.fen(), move.uci()):
-                    good_moves.append(move)
+            if self.use_nn:
+                good_moves = list()
+                for move in board.legal_moves:
+                    if self.nn.check_move(board.fen(), move.uci()):
+                        good_moves.append(move)
+            else:
+                good_moves: list[chess.Move] = list(board.legal_moves)
             self.nn_tb[hash] = good_moves
         good_moves = self.nn_tb[hash]
         if not good_moves:
             good_moves = list(board.legal_moves)
+        if int(sys.getsizeof(self.nn_tb) / 1024 / 1024) >= self.hashlimit / 2:
+            del self.nn_tb[list(self.nn_tb.keys())[0]]
+            self.hashfull += 1
         return good_moves
 
     def get_book_move(self, board: chess.Board) -> Optional[chess.Move]:
@@ -176,7 +186,7 @@ class EngineBase:
         :rtype: Optional[chess.Move]
         """
         try:
-            return self.opening_book.choice(board).move
+            return self.opening_book.weighted_choice(board).move
         except IndexError:
             return False
 
@@ -201,7 +211,7 @@ class EngineBase:
             return evaluation, chess.Move.from_uci("0000")
         if maximimize_white:
             book_move = None
-            if board.fullmove_number < 15 and (book_move := self.get_book_move(board)):
+            if self.own_book and board.fullmove_number < 15 and (book_move := self.get_book_move(board)):
                 self.obhits += 1
                 return 10000, book_move
             if len(board.piece_map()) <= 7:
@@ -237,6 +247,9 @@ class EngineBase:
                         test_board, depth - 1, False, limit_time
                     )[0]
                     self.tb[hash] = (copy.copy(depth), copy.copy(evaluation))
+                    if int(sys.getsizeof(self.tb) / 1024 / 1024) >= self.hashlimit / 2:
+                        del self.tb[list(self.tb.keys())[0]]
+                        self.hashfull += 1
                 if value == evaluation:
                     list_best_moves.append(move)
                 elif value < evaluation:
@@ -245,7 +258,7 @@ class EngineBase:
             return value, random.choice(list_best_moves)
         else:
             book_move = None
-            if board.fullmove_number < 15 and (book_move := self.get_book_move(board)):
+            if self.own_book and board.fullmove_number < 15 and (book_move := self.get_book_move(board)):
                 self.obhits += 1
                 return -10000, book_move
             if len(board.piece_map()) <= 7:
@@ -281,6 +294,10 @@ class EngineBase:
                     evaluation = self.minimax_nn(
                         test_board, depth - 1, True, limit_time
                     )[0]
+                    self.tb[hash] = (copy.copy(depth), copy.copy(evaluation))
+                    if int(sys.getsizeof(self.tb) / 1024 / 1024) >= self.hashlimit / 2:
+                        del self.tb[list(self.tb.keys())[0]]
+                        self.hashfull += 1
                 if value == evaluation:
                     list_best_moves.append(move)
                 elif value > evaluation:
