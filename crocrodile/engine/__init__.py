@@ -74,6 +74,7 @@ class EngineBase:
         self.use_nn: bool = True  # Used to disable NN (NeuralNetwork)
         self.hashfull: int = 0  # info hashfull
         self.own_book: bool = False  # Use own book (OwnBook)
+        self.syzygy_online: bool = False  # Use online Syzygy Lichess tables (SyzygyOnline)
 
     def evaluate(self, board):
         """Evaluate position."""
@@ -214,7 +215,7 @@ class EngineBase:
             if self.own_book and board.fullmove_number < 15 and (book_move := self.get_book_move(board)):
                 self.obhits += 1
                 return 10000, book_move
-            if len(board.piece_map()) <= 7:
+            if self.syzygy_online and len(board.piece_map()) <= 7:
                 formatted_fen = board.fen().replace(" ", "_")
                 data = requests.get(
                     f"http://tablebase.lichess.ovh/standard?fen={formatted_fen}"
@@ -261,7 +262,7 @@ class EngineBase:
             if self.own_book and board.fullmove_number < 15 and (book_move := self.get_book_move(board)):
                 self.obhits += 1
                 return -10000, book_move
-            if len(board.piece_map()) <= 7:
+            if self.syzygy_online and len(board.piece_map()) <= 7:
                 formatted_fen = board.fen().replace(" ", "_")
                 data = requests.get(
                     f"http://tablebase.lichess.ovh/standard?fen={formatted_fen}"

@@ -35,7 +35,7 @@ class UCI:
         self.author = "Created by Virinas-code / Co-developed by ZeBox / "
         self.author += "Tested by PerleShetland"
         # default true when NN complete
-        self.options: dict[str, str] = {"Hash": "16", "NeuralNetwork": "true", "OwnBook": "false"}
+        self.options: dict[str, str] = {"Hash": "16", "NeuralNetwork": "true", "OwnBook": "false", "SyzygyOnline": "false"}
         self.debug_mode = False
         self.board = chess.Board()
         self.positionned = False
@@ -119,6 +119,7 @@ class UCI:
         print("option name Hash type spin default 16 min 0 max 65536")
         print("option name NeuralNetwork type check default true")
         print("option name OwnBook type check default false")
+        print("option name SyzygyOnline type check default false")
         print("uciok")
 
     def debug(self, boolean: str) -> NoneType:
@@ -155,6 +156,10 @@ class UCI:
                     self.engine.own_book = True
                 else:
                     self.engine.own_book = False
+                if self.options["SyzygyOnline"] == "true":
+                    self.engine.syzygy_online = True
+                else:
+                    self.engine.syzygy_online = False
             else:
                 print("Unknow option:", args[1])
         else:
@@ -199,6 +204,8 @@ class UCI:
             limit = movetime / 1000
         else:
             limit = float("inf")
+        evaluation, best_move = self.engine.search(self.board, 1, self.board.turn, float('inf'))
+        last_best_move = copy.copy(best_move.uci())
         for search_depth in range(1, depth + 1):
             evaluation, best_move = self.engine.search(
                 self.board, search_depth, self.board.turn, limit
