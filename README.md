@@ -11,7 +11,7 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/Virinas-code/Crocrodile?logo=github)](https://github.com/Virinas-code/Crocrodile/commits/master)
 [![GitHub contributors](https://img.shields.io/github/contributors/Virinas-code/Crocrodile?logo=github)](https://github.com/Virinas-code/Crocrodile/graphs/contributors)
 [![GitHub all releases](https://img.shields.io/github/downloads/Virinas-code/Crocrodile/total?logo=github)](https://github.com/Virinas-code/Crocrodile/releases)
-[![GitHub Release Date](https://img.shields.io/github/release-date/Virinas-code/Crocrodile?logo=github)](https://github.com/Virinas-code/Crocrodile/releases/latest)]
+[![GitHub Release Date](https://img.shields.io/github/release-date/Virinas-code/Crocrodile?logo=github)](https://github.com/Virinas-code/Crocrodile/releases/latest)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/Virinas-code/Crocrodile?logo=github)](https://github.com/Virinas-code/Crocrodile/releases/latest)
 [![GitHub issues](https://img.shields.io/github/issues/Virinas-code/Crocrodile?logo=github)](https://github.com/Virinas-code/Crocrodile/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/Virinas-code/Crocrodile?logo=github)](https://github.com/Virinas-code/Crocrodile/pulls)
