@@ -206,8 +206,8 @@ Engine to GUI
  but it can be used anytime, even when the engine is searching,
  and must always be answered with "isready".
 
-- bestmove <move1> [ ponder <move2> ]
- the engine has stopped searching and found the move <move> best in this position.
+- `bestmove <move1> [ ponder <move2> ]`
+ the engine has stopped searching and found the move `<move>` best in this position.
  the engine can send the move it likes to ponder on. The engine must not start pondering automatically.
  this command must always be sent if the engine stops searching, also in pondering mode if there is a
  "stop" command, so for every "go" command a "bestmove" command is needed!

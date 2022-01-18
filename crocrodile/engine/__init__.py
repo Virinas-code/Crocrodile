@@ -8,6 +8,7 @@ from __future__ import print_function
 
 import copy
 import math
+import pickle
 import random
 import sys
 import time
@@ -75,6 +76,17 @@ class EngineBase:
         self.hashfull: int = 0  # info hashfull
         self.own_book: bool = False  # Use own book (OwnBook)
         self.syzygy_online: bool = False  # Use online Syzygy Lichess tables (SyzygyOnline)
+        self.syzygy_tb: Optional[chess.syzygy.Tablebase] = None  # Path to Syzygy Tables, if implemented (SyzygyPath)
+        self.hashpath: str = ""  # Path to a file used to store hash table
+
+    def tb_update(self):
+        """
+        Update hash tables from file.
+
+        :return: Nothing.
+        :rtype: None
+        """
+        self.tb.update(pickle.load(open(self.hashpath, "br")))
 
     def evaluate(self, board):
         """Evaluate position."""
@@ -93,6 +105,9 @@ class EngineBase:
             print(
                 f"info depth {depth} nodes {self.nodes} score cp {eval} pv {move} tbhits {self.tbhits} time {int(calc_time * 1000)} nps {int(self.nodes / calc_time)} hashfull {self.hashfull} string obhits:{self.obhits}"
             )
+        # Update hash file
+        if self.hashpath:
+            pickle.dump(self.tb, open(self.hashpath, "bw"))
         return eval, move
 
     def minimax_std(self, board, depth, maximimize_white, limit_time):
@@ -160,23 +175,25 @@ class EngineBase:
 
     def nn_select_best_moves(self, board: chess.Board):
         """Select best moves in board."""
-        hash = chess.polyglot.zobrist_hash(board)
-        if hash not in self.nn_tb:
-            if self.use_nn:
+        good_moves = True
+        if self.use_nn:
+            hash = chess.polyglot.zobrist_hash(board)
+            if hash not in self.nn_tb:
                 good_moves = list()
                 for move in board.legal_moves:
                     if self.nn.check_move(board.fen(), move.uci()):
                         good_moves.append(move)
-            else:
-                good_moves: list[chess.Move] = list(board.legal_moves)
-            self.nn_tb[hash] = good_moves
-        good_moves = self.nn_tb[hash]
-        if not good_moves:
-            good_moves = list(board.legal_moves)
-        if int(sys.getsizeof(self.nn_tb) / 1024 / 1024) >= self.hashlimit / 2:
-            del self.nn_tb[list(self.nn_tb.keys())[0]]
-            self.hashfull += 1
-        return good_moves
+                self.nn_tb[hash] = good_moves
+            good_moves = self.nn_tb[hash]
+            if not good_moves:
+                good_moves = list(board.legal_moves)
+                self.nn_tb[hash] = good_moves
+            if int(sys.getsizeof(self.nn_tb) / 1024 / 1024) >= self.hashlimit / 2:
+                del self.nn_tb[list(self.nn_tb.keys())[0]]
+                self.hashfull += 1
+            return good_moves
+        else:
+            return list(board.legal_moves)
 
     def get_book_move(self, board: chess.Board) -> Optional[chess.Move]:
         """Get move from opening book.
@@ -190,6 +207,45 @@ class EngineBase:
             return self.opening_book.weighted_choice(board).move
         except IndexError:
             return False
+    
+    def get_syzygy(self, board: chess.Board) -> tuple[int, chess.Move]:
+        """
+        Get a move from Syzygy tablebases.
+
+        :param chess.Board board: Board to get best move and evaluation.
+        :return: The evaluation from Syzygy tablebases and the best move.
+        :rtype: tuple[int, chess.Move]
+        """
+        # Generate DTZ list
+        wdl: dict[int, dict[int, chess.Move]] = {2: {}, 1: {}, 0: {}, -1: {}, -2: {}}
+        for move in board.legal_moves:
+            test_board: chess.Board = board.copy()
+            test_board.push(move)
+            wdl[self.syzygy_tb.probe_wdl(test_board)][self.syzygy_tb.probe_dtz(test_board)] = move
+        # Get best WDL
+        best_wdl: int = -2
+        while wdl[best_wdl] == {}:
+            best_wdl += 1
+        # Get best move
+        best_dtz: int = 0
+        best_dtz = max(wdl[best_wdl].items(), key=lambda key: key[0])[0]
+        # Evaluation
+        print(wdl)
+        syzygy_evaluation: int = 0
+        if best_wdl < 0:
+            if board.turn:
+                syzygy_evaluation = 10000
+            else:
+                syzygy_evaluation = -10000
+        elif best_wdl == 0:
+            syzygy_evaluation = 0
+        else:
+            if board.turn:
+                syzygy_evaluation = -10000
+            else:
+                syzygy_evaluation = 10000
+        # Return
+        return syzygy_evaluation, wdl[best_wdl][best_dtz]
 
     # + param time + param best move depth-1 + param evaluation
     def minimax_nn(self, board: chess.Board, depth, maximimize_white, limit_time):
@@ -232,6 +288,11 @@ class EngineBase:
                     return 0, good_move
                 else:
                     pass
+            if self.syzygy_tb and len(board.piece_map()) <= 6:
+                try:
+                    return self.get_syzygy(board)
+                except chess.syzygy.MissingTableError:
+                    pass
             value = -float("inf")
             legal_moves = list(board.legal_moves)
             list_best_moves = [legal_moves[0]]
@@ -241,7 +302,7 @@ class EngineBase:
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
                 hash = chess.polyglot.zobrist_hash(test_board)
-                if hash in self.tb and self.tb[hash][0] >= (depth - 1):
+                if hash in self.tb and self.tb[hash][0] >= depth:
                     evaluation: int = self.tb[hash][1]
                 else:
                     evaluation = self.minimax_nn(
@@ -279,6 +340,11 @@ class EngineBase:
                     return 0, good_move
                 else:
                     pass
+            if self.syzygy_tb and len(board.piece_map()) <= 6:
+                try:
+                    return self.get_syzygy(board)
+                except chess.syzygy.MissingTableError:
+                    pass
             # minimizing white
             value = float("inf")
             legal_moves = list(board.legal_moves)
@@ -289,7 +355,7 @@ class EngineBase:
                 test_board = chess.Board(fen=board.fen())
                 test_board.push(move)
                 hash = chess.polyglot.zobrist_hash(test_board)
-                if hash in self.tb and self.tb[hash][0] >= (depth - 1):
+                if hash in self.tb and self.tb[hash][0] >= depth:
                     evaluation: int = self.tb[hash][1]
                 else:
                     evaluation = self.minimax_nn(

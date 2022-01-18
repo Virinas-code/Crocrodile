@@ -1,0 +1,29 @@
+[Event "Crocrodile Testing: Disabled features"]
+[Site "Cute Chess"]
+[Date "2022.01.09"]
+[Round "1"]
+[White "Crocrodile"]
+[Black "Crocrodile (NN disabled)"]
+[Result "1-0"]
+[ECO "B10"]
+[GameDuration "00:02:33"]
+[GameEndTime "2022-01-09T02:58:36.943 CET"]
+[GameStartTime "2022-01-09T02:56:03.452 CET"]
+[Opening "Caro-Kann defense"]
+[PlyCount "35"]
+[Termination "abandoned"]
+[TimeControl "hg300"]
+
+1. e4 {+100.00/256 0.076s} c6 {-100.00/256 0.080s} 2. Nf3 {+100.00/256 0.045s}
+d6 {-100.00/256 0.046s} 3. d4 {+100.00/256 0.041s} Nf6 {-100.00/256 0.039s}
+4. Nc3 {+100.00/256 0.038s} Bg4 {-100.00/256 0.034s} 5. Be3 {+100.00/256 0.040s}
+Nbd7 {-100.00/256 0.035s} 6. h3 {+100.00/256 0.037s} Bxf3 {-100.00/256 0.038s}
+7. Qxf3 {+100.00/256 0.037s} g6 {-100.00/256 0.038s} 8. Be2 {+100.00/256 0.036s}
+Nxe4 {-0.85/2 7.5s} 9. Qxe4 {+2.05/2 7.8s} Bg7 {+2.00/2 7.5s}
+10. Qxe7+ {+3.05/2 7.7s} Qxe7 {-8.80/4 7.5s} 11. Kd2 {-5.85/2 7.7s}
+Qxe3+ {-8.95/2 7.6s} 12. fxe3 {+0.05/4 7.8s} Bxd4 {-0.90/2 7.6s}
+13. exd4 {+2.15/4 7.7s} Rd8 {+2.10/2 7.6s} 14. Rad1 {+2.15/2 7.7s}
+Ke7 {+2.10/2 7.5s} 15. Rhe1 {+2.15/2 7.7s} Rhf8 {+2.15/4 7.5s}
+16. Rc1 {+2.10/2 7.7s} b5 {+2.10/2 7.6s} 17. Bd1+ {+5.05/4 7.7s}
+Ne5 {+2.15/8 7.6s} 18. Nd5+ {+2.10/6 7.7s, Black disconnects} 1-0
+

@@ -35,7 +35,7 @@ class UCI:
         self.author = "Created by Virinas-code / Co-developed by ZeBox / "
         self.author += "Tested by PerleShetland"
         # default true when NN complete
-        self.options: dict[str, str] = {"Hash": "16", "NeuralNetwork": "true", "OwnBook": "false", "SyzygyOnline": "false"}
+        self.options: dict[str, str] = {"Hash": "16", "NeuralNetwork": "true", "OwnBook": "false", "SyzygyOnline": "false", "HashPath": ""}
         self.debug_mode = False
         self.board = chess.Board()
         self.positionned = False
@@ -120,6 +120,7 @@ class UCI:
         print("option name NeuralNetwork type check default true")
         print("option name OwnBook type check default false")
         print("option name SyzygyOnline type check default false")
+        print("option name HashPath type string default <empty>")
         print("uciok")
 
     def debug(self, boolean: str) -> NoneType:
@@ -160,6 +161,10 @@ class UCI:
                     self.engine.syzygy_online = True
                 else:
                     self.engine.syzygy_online = False
+                if self.options["HashPath"] != "":
+                    self.engine.hashpath = self.options["HashPath"]
+                if args[1] == "HashPath":
+                    self.engine.tb_update()
             else:
                 print("Unknow option:", args[1])
         else:
@@ -206,7 +211,7 @@ class UCI:
             limit = float("inf")
         evaluation, best_move = self.engine.search(self.board, 1, self.board.turn, float('inf'))
         last_best_move = copy.copy(best_move.uci())
-        for search_depth in range(1, depth + 1):
+        for search_depth in range(2, depth + 1):
             evaluation, best_move = self.engine.search(
                 self.board, search_depth, self.board.turn, limit
             )

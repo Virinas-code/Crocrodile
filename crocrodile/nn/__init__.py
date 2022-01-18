@@ -33,7 +33,8 @@ class NeuralNetwork:
 
     def __init__(self):
         """Initialize NN."""
-        self.weight1 = self.csv_to_array("nns/default/w1.csv")
+        # Old NN files. Can be reused.
+        """self.weight1 = self.csv_to_array("nns/default/w1.csv")
         self.weight2 = self.csv_to_array("nns/default/w2.csv")
         self.weight3 = self.csv_to_array("nns/default/w3.csv")
         self.weight4 = self.csv_to_array("nns/default/w4.csv")
@@ -52,7 +53,7 @@ class NeuralNetwork:
         self.cb2 = self.csv_to_array("nns/default/cb2.csv")
         self.cb3 = self.csv_to_array("nns/default/cb3.csv")
         self.cb4 = self.csv_to_array("nns/default/cb4.csv")
-        self.cb5 = self.csv_to_array("nns/default/cb5.csv")
+        self.cb5 = self.csv_to_array("nns/default/cb5.csv")"""
         self.pre_input_layer = numpy.zeros(768)
         self.input_layer = numpy.zeros(64)
         self.hidden_layer_1 = numpy.zeros(64)
@@ -60,8 +61,10 @@ class NeuralNetwork:
         self.hidden_layer_3 = numpy.zeros(64)
         self.hidden_layer_4 = numpy.zeros(1)
         self.output_layer = numpy.zeros(1)
-        self.genetic_train_settings = json.load(open("nns/settings.json"))
-        self.train_good = (
+        # Old configuration file. Can be reused.
+        # self.genetic_train_settings = json.load(open("nns/settings.json"))
+        # Old training files. Can be reused.
+        """self.train_good = (
             open(self.genetic_train_settings["train_good"]).read().split(
                 "\n\n")
         )
@@ -73,7 +76,7 @@ class NeuralNetwork:
         )
         self.test_bad = (
             open(self.genetic_train_settings["test_bad"]).read().split("\n\n")
-        )
+        )"""
         self.result = None  # Basics training
         self.perfs: tuple[int, int] = (0, 0)
         self.old_good_moves_result: Optional[int] = None

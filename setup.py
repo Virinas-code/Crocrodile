@@ -99,6 +99,8 @@ def detect_pip(python):
 def install_requirements(requirements, python):
     """Install missing requirements."""
     for requirement in requirements:
+        if requirement.endswith("\n"):
+            requirement = requirement[:-1]
         print(
             "Downloading: https://pypi.org/simple/{0}/...".format(requirement),
             end=" ",
@@ -154,12 +156,12 @@ def install_requirements(requirements, python):
 
 def install_crocrodile(python):
     print(
-        "Downloading: https://codeload.github.com/Virinas-code/Crocrodile/zip/refs/heads/master...",
+        "Downloading: https://codeload.github.com/Virinas-code/crocrodile-easy/zip/refs/heads/master...",
         end=" ",
         flush=True,
     )
     download(
-        "https://codeload.github.com/Virinas-code/Crocrodile/zip/refs/heads/master",
+        "https://codeload.github.com/Virinas-code/crocrodile-easy/zip/refs/heads/master",
         "crocrodile.zip",
     )
     print("Done.")

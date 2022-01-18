@@ -9,5 +9,6 @@
     "python.linting.mypyEnabled": false,
     "todo-tree.tree.showBadges": true,
     "discord.enabled": true,
-    "restructuredtext.confPath": ""
+    "restructuredtext.confPath": "",
+    "restructuredtext.languageServer.disabled": true
 }
