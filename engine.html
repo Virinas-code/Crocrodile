@@ -105,6 +105,23 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="crocrodile.engine.EngineBase.get_syzygy">
+<code class="sig-name descname">get_syzygy</code><span class="sig-paren">(</span><em class="sig-param">board: chess.Board</em><span class="sig-paren">)</span> &#x2192; tuple<a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase.get_syzygy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase.get_syzygy" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Get a move from Syzygy tablebases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>board</strong> (<em>chess.Board</em>) – Board to get best move and evaluation.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>The evaluation from Syzygy tablebases and the best move.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>tuple[int, chess.Move]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="crocrodile.engine.EngineBase.minimax_nn">
 <code class="sig-name descname">minimax_nn</code><span class="sig-paren">(</span><em class="sig-param">board: chess.Board</em>, <em class="sig-param">depth</em>, <em class="sig-param">maximimize_white</em>, <em class="sig-param">limit_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase.minimax_nn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase.minimax_nn" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Minimax algorithm from Wikipedia with NN.</p>
@@ -126,6 +143,20 @@
 <dt id="crocrodile.engine.EngineBase.search">
 <code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param">board</em>, <em class="sig-param">depth</em>, <em class="sig-param">maximize_white</em>, <em class="sig-param">limit_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase.search" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Search best move (Minimax from wikipedia).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.engine.EngineBase.tb_update">
+<code class="sig-name descname">tb_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/engine.html#EngineBase.tb_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.engine.EngineBase.tb_update" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Update hash tables from file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Nothing.</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

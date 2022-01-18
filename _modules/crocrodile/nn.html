@@ -103,26 +103,27 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize NN.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/w1.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/w2.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/w3.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/w4.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/w5.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/b1.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/b2.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/b3.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/b4.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/b5.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cweight1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cw1.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cweight2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cw2.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cweight3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cw3.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cweight4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cw4.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cweight5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cw5.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cb1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cb1.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cb2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cb2.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cb3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cb3.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cb4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cb4.csv&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cb5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csv_to_array</span><span class="p">(</span><span class="s2">&quot;nns/default/cb5.csv&quot;</span><span class="p">)</span>
+        <span class="c1"># Old NN files. Can be reused.</span>
+        <span class="sd">&quot;&quot;&quot;self.weight1 = self.csv_to_array(&quot;nns/default/w1.csv&quot;)</span>
+<span class="sd">        self.weight2 = self.csv_to_array(&quot;nns/default/w2.csv&quot;)</span>
+<span class="sd">        self.weight3 = self.csv_to_array(&quot;nns/default/w3.csv&quot;)</span>
+<span class="sd">        self.weight4 = self.csv_to_array(&quot;nns/default/w4.csv&quot;)</span>
+<span class="sd">        self.weight5 = self.csv_to_array(&quot;nns/default/w5.csv&quot;)</span>
+<span class="sd">        self.b1 = self.csv_to_array(&quot;nns/default/b1.csv&quot;)</span>
+<span class="sd">        self.b2 = self.csv_to_array(&quot;nns/default/b2.csv&quot;)</span>
+<span class="sd">        self.b3 = self.csv_to_array(&quot;nns/default/b3.csv&quot;)</span>
+<span class="sd">        self.b4 = self.csv_to_array(&quot;nns/default/b4.csv&quot;)</span>
+<span class="sd">        self.b5 = self.csv_to_array(&quot;nns/default/b5.csv&quot;)</span>
+<span class="sd">        self.cweight1 = self.csv_to_array(&quot;nns/default/cw1.csv&quot;)</span>
+<span class="sd">        self.cweight2 = self.csv_to_array(&quot;nns/default/cw2.csv&quot;)</span>
+<span class="sd">        self.cweight3 = self.csv_to_array(&quot;nns/default/cw3.csv&quot;)</span>
+<span class="sd">        self.cweight4 = self.csv_to_array(&quot;nns/default/cw4.csv&quot;)</span>
+<span class="sd">        self.cweight5 = self.csv_to_array(&quot;nns/default/cw5.csv&quot;)</span>
+<span class="sd">        self.cb1 = self.csv_to_array(&quot;nns/default/cb1.csv&quot;)</span>
+<span class="sd">        self.cb2 = self.csv_to_array(&quot;nns/default/cb2.csv&quot;)</span>
+<span class="sd">        self.cb3 = self.csv_to_array(&quot;nns/default/cb3.csv&quot;)</span>
+<span class="sd">        self.cb4 = self.csv_to_array(&quot;nns/default/cb4.csv&quot;)</span>
+<span class="sd">        self.cb5 = self.csv_to_array(&quot;nns/default/cb5.csv&quot;)&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pre_input_layer</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">768</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_layer</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
@@ -130,20 +131,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_4</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">genetic_train_settings</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;nns/settings.json&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">train_good</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genetic_train_settings</span><span class="p">[</span><span class="s2">&quot;train_good&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">train_bad</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genetic_train_settings</span><span class="p">[</span><span class="s2">&quot;train_bad&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">test_good</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genetic_train_settings</span><span class="p">[</span><span class="s2">&quot;test_good&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">test_bad</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">genetic_train_settings</span><span class="p">[</span><span class="s2">&quot;test_bad&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="c1"># Old configuration file. Can be reused.</span>
+        <span class="c1"># self.genetic_train_settings = json.load(open(&quot;nns/settings.json&quot;))</span>
+        <span class="c1"># Old training files. Can be reused.</span>
+        <span class="sd">&quot;&quot;&quot;self.train_good = (</span>
+<span class="sd">            open(self.genetic_train_settings[&quot;train_good&quot;]).read().split(</span>
+<span class="sd">                &quot;\n\n&quot;)</span>
+<span class="sd">        )</span>
+<span class="sd">        self.train_bad = (</span>
+<span class="sd">            open(self.genetic_train_settings[&quot;train_bad&quot;]).read().split(&quot;\n\n&quot;)</span>
+<span class="sd">        )</span>
+<span class="sd">        self.test_good = (</span>
+<span class="sd">            open(self.genetic_train_settings[&quot;test_good&quot;]).read().split(&quot;\n\n&quot;)</span>
+<span class="sd">        )</span>
+<span class="sd">        self.test_bad = (</span>
+<span class="sd">            open(self.genetic_train_settings[&quot;test_bad&quot;]).read().split(&quot;\n\n&quot;)</span>
+<span class="sd">        )&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Basics training</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">perfs</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">old_good_moves_result</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>

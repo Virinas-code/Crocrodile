@@ -78,6 +78,7 @@
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -145,6 +146,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hashfull</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># info hashfull</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">own_book</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Use own book (OwnBook)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">syzygy_online</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Use online Syzygy Lichess tables (SyzygyOnline)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">syzygy_tb</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">syzygy</span><span class="o">.</span><span class="n">Tablebase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Path to Syzygy Tables, if implemented (SyzygyPath)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hashpath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># Path to a file used to store hash table</span>
+
+<div class="viewcode-block" id="EngineBase.tb_update"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.tb_update">[docs]</a>    <span class="k">def</span> <span class="nf">tb_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update hash tables from file.</span>
+
+<span class="sd">        :return: Nothing.</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashpath</span><span class="p">,</span> <span class="s2">&quot;br&quot;</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="EngineBase.evaluate"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Evaluate position.&quot;&quot;&quot;</span>
@@ -163,6 +175,9 @@
             <span class="nb">print</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;info depth </span><span class="si">{</span><span class="n">depth</span><span class="si">}</span><span class="s2"> nodes </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="si">}</span><span class="s2"> score cp </span><span class="si">{</span><span class="nb">eval</span><span class="si">}</span><span class="s2"> pv </span><span class="si">{</span><span class="n">move</span><span class="si">}</span><span class="s2"> tbhits </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tbhits</span><span class="si">}</span><span class="s2"> time </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">calc_time</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span><span class="si">}</span><span class="s2"> nps </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">/</span> <span class="n">calc_time</span><span class="p">)</span><span class="si">}</span><span class="s2"> hashfull </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hashfull</span><span class="si">}</span><span class="s2"> string obhits:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">obhits</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
+        <span class="c1"># Update hash file</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hashpath</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hashpath</span><span class="p">,</span> <span class="s2">&quot;bw&quot;</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">eval</span><span class="p">,</span> <span class="n">move</span></div>
 
 <div class="viewcode-block" id="EngineBase.minimax_std"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.minimax_std">[docs]</a>    <span class="k">def</span> <span class="nf">minimax_std</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">maximimize_white</span><span class="p">,</span> <span class="n">limit_time</span><span class="p">):</span>
@@ -230,23 +245,25 @@
 
 <div class="viewcode-block" id="EngineBase.nn_select_best_moves"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.nn_select_best_moves">[docs]</a>    <span class="k">def</span> <span class="nf">nn_select_best_moves</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Select best moves in board.&quot;&quot;&quot;</span>
-        <span class="nb">hash</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">polyglot</span><span class="o">.</span><span class="n">zobrist_hash</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nn</span><span class="p">:</span>
+        <span class="n">good_moves</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_nn</span><span class="p">:</span>
+            <span class="nb">hash</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">polyglot</span><span class="o">.</span><span class="n">zobrist_hash</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">:</span>
                 <span class="n">good_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">check_move</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">fen</span><span class="p">(),</span> <span class="n">move</span><span class="o">.</span><span class="n">uci</span><span class="p">()):</span>
                         <span class="n">good_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">good_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">good_moves</span>
-        <span class="n">good_moves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">good_moves</span><span class="p">:</span>
-            <span class="n">good_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hashlimit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">hashfull</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">good_moves</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">good_moves</span>
+            <span class="n">good_moves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">good_moves</span><span class="p">:</span>
+                <span class="n">good_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">good_moves</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hashlimit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nn_tb</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hashfull</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="n">good_moves</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EngineBase.get_book_move"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.get_book_move">[docs]</a>    <span class="k">def</span> <span class="nf">get_book_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get move from opening book.</span>
@@ -260,6 +277,45 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">opening_book</span><span class="o">.</span><span class="n">weighted_choice</span><span class="p">(</span><span class="n">board</span><span class="p">)</span><span class="o">.</span><span class="n">move</span>
         <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
+    
+<div class="viewcode-block" id="EngineBase.get_syzygy"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.get_syzygy">[docs]</a>    <span class="k">def</span> <span class="nf">get_syzygy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a move from Syzygy tablebases.</span>
+
+<span class="sd">        :param chess.Board board: Board to get best move and evaluation.</span>
+<span class="sd">        :return: The evaluation from Syzygy tablebases and the best move.</span>
+<span class="sd">        :rtype: tuple[int, chess.Move]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Generate DTZ list</span>
+        <span class="n">wdl</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">Move</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">:</span> <span class="p">{},</span> <span class="mi">1</span><span class="p">:</span> <span class="p">{},</span> <span class="mi">0</span><span class="p">:</span> <span class="p">{},</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="p">{},</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span> <span class="p">{}}</span>
+        <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">:</span>
+            <span class="n">test_board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span> <span class="o">=</span> <span class="n">board</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">test_board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+            <span class="n">wdl</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">syzygy_tb</span><span class="o">.</span><span class="n">probe_wdl</span><span class="p">(</span><span class="n">test_board</span><span class="p">)][</span><span class="bp">self</span><span class="o">.</span><span class="n">syzygy_tb</span><span class="o">.</span><span class="n">probe_dtz</span><span class="p">(</span><span class="n">test_board</span><span class="p">)]</span> <span class="o">=</span> <span class="n">move</span>
+        <span class="c1"># Get best WDL</span>
+        <span class="n">best_wdl</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+        <span class="k">while</span> <span class="n">wdl</span><span class="p">[</span><span class="n">best_wdl</span><span class="p">]</span> <span class="o">==</span> <span class="p">{}:</span>
+            <span class="n">best_wdl</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Get best move</span>
+        <span class="n">best_dtz</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">best_dtz</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">wdl</span><span class="p">[</span><span class="n">best_wdl</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Evaluation</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">wdl</span><span class="p">)</span>
+        <span class="n">syzygy_evaluation</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">best_wdl</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">turn</span><span class="p">:</span>
+                <span class="n">syzygy_evaluation</span> <span class="o">=</span> <span class="mi">10000</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">syzygy_evaluation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10000</span>
+        <span class="k">elif</span> <span class="n">best_wdl</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">syzygy_evaluation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">turn</span><span class="p">:</span>
+                <span class="n">syzygy_evaluation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10000</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">syzygy_evaluation</span> <span class="o">=</span> <span class="mi">10000</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">syzygy_evaluation</span><span class="p">,</span> <span class="n">wdl</span><span class="p">[</span><span class="n">best_wdl</span><span class="p">][</span><span class="n">best_dtz</span><span class="p">]</span></div>
 
     <span class="c1"># + param time + param best move depth-1 + param evaluation</span>
 <div class="viewcode-block" id="EngineBase.minimax_nn"><a class="viewcode-back" href="../../engine.html#crocrodile.engine.EngineBase.minimax_nn">[docs]</a>    <span class="k">def</span> <span class="nf">minimax_nn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">maximimize_white</span><span class="p">,</span> <span class="n">limit_time</span><span class="p">):</span>
@@ -302,6 +358,11 @@
                     <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">good_move</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">syzygy_tb</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_syzygy</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">chess</span><span class="o">.</span><span class="n">syzygy</span><span class="o">.</span><span class="n">MissingTableError</span><span class="p">:</span>
+                    <span class="k">pass</span>
             <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
             <span class="n">legal_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
             <span class="n">list_best_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">legal_moves</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
@@ -311,7 +372,7 @@
                 <span class="n">test_board</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="n">fen</span><span class="o">=</span><span class="n">board</span><span class="o">.</span><span class="n">fen</span><span class="p">())</span>
                 <span class="n">test_board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
                 <span class="nb">hash</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">polyglot</span><span class="o">.</span><span class="n">zobrist_hash</span><span class="p">(</span><span class="n">test_board</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">depth</span><span class="p">:</span>
                     <span class="n">evaluation</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimax_nn</span><span class="p">(</span>
@@ -349,6 +410,11 @@
                     <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">good_move</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">syzygy_tb</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">piece_map</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_syzygy</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">chess</span><span class="o">.</span><span class="n">syzygy</span><span class="o">.</span><span class="n">MissingTableError</span><span class="p">:</span>
+                    <span class="k">pass</span>
             <span class="c1"># minimizing white</span>
             <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
             <span class="n">legal_moves</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">legal_moves</span><span class="p">)</span>
@@ -359,7 +425,7 @@
                 <span class="n">test_board</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">(</span><span class="n">fen</span><span class="o">=</span><span class="n">board</span><span class="o">.</span><span class="n">fen</span><span class="p">())</span>
                 <span class="n">test_board</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
                 <span class="nb">hash</span> <span class="o">=</span> <span class="n">chess</span><span class="o">.</span><span class="n">polyglot</span><span class="o">.</span><span class="n">zobrist_hash</span><span class="p">(</span><span class="n">test_board</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">depth</span><span class="p">:</span>
                     <span class="n">evaluation</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="p">[</span><span class="nb">hash</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">evaluation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimax_nn</span><span class="p">(</span>
