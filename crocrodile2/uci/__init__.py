@@ -35,10 +35,11 @@ class UCI:
         self.author = "Created by Virinas-code / Co-developed by ZeBox / "
         self.author += "Tested by PerleShetland"
         # default true when NN complete
-        self.options = {"Hash": "77", "NeuralNetwork": "false"}
+        self.options: dict[str, str] = {"Hash": "16", "NeuralNetwork": "true", "OwnBook": "false", "SyzygyOnline": "false", "HashPath": ""}
         self.debug_mode = False
         self.board = chess.Board()
         self.positionned = False
+        self.engine = crocrodile.engine.EngineBase(self.name, self.author)
         print(self.name, self.author.lower())
 
     def run(self):
@@ -115,9 +116,11 @@ class UCI:
         print("id name {0}".format(self.name))
         print("id author {0}".format(self.author))
         print()
-        print("option name Hash type spin default 77")
-        # default true when NN complete
-        print("option name NeuralNetwork type check default false")
+        print("option name Hash type spin default 16 min 0 max 65536")
+        print("option name NeuralNetwork type check default true")
+        print("option name OwnBook type check default false")
+        print("option name SyzygyOnline type check default false")
+        print("option name HashPath type string default <empty>")
         print("uciok")
 
     def debug(self, boolean: str) -> NoneType:
@@ -145,6 +148,23 @@ class UCI:
         if len(args) > 3 and args[0] == "name" and args[2] == "value":
             if args[1] in self.options:
                 self.options[args[1]] = " ".join(args[3:])
+                self.engine.hashlimit = int(self.options["Hash"])
+                if self.options["NeuralNetwork"] == "true":
+                    self.engine.use_nn = True
+                else:
+                    self.engine.use_nn = False
+                if self.options["OwnBook"] == "true":
+                    self.engine.own_book = True
+                else:
+                    self.engine.own_book = False
+                if self.options["SyzygyOnline"] == "true":
+                    self.engine.syzygy_online = True
+                else:
+                    self.engine.syzygy_online = False
+                if self.options["HashPath"] != "":
+                    self.engine.hashpath = self.options["HashPath"]
+                if args[1] == "HashPath":
+                    self.engine.tb_update()
             else:
                 print("Unknow option:", args[1])
         else:
@@ -181,17 +201,22 @@ class UCI:
                     movetime = int(args[indice + 1])
                 except ValueError:
                     print("Invalid movetime.", file=sys.stderr)
-        if self.board.turn and wtime:
-            limit = ((wtime / 1000) / 40) + time.time()
-        elif (not self.board.turn) and btime:
-            limit = ((btime / 1000) / 40) + time.time()
-        elif movetime:
-            limit = movetime / 1000
+        if depth != 256:
+            if self.board.turn and wtime:
+                limit = ((wtime / 1000) / 40) + time.time()
+            elif (not self.board.turn) and btime:
+                limit = ((btime / 1000) / 40) + time.time()
+            elif movetime:
+                limit = movetime / 1000
+            else:
+                limit = float("inf")
         else:
-            limit = float("inf")
-        engine = crocrodile.engine.EngineBase(self.name, self.author)
-        for search_depth in range(depth):
-            evaluation, best_move = engine.search(
+                limit = float("inf")
+        print(limit)
+        evaluation, best_move = self.engine.search(self.board, 1, self.board.turn, float('inf'))
+        last_best_move = copy.copy(best_move.uci())
+        for search_depth in range(2, depth + 1):
+            evaluation, best_move = self.engine.search(
                 self.board, search_depth, self.board.turn, limit
             )
             if evaluation == float("inf"):

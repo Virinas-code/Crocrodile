@@ -248,6 +248,7 @@ BISHOP_AT_HOME = 10
 BAD_EDGES = [8, 16, 24, 32, 40, 15, 23, 31, 39, 47]
 BAD_EDGES_PIECES = [chess.KNIGHT, chess.BISHOP, chess.ROOK, chess.QUEEN]
 BAD_EDGES_MALUS = 20
+CENTER_BONUS: int = 30
 
 
 class Evaluator():
@@ -281,6 +282,7 @@ class Evaluator():
         """
         score = 0
         score += self.eval_material(position)
+        score += self.eval_center(position)
         score += self.eval_king_protection(position)
         score += self.eval_developpement(position)
         return score
@@ -376,4 +378,22 @@ class Evaluator():
                 and position.piece_map()[move.from_square].piece_type == chess.KING \
                 and move.to_square in (chess.G1, chess.C1):
             score += 70
+        return score
+
+    @staticmethod
+    def eval_center(position: chess.Board) -> int:
+        """
+        Evaluate center occupation.
+
+        :param chess.Board position: Position to evaluate.
+        :return: White's center advantage as centipawns.
+        :rtype: int
+        """
+        score: int = 0
+        for square, piece in position.piece_map().items():
+            if piece.symbol() == "P":
+                if square in CENTRAL_SQUARES:
+                    score += CENTER_BONUS
+                elif square in ELARGED_SQUARES:
+                    score += int(CENTER_BONUS / 2)
         return score
