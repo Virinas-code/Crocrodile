@@ -319,6 +319,7 @@
 <span class="n">BAD_EDGES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">47</span><span class="p">]</span>
 <span class="n">BAD_EDGES_PIECES</span> <span class="o">=</span> <span class="p">[</span><span class="n">chess</span><span class="o">.</span><span class="n">KNIGHT</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">BISHOP</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">ROOK</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">QUEEN</span><span class="p">]</span>
 <span class="n">BAD_EDGES_MALUS</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">CENTER_BONUS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>
 
 
 <div class="viewcode-block" id="Evaluator"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator">[docs]</a><span class="k">class</span> <span class="nc">Evaluator</span><span class="p">():</span>
@@ -352,6 +353,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_material</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_center</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="n">score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_king_protection</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="n">score</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_developpement</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">score</span></div>
@@ -447,6 +449,24 @@
                 <span class="ow">and</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()[</span><span class="n">move</span><span class="o">.</span><span class="n">from_square</span><span class="p">]</span><span class="o">.</span><span class="n">piece_type</span> <span class="o">==</span> <span class="n">chess</span><span class="o">.</span><span class="n">KING</span> \
                 <span class="ow">and</span> <span class="n">move</span><span class="o">.</span><span class="n">to_square</span> <span class="ow">in</span> <span class="p">(</span><span class="n">chess</span><span class="o">.</span><span class="n">G1</span><span class="p">,</span> <span class="n">chess</span><span class="o">.</span><span class="n">C1</span><span class="p">):</span>
             <span class="n">score</span> <span class="o">+=</span> <span class="mi">70</span>
+        <span class="k">return</span> <span class="n">score</span></div>
+
+<div class="viewcode-block" id="Evaluator.eval_center"><a class="viewcode-back" href="../../../engine.html#crocrodile.engine.evaluate.Evaluator.eval_center">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">eval_center</span><span class="p">(</span><span class="n">position</span><span class="p">:</span> <span class="n">chess</span><span class="o">.</span><span class="n">Board</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate center occupation.</span>
+
+<span class="sd">        :param chess.Board position: Position to evaluate.</span>
+<span class="sd">        :return: White&#39;s center advantage as centipawns.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">score</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">square</span><span class="p">,</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">position</span><span class="o">.</span><span class="n">piece_map</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">piece</span><span class="o">.</span><span class="n">symbol</span><span class="p">()</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">CENTRAL_SQUARES</span><span class="p">:</span>
+                    <span class="n">score</span> <span class="o">+=</span> <span class="n">CENTER_BONUS</span>
+                <span class="k">elif</span> <span class="n">square</span> <span class="ow">in</span> <span class="n">ELARGED_SQUARES</span><span class="p">:</span>
+                    <span class="n">score</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">CENTER_BONUS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">score</span></div></div>
 </pre></div>
 
