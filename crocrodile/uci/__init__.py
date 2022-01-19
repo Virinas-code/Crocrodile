@@ -201,14 +201,18 @@ class UCI:
                     movetime = int(args[indice + 1])
                 except ValueError:
                     print("Invalid movetime.", file=sys.stderr)
-        if self.board.turn and wtime:
-            limit = ((wtime / 1000) / 40) + time.time()
-        elif (not self.board.turn) and btime:
-            limit = ((btime / 1000) / 40) + time.time()
-        elif movetime:
-            limit = movetime / 1000
+        if depth != 256:
+            if self.board.turn and wtime:
+                limit = ((wtime / 1000) / 40) + time.time()
+            elif (not self.board.turn) and btime:
+                limit = ((btime / 1000) / 40) + time.time()
+            elif movetime:
+                limit = movetime / 1000
+            else:
+                limit = float("inf")
         else:
-            limit = float("inf")
+                limit = float("inf")
+        print(limit)
         evaluation, best_move = self.engine.search(self.board, 1, self.board.turn, float('inf'))
         last_best_move = copy.copy(best_move.uci())
         for search_depth in range(2, depth + 1):

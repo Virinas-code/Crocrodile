@@ -101,6 +101,8 @@ class EngineBase:
         start_time: float = time.time()
         eval, move = self.minimax_nn(board, depth, maximize_white, limit_time)
         calc_time: float = time.time() - start_time
+        if board.turn is chess.BLACK:
+            eval = - eval
         if eval != float("inf"):
             print(
                 f"info depth {depth} nodes {self.nodes} score cp {eval} pv {move} tbhits {self.tbhits} time {int(calc_time * 1000)} nps {int(self.nodes / calc_time)} hashfull {self.hashfull} string obhits:{self.obhits}"
