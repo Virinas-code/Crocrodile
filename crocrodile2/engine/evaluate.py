@@ -391,7 +391,7 @@ class Evaluator():
         """
         score: int = 0
         for square, piece in position.piece_map().items():
-            if piece.symbol() == "P":
+            if piece.symbol().isupper():
                 if square in CENTRAL_SQUARES:
                     score += CENTER_BONUS
                 elif square in ELARGED_SQUARES:

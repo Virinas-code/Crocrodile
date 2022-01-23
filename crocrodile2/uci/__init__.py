@@ -35,7 +35,12 @@ class UCI:
         self.author = "Created by Virinas-code / Co-developed by ZeBox / "
         self.author += "Tested by PerleShetland"
         # default true when NN complete
-        self.options: dict[str, str] = {"Hash": "16", "NeuralNetwork": "true", "OwnBook": "false", "SyzygyOnline": "false", "HashPath": ""}
+        self.options: dict[str, str] = {"Hash": "16",
+                                        "NeuralNetwork": "true",
+                                        "OwnBook": "false",
+                                        "SyzygyOnline": "false",
+                                        "SyzygyPath": "",
+                                        "HashPath": ""}
         self.debug_mode = False
         self.board = chess.Board()
         self.positionned = False
@@ -120,6 +125,7 @@ class UCI:
         print("option name NeuralNetwork type check default true")
         print("option name OwnBook type check default false")
         print("option name SyzygyOnline type check default false")
+        print("option name SyzygyPath type string default <empty>")
         print("option name HashPath type string default <empty>")
         print("uciok")
 
@@ -161,6 +167,8 @@ class UCI:
                     self.engine.syzygy_online = True
                 else:
                     self.engine.syzygy_online = False
+                if self.options["SyzygyPath"] != "":
+                    self.engine.syzygy_tb: chess.syzygy.Table = chess.syzygy.open_tablebase(self.options["SyzygyPath"])
                 if self.options["HashPath"] != "":
                     self.engine.hashpath = self.options["HashPath"]
                 if args[1] == "HashPath":

@@ -17,7 +17,10 @@ from typing import Optional, Tuple
 
 import chess
 import chess.polyglot
+from numba import njit
 import numpy
+
+from crocrodile2.nn.numba import jit_calculate
 
 # ====== IDLE ======
 # import os
@@ -400,6 +403,11 @@ class NeuralNetwork:
         :return: Output layer.
         :rtype: numpy.ndarray
         """
+        self.output_layer = jit_calculate(self.input_layer,
+                                          self.w_pawns, self.w_pieces,
+                                          self.b_pawns, self.b_pieces,
+                                          self.w_last, self.b_last)
+        return self.output_layer
         hidden_layer: numpy.ndarray = self.input_layer
         mask_false = 16 * [16 * [False]]
         for layer_index in range(LAYERS):
