@@ -300,38 +300,6 @@
 <dd><p>Return NN output.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="crocrodile.nn.NeuralNetwork.output_layer">
-<code class="sig-name descname">output_layer</code><em class="property"> = None</em><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.output_layer" title="Lien permanent vers cette définition">¶</a></dt>
-<dd><dl>
-<dt>self.train_good = (</dt><dd><dl class="simple">
-<dt>open(self.genetic_train_settings[« train_good »]).read().split(</dt><dd><p>« </p>
-</dd>
-</dl>
-</dd>
-<dt>« )</dt><dd><p>)
-self.train_bad = (</p>
-<blockquote>
-<div><p>open(self.genetic_train_settings[« train_bad »]).read().split( »</p>
-</div></blockquote>
-</dd>
-<dt>« )</dt><dd><p>)
-self.test_good = (</p>
-<blockquote>
-<div><p>open(self.genetic_train_settings[« test_good »]).read().split( »</p>
-</div></blockquote>
-</dd>
-<dt>« )</dt><dd><p>)
-self.test_bad = (</p>
-<blockquote>
-<div><p>open(self.genetic_train_settings[« test_bad »]).read().split( »</p>
-</div></blockquote>
-</dd>
-<dt>« )</dt><dd><p>)</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="method">
 <dt id="crocrodile.nn.NeuralNetwork.test">
 <code class="sig-name descname">test</code><span class="sig-paren">(</span><em class="sig-param">list_good_moves: list</em>, <em class="sig-param">list_bad_moves: list</em><span class="sig-paren">)</span> &#x2192; tuple<a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.test" title="Lien permanent vers cette définition">¶</a></dt>
@@ -425,6 +393,38 @@ Standard format for new_good_move is « &lt;FEN&gt;n&lt;move&gt; »</p>
 <dt id="crocrodile.nn.NeuralNetwork.train">
 <code class="sig-name descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn.html#NeuralNetwork.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.train" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Train Neural Network.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="crocrodile.nn.NeuralNetwork.train_settings">
+<code class="sig-name descname">train_settings</code><em class="property"> = None</em><a class="headerlink" href="#crocrodile.nn.NeuralNetwork.train_settings" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><dl>
+<dt>self.train_good = (</dt><dd><dl class="simple">
+<dt>open(self.genetic_train_settings[« train_good »]).read().split(</dt><dd><p>« </p>
+</dd>
+</dl>
+</dd>
+<dt>« )</dt><dd><p>)
+self.train_bad = (</p>
+<blockquote>
+<div><p>open(self.genetic_train_settings[« train_bad »]).read().split( »</p>
+</div></blockquote>
+</dd>
+<dt>« )</dt><dd><p>)
+self.test_good = (</p>
+<blockquote>
+<div><p>open(self.genetic_train_settings[« test_good »]).read().split( »</p>
+</div></blockquote>
+</dd>
+<dt>« )</dt><dd><p>)
+self.test_bad = (</p>
+<blockquote>
+<div><p>open(self.genetic_train_settings[« test_bad »]).read().split( »</p>
+</div></blockquote>
+</dd>
+<dt>« )</dt><dd><p>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

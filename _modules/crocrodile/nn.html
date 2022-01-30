@@ -132,7 +132,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_layer_4</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_layer</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="c1"># Old configuration file. Can be reused.</span>
-        <span class="c1"># self.genetic_train_settings = json.load(open(&quot;nns/settings.json&quot;))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_settings</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;basics_train.json&quot;</span><span class="p">))</span>
         <span class="c1"># Old training files. Can be reused.</span>
         <span class="sd">&quot;&quot;&quot;self.train_good = (</span>
 <span class="sd">            open(self.genetic_train_settings[&quot;train_good&quot;]).read().split(</span>
@@ -602,8 +602,14 @@
 <span class="sd">        :return: Number of correct answers on good moves, on bad moves</span>
 <span class="sd">        :rtype: Tuple[int, int]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cpu_cores</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_settings</span><span class="p">[</span><span class="s2">&quot;cpu_cores&quot;</span><span class="p">]</span>
+        <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="n">k</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="nb">min</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">m</span><span class="p">):(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="nb">min</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
         <span class="c1">## print(f&quot;DEBUG: {list_good_moves=} {list_bad_moves=}&quot;)</span>
         <span class="c1"># Make 2 sub-lists</span>
+        <span class="n">sub_lists_good_moves</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">list_good_moves</span><span class="p">,</span> <span class="n">cpu_cores</span><span class="p">)</span>
+        <span class="n">sub_lists_bad_moves</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">list_bad_moves</span><span class="p">,</span> <span class="n">cpu_cores</span><span class="p">)</span>
         <span class="n">list_good_moves1</span> <span class="o">=</span> <span class="n">list_good_moves</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">list_good_moves</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">list_good_moves2</span> <span class="o">=</span> <span class="n">list_good_moves</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">list_good_moves</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
         <span class="n">list_bad_moves1</span> <span class="o">=</span> <span class="n">list_bad_moves</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">list_bad_moves</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
@@ -614,21 +620,22 @@
         <span class="n">good_moves_data</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">bad_moves_data</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="c1"># Create processes</span>
-        <span class="n">process1</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_full</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">list_good_moves1</span><span class="p">,</span>
-                                                                        <span class="n">list_bad_moves1</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
-                                                                        <span class="n">good_moves_data</span><span class="p">,</span>
-                                                                        <span class="n">bad_moves_data</span><span class="p">))</span>
-        <span class="n">process2</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_full</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">list_good_moves2</span><span class="p">,</span>
-                                                                        <span class="n">list_bad_moves2</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
-                                                                        <span class="n">good_moves_data</span><span class="p">,</span>
-                                                                        <span class="n">bad_moves_data</span><span class="p">))</span>
+        <span class="n">processes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cpu_cores</span><span class="p">):</span>
+            <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_full</span><span class="p">,</span>
+                                                     <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">sub_lists_good_moves</span><span class="p">[</span><span class="n">p</span><span class="p">],</span>
+                                                           <span class="n">sub_lists_bad_moves</span><span class="p">[</span><span class="n">p</span><span class="p">],</span> 
+                                                           <span class="kc">True</span><span class="p">,</span>
+                                                           <span class="n">good_moves_data</span><span class="p">,</span>
+                                                           <span class="n">bad_moves_data</span><span class="p">)</span>
+                                                     <span class="p">))</span>
         <span class="c1"># Start them</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">multiprocesses_result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">process1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="n">process2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">process</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+            <span class="n">process</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="c1"># Get results</span>
-        <span class="n">process1</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
-        <span class="n">process2</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">process</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+            <span class="n">process</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
         <span class="n">good_moves_result</span> <span class="o">=</span> <span class="n">good_moves_data</span><span class="o">.</span><span class="n">value</span>
         <span class="n">bad_moves_result</span> <span class="o">=</span> <span class="n">bad_moves_data</span><span class="o">.</span><span class="n">value</span>
         <span class="c1"># Old results</span>
