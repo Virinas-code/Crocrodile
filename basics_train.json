@@ -1,1 +1,1 @@
-{"iterations_done": 457, "good_moves": "training_files/crocro-mistakes-all", "mutation_rate": 0.05, "mutation_change": 0.25, "min_bad_moves": 75, "max_good_moves": 20000, "max_bad_moves": 150000, "step": 5}
+{"iterations_done": 457, "good_moves": "training_files/crocro-mistakes-all", "mutation_rate": 0.05, "mutation_change": 0.25, "min_bad_moves": 75, "max_good_moves": 20000, "max_bad_moves": 150000, "step": 5, "cpu_cores": 2}

@@ -62,7 +62,7 @@ class NeuralNetwork:
         self.hidden_layer_4 = numpy.zeros(1)
         self.output_layer = numpy.zeros(1)
         # Old configuration file. Can be reused.
-        # self.genetic_train_settings = json.load(open("nns/settings.json"))
+        self.train_settings = json.load(open("basics_train.json"))
         # Old training files. Can be reused.
         """self.train_good = (
             open(self.genetic_train_settings["train_good"]).read().split(
@@ -532,8 +532,14 @@ class NeuralNetwork:
         :return: Number of correct answers on good moves, on bad moves
         :rtype: Tuple[int, int]
         """
+        cpu_cores: int = self.train_settings["cpu_cores"]
+        def split(a, n):
+            k, m = divmod(len(a), n)
+            return list(a[i*k+min(i, m):(i+1)*k+min(i+1, m)] for i in range(n))
         ## print(f"DEBUG: {list_good_moves=} {list_bad_moves=}")
         # Make 2 sub-lists
+        sub_lists_good_moves = split(list_good_moves, cpu_cores)
+        sub_lists_bad_moves = split(list_bad_moves, cpu_cores)
         list_good_moves1 = list_good_moves[:len(list_good_moves)//2]
         list_good_moves2 = list_good_moves[len(list_good_moves)//2:]
         list_bad_moves1 = list_bad_moves[:len(list_bad_moves)//2]
@@ -544,21 +550,22 @@ class NeuralNetwork:
         good_moves_data = multiprocessing.Value('i', 0)
         bad_moves_data = multiprocessing.Value('i', 0)
         # Create processes
-        process1 = multiprocessing.Process(target=self.test_full, args=(list_good_moves1,
-                                                                        list_bad_moves1, True,
-                                                                        good_moves_data,
-                                                                        bad_moves_data))
-        process2 = multiprocessing.Process(target=self.test_full, args=(list_good_moves2,
-                                                                        list_bad_moves2, True,
-                                                                        good_moves_data,
-                                                                        bad_moves_data))
+        processes: list[multiprocessing.Process] = []
+        for p in range(cpu_cores):
+            processes.append(multiprocessing.Process(target=self.test_full,
+                                                     args=(sub_lists_good_moves[p],
+                                                           sub_lists_bad_moves[p], 
+                                                           True,
+                                                           good_moves_data,
+                                                           bad_moves_data)
+                                                     ))
         # Start them
         self.multiprocesses_result: list[int] = [0, 0]
-        process1.start()
-        process2.start()
+        for process in processes:
+            process.start()
         # Get results
-        process1.join()
-        process2.join()
+        for process in processes:
+            process.join()
         good_moves_result = good_moves_data.value
         bad_moves_result = bad_moves_data.value
         # Old results
