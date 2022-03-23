@@ -851,7 +851,7 @@ class BasicsTrain:
     def main(self, argv):
         """Start training."""
         self.ask()
-        performance_output_file = "nns/log/" + str(datetime.datetime.now()) + ".log"
+        performance_output_file = ("nns/log/" + str(datetime.datetime.now()) + ".log").replace(":", ".")
         with open(performance_output_file, "w") as file: pass
         good_moves_file = self.config["good_moves"]
         good_moves_list = self.parse_good_moves(good_moves_file)
