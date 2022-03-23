@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="client.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.client</span></code> - Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="engine.html"><code class="docutils literal notranslate"><span class="pre">crocrodile.engine</span></code> - Engine</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn</span></code> - Neural Network</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#crocrodile-nn-basics-train-basics-training"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.basics_train</span></code> - Basics Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-crocrodile.nn.basics_train"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.basics_train</span></code> - Basics Training</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-crocrodile.nn.load_network"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.load_network</span></code> - Load Network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#crocrodile-nn-masters-train-masters-training"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.masters_train</span></code> - Masters Training</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-crocrodile.nn.nn_auto"><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.nn_auto</span></code> - Auto Neural Network Training</a></li>
@@ -429,8 +429,230 @@ self.test_bad = (</p>
 
 </dd></dl>
 
-<section id="crocrodile-nn-basics-train-basics-training">
-<h2><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.basics_train</span></code> - Basics Training<a class="headerlink" href="#crocrodile-nn-basics-train-basics-training" title="Lien permanent vers ce titre">¶</a></h2>
+<section id="module-crocrodile.nn.basics_train">
+<span id="crocrodile-nn-basics-train-basics-training"></span><h2><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.basics_train</span></code> - Basics Training<a class="headerlink" href="#module-crocrodile.nn.basics_train" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Crocrodile Training.</p>
+<p>Back to basics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Virinas-code and ZeBox</p>
+</dd>
+</dl>
+<dl class="class">
+<dt id="crocrodile.nn.basics_train.BasicsTrain">
+<em class="property">class </em><code class="sig-prename descclassname">crocrodile.nn.basics_train.</code><code class="sig-name descname">BasicsTrain</code><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Basics train - class for training Crocrodile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Author</dt>
+<dd class="field-odd"><p>&#64;ZeBox and Virinas-code</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.array_to_csv">
+<em class="property">static </em><code class="sig-name descname">array_to_csv</code><span class="sig-paren">(</span><em class="sig-param">array</em>, <em class="sig-param">csv_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.array_to_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.array_to_csv" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Write array in csv_path CSV file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.ask">
+<code class="sig-name descname">ask</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.ask" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Ask for inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>self</strong> (<a class="reference internal" href="train.html#crocrodile.nn.basics_train.BasicsTrain" title="crocrodile.nn.basics_train.BasicsTrain"><em>BasicsTrain</em></a>) – Current BasicsTrain object.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Good moves file.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.couple">
+<code class="sig-name descname">couple</code><span class="sig-paren">(</span><em class="sig-param">matrix1: numpy.ndarray</em>, <em class="sig-param">matrix2: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.couple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.couple" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Couple two matrixes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix1</strong> (<em>numpy.ndarray</em>) – First matrix to couple.</p></li>
+<li><p><strong>matrix2</strong> (<em>numpy.ndarray</em>) – Second matrix to couple.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>A new matrix.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.couple_networks">
+<code class="sig-name descname">couple_networks</code><span class="sig-paren">(</span><em class="sig-param">worst_network: int</em>, <em class="sig-param">network1: int</em>, <em class="sig-param">network2: int</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.couple_networks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.couple_networks" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Couple two networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network1</strong> (<em>int</em>) – First network indice</p></li>
+<li><p><strong>network2</strong> (<em>int</em>) – Second network indice.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>Nothing.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.couple_pawns">
+<code class="sig-name descname">couple_pawns</code><span class="sig-paren">(</span><em class="sig-param">matrix1: numpy.ndarray</em>, <em class="sig-param">matrix2: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.couple_pawns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.couple_pawns" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Couple two pawn matrixes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix1</strong> (<em>numpy.ndarray</em>) – First matrix to couple.</p></li>
+<li><p><strong>matrix2</strong> (<em>numpy.ndarray</em>) – Second matrix to couple.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>A new matrix.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.couple_pieces">
+<code class="sig-name descname">couple_pieces</code><span class="sig-paren">(</span><em class="sig-param">matrix1: numpy.ndarray</em>, <em class="sig-param">matrix2: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.couple_pieces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.couple_pieces" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Couple two pieces matrixes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix1</strong> (<em>numpy.ndarray</em>) – First matrix to couple.</p></li>
+<li><p><strong>matrix2</strong> (<em>numpy.ndarray</em>) – Second matrix to couple.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>A new matrix.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.generate" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Generate empty networks and save them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.generate_bad_moves">
+<em class="property">static </em><code class="sig-name descname">generate_bad_moves</code><span class="sig-paren">(</span><em class="sig-param">good_move_pos: str</em>, <em class="sig-param">good_moves_list</em>, <em class="sig-param">bad_moves_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.generate_bad_moves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.generate_bad_moves" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Generate bad moves for position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>good_move_pos</strong> (<em>str</em>) – Good move in position (FEN + good move)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.load" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Load neural networks from nns/ folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.main">
+<code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param">argv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.main" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Start training.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.parse_good_moves">
+<em class="property">static </em><code class="sig-name descname">parse_good_moves</code><span class="sig-paren">(</span><em class="sig-param">good_moves_file: str</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.parse_good_moves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.parse_good_moves" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Parse good moves in good_moves_file. good_moves_file is only a file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>good_moves_file</strong> (<em>str</em>) – Path to the good moves file.</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>The list of FENs + good move.</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.save" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Save neural networks to nns/ folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="crocrodile.nn.basics_train.BasicsTrain.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">new_good_move: str</em>, <em class="sig-param">new_bad_moves: str</em>, <em class="sig-param">param_good_moves: list</em>, <em class="sig-param">param_bad_moves: list</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#BasicsTrain.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.BasicsTrain.train" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Train neural networks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie</dt>
+<dd class="field-odd"><p>Mean performance at end.</p>
+</dd>
+<dt class="field-even">Type renvoyé</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="crocrodile.nn.basics_train.main">
+<code class="sig-prename descclassname">crocrodile.nn.basics_train.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param">argv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/crocrodile/nn/basics_train.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#crocrodile.nn.basics_train.main" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Start function called in init.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres</dt>
+<dd class="field-odd"><p><strong>argv</strong> (<em>list</em>) – sys.argv</p>
+</dd>
+<dt class="field-even">Renvoie</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Type renvoyé</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-crocrodile.nn.load_network">
 <span id="crocrodile-nn-load-network-load-network"></span><h2><code class="docutils literal notranslate"><span class="pre">crocrodile.nn.load_network</span></code> - Load Network<a class="headerlink" href="#module-crocrodile.nn.load_network" title="Lien permanent vers ce titre">¶</a></h2>
