@@ -5,6 +5,8 @@ NN Auto.
 
 Simple tool to create Crocrodile NN Training files.
 """
+from __future__ import annotations
+
 import chess  # python-chess
 
 if __name__ == '__main__':

@@ -4,6 +4,8 @@ MyEngine Engine base.
 
 Base engine
 """
+from __future__ import annotations
+
 from __future__ import print_function
 
 import copy

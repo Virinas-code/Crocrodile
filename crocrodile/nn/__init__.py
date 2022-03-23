@@ -6,6 +6,8 @@ Crocrodile Neural Network.
 Base class for Crocrodile NN.
 """
 from __future__ import annotations
+
+from __future__ import annotations
 import csv
 import heapq
 import json

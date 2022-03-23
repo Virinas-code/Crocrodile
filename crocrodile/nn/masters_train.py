@@ -5,6 +5,8 @@ Crocrodile Masters Train.
 
 Training sessions for Crocrodile on masters games.
 """
+from __future__ import annotations
+
 import chess
 import random
 import my_engine.nn

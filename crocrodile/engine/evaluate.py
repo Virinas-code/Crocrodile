@@ -5,6 +5,8 @@ Crocrodile Evaluation.
 
 Evaluation: Evaluate position.
 """
+from __future__ import annotations
+
 import chess
 
 BISHOPS_PAIR = 50

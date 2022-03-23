@@ -5,6 +5,8 @@ Crocrodile NNs.
 
 Load network: Load network to use it with the client.
 """
+from __future__ import annotations
+
 import os
 
 

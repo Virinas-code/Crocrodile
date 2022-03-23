@@ -5,6 +5,8 @@ MyEngine.
 
 UCI System
 """
+from __future__ import annotations
+
 import time
 import sys
 import chess

@@ -7,6 +7,8 @@ Back to basics.
 
 :author: Virinas-code and ZeBox
 """
+from __future__ import annotations
+
 import csv
 import datetime
 import json

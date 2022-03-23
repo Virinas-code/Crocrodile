@@ -5,6 +5,8 @@ NN Random.
 
 Reset NN wa, wb and wc.
 """
+from __future__ import annotations
+
 import csv
 import numpy
 

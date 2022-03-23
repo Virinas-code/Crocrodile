@@ -5,6 +5,8 @@ NN of Crocrodile.
 
 Tools to manage Crocrodile NN.
 """
+from __future__ import annotations
+
 import csv
 import copy
 import random
