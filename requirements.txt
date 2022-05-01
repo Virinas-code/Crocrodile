@@ -6,4 +6,4 @@ sphinx_rtd_theme~=1.0.0
 matplotlib~=3.5.1
 requests~=2.27.1
 urllib3~=1.26.9
-pytest~=7.1.1
+pytest~=7.1.2
