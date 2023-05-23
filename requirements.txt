@@ -1,4 +1,4 @@
-berserk~=0.10.0
+berserk~=0.12.4
 python-chess~=1.999
 colorama~=0.4.6
 numpy>=1.22.0
